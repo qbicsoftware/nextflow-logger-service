@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: life.qbic
+---
+testFramework: spock
+sourceLanguage: groovy
