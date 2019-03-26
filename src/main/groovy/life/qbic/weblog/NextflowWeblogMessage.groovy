@@ -14,13 +14,13 @@ class NextflowWeblogMessage {
     
     private NextflowWeblogMessage(){}
 
-    /**
+
     static NextflowWeblogMessage withRunAndTraceInfo(RunInfo runInfo,
                                                      Trace trace){
        return new NextflowWeblogMessage().tap {
-           this.runInfo = runInfo
-           this.trace = trace
-           this.metadata = new MetaData()
+           it.runInfo = runInfo
+           it.trace = trace
+           metadata = new MetaData()
        }
     }
 
@@ -28,15 +28,15 @@ class NextflowWeblogMessage {
                                                           Trace trace,
                                                           MetaData metadata){
         return new NextflowWeblogMessage().tap {
-            this.runInfo = runInfo
-            this.trace = trace
-            this.metadata = metadata
+            it.runInfo = runInfo
+            it.trace = trace
+            it.metadata = metadata
         }
-    }*/
+    }
 
-    static NextflowWeblogMessage withRunInfo(RunInfo info){
+    static NextflowWeblogMessage withRunInfo(RunInfo runInfo){
         return new NextflowWeblogMessage().tap {
-            runInfo = info
+            it.runInfo = runInfo
             trace = new Trace()
             metadata = new MetaData()
         }
