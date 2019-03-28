@@ -1,14 +1,15 @@
-package life.qbic.weblog.nextflow
+package life.qbic.nextflow.weblog
 
+import groovy.transform.EqualsAndHashCode
 import org.codehaus.groovy.runtime.NullObject
 
-
+@EqualsAndHashCode()
 class MetaData {
 
     private Map metadata
 
     MetaData() {
-        metadata = new HashMap()
+        metadata = [:]
     }
 
     MetaData(Map metadata){

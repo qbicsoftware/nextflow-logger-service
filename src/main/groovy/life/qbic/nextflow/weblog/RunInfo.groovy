@@ -1,4 +1,6 @@
-package life.qbic.weblog.nextflow
+package life.qbic.nextflow.weblog
+
+import groovy.transform.EqualsAndHashCode
 
 import java.text.SimpleDateFormat
 
@@ -7,6 +9,7 @@ enum NextflowEventType
     STARTED, PROCESS_SUBMITTED, PROCESS_STARTED, PROCESS_COMPLETED, ERROR, COMPLETED, UNKNOWN
 }
 
+@EqualsAndHashCode()
 class RunInfo {
 
     static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -24,11 +27,11 @@ class RunInfo {
         time = new Date()
     }
 
-    RunInfo(Map<String, String> weblogRunInformation){
-        eventType = convertEventStringToEnum(weblogRunInformation.get('event'))
+    RunInfo(Map<String, Object> weblogRunInformation){
+        eventType = convertEventStringToEnum(weblogRunInformation.get('event') as String)
         name = weblogRunInformation.get('runName') ?: ""
         status = weblogRunInformation.get('runStatus') ?: ""
-        time = new SimpleDateFormat(DATE_TIME_PATTERN).parse(weblogRunInformation.get('utcTime'))
+        time = new SimpleDateFormat(DATE_TIME_PATTERN).parse(weblogRunInformation.get('utcTime') as String)
     }
 
     private static convertEventStringToEnum(String event){
