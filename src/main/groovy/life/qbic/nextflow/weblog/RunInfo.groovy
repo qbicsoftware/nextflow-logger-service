@@ -1,7 +1,6 @@
 package life.qbic.nextflow.weblog
 
 import groovy.transform.EqualsAndHashCode
-
 import java.text.SimpleDateFormat
 
 enum NextflowEventType
@@ -28,13 +27,13 @@ class RunInfo {
     }
 
     RunInfo(Map<String, Object> weblogRunInformation){
-        eventType = convertEventStringToEnum(weblogRunInformation.get('event') as String)
+        eventType = convertEventStringToEventType(weblogRunInformation.get('event') as String)
         name = weblogRunInformation.get('runName') ?: ""
         status = weblogRunInformation.get('runStatus') ?: ""
         time = new SimpleDateFormat(DATE_TIME_PATTERN).parse(weblogRunInformation.get('utcTime') as String)
     }
 
-    private static convertEventStringToEnum(String event){
+    private static NextflowEventType convertEventStringToEventType(String event){
         try {
             def eventType = event.toUpperCase() as NextflowEventType
             return eventType
