@@ -45,13 +45,13 @@ class MariaDBStorageImplementation implements WeblogStorage{
         createDatabaseConnectionWithCredentials(databaseUser, userPassword)
     }
 
+    private void buildDatabaseUrlFromProperties(){
+        databaseUrl = databaseProperties.getDatabaseConnectionUrl()
+    }
+
     private void createDatabaseConnectionWithCredentials(String user, String password) throws Exception {
         Class.forName(databaseProperties.driverClass)
         connection = DriverManager.getConnection(databaseUrl, user, password)
-    }
-
-    private void buildDatabaseUrlFromProperties(){
-        databaseUrl = databaseProperties.getDatabaseConnectionUrl()
     }
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{
