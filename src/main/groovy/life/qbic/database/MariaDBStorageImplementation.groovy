@@ -1,8 +1,10 @@
 package life.qbic.database
 
+import groovy.sql.Sql
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import life.qbic.nextflow.WeblogMessage
+import life.qbic.nextflow.weblog.Trace
 
 import javax.inject.Singleton
 import java.sql.Connection
@@ -61,7 +63,18 @@ class MariaDBStorageImplementation implements WeblogStorage{
     }
 
     private void tryToStoreWeblogMessage(WeblogMessage message) {
+        final def sql = new Sql(connection)
+        insertRunInfo(message, sql)
+        insertTraceInfo(message.trace, sql)
+        sql.close()
+    }
 
+    private void insertRunInfo(WeblogMessage, Sql sql) {
+        //TODO Implement run info insertion
+    }
+
+    private void insertTraceInfo(Trace trace, Sql sql) {
+        //TODO Implement trace info insertion
     }
 
     private static class DatabaseProperties {

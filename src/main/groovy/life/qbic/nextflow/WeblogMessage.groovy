@@ -1,9 +1,11 @@
 package life.qbic.nextflow
 
+import groovy.transform.CompileStatic
 import life.qbic.nextflow.weblog.MetaData
 import life.qbic.nextflow.weblog.RunInfo
 import life.qbic.nextflow.weblog.Trace
 
+@CompileStatic
 class WeblogMessage {
 
     private RunInfo runInfo
