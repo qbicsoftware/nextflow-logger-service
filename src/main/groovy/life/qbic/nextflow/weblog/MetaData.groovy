@@ -6,7 +6,7 @@ import org.codehaus.groovy.runtime.NullObject
 @EqualsAndHashCode()
 class MetaData {
 
-    private Map metadata
+    private def metadata
 
     MetaData() {
         metadata = [:]

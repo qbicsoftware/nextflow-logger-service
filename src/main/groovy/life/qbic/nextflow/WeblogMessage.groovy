@@ -15,7 +15,7 @@ class WeblogMessage {
     private WeblogMessage(){}
 
     static WeblogMessage withRunAndTraceInfo(RunInfo runInfo,
-                                                     Trace trace){
+                                             Trace trace){
        return new WeblogMessage().tap {
            it.runInfo = runInfo
            it.trace = trace

@@ -1,6 +1,9 @@
-package life.qbic.nextflow.weblog
+package life.qbic.nextflow
 
 import life.qbic.nextflow.WeblogMessage
+import life.qbic.nextflow.weblog.MetaData
+import life.qbic.nextflow.weblog.RunInfo
+import life.qbic.nextflow.weblog.Trace
 import spock.lang.Specification
 
 class NextflowWeblogSpecification extends Specification {
