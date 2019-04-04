@@ -1,12 +1,10 @@
 package life.qbic.nextflow
 
 import groovy.json.JsonSlurper
-import groovy.transform.CompileStatic
 import life.qbic.nextflow.weblog.MetaData
 import life.qbic.nextflow.weblog.RunInfo
 import life.qbic.nextflow.weblog.Trace
 
-@CompileStatic
 class WeblogMessage {
 
     static final String TRACE_FIELDNAME = 'trace'
@@ -23,10 +21,11 @@ class WeblogMessage {
 
     static WeblogMessage createFromJson(String json) {
         final def messageProperties = new JsonSlurper().parseText(json) as Map
+        println messageProperties
         return new WeblogMessage().tap {
             it.runInfo = new RunInfo(messageProperties)
-            it.trace = createTraceInfoFromMap(messageProperties)
-            it.metadata = createMetadataFromJson(messageProperties)
+            it.trace = new Trace()//createTraceInfoFromMap(messageProperties)
+            it.metadata = new MetaData()//createMetadataFromJson(messageProperties)
         }
     }
 

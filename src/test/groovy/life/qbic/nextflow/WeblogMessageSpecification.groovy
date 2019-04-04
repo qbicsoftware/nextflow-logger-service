@@ -1,12 +1,11 @@
 package life.qbic.nextflow
 
-import life.qbic.nextflow.WeblogMessage
 import life.qbic.nextflow.weblog.MetaData
 import life.qbic.nextflow.weblog.RunInfo
 import life.qbic.nextflow.weblog.Trace
 import spock.lang.Specification
 
-class NextflowWeblogSpecification extends Specification {
+class WeblogMessageSpecification extends Specification {
 
     def "create run info only weblog message"() {
         given :
@@ -59,6 +58,26 @@ class NextflowWeblogSpecification extends Specification {
         assert message.metadata.parameters == ["myParam": 123]
         assert message.metadata.workflow.start == "2019-03-27T13:37:14Z"
         assert message.trace == new Trace()
+    }
+
+    def "create weblog message from json"() {
+
+        given :
+        def fakeWeblogPayload = """
+                {
+                    "runName": "awesomerun",
+                    "runId": "1234-1234",
+                    "event": "started"
+                }
+                """.stripIndent()
+
+        when:
+        assert fakeWeblogPayload
+        WeblogMessage message = WeblogMessage.createFromJson(fakeWeblogPayload)
+
+        then:
+        assert fakeWeblogPayload
+        assert message.runInfo.name == "awesomerun"
     }
 
 
