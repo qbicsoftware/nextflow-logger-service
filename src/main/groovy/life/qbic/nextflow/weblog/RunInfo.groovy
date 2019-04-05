@@ -42,15 +42,11 @@ class RunInfo {
     private static Date convertStringToDate(String s) {
         Date date
         try {
-            date = tryStringToDateConversion(s)
+            date = new SimpleDateFormat(DATE_TIME_PATTERN).parse(s)
         } catch (Exception e) {
             date = new Date()
         }
         return date
-    }
-
-    private static Date tryStringToDateConversion(String s){
-        new SimpleDateFormat(DATE_TIME_PATTERN).parse(s)
     }
 
     private static NextflowEventType convertEventStringToEventType(String event){
