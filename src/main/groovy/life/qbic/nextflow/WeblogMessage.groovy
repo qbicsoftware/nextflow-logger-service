@@ -21,11 +21,10 @@ class WeblogMessage {
 
     static WeblogMessage createFromJson(String json) {
         final def messageProperties = new JsonSlurper().parseText(json) as Map
-        println messageProperties
         return new WeblogMessage().tap {
             it.runInfo = new RunInfo(messageProperties)
-            it.trace = new Trace()//createTraceInfoFromMap(messageProperties)
-            it.metadata = new MetaData()//createMetadataFromJson(messageProperties)
+            it.trace = createTraceInfoFromMap(messageProperties)
+            it.metadata = createMetadataFromJson(messageProperties)
         }
     }
 

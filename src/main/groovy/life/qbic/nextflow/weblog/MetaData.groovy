@@ -1,23 +1,22 @@
 package life.qbic.nextflow.weblog
 
 import groovy.transform.EqualsAndHashCode
-import org.codehaus.groovy.runtime.NullObject
 
 @EqualsAndHashCode()
 class MetaData {
 
-    private Map metadata
+    private final Map metadata
 
     MetaData() {
-        metadata = [:]
+        metadata = [:].asImmutable()
     }
 
     MetaData(Map metadata){
-        this.metadata = metadata
+        this.metadata = metadata.asImmutable()
     }
 
     @Override
     Object getProperty(String s) {
-        return this.metadata.get(s) ?: NullObject
+        return this.metadata.get(s)
     }
 }

@@ -67,7 +67,15 @@ class WeblogMessageSpecification extends Specification {
                 {
                     "runName": "awesomerun",
                     "runId": "1234-1234",
-                    "event": "started"
+                    "event": "started",
+                    "metadata": {
+                        "parameters": {
+                            "myparam": 123
+                        }
+                    },
+                    "trace": {
+                        "task_id": 3
+                    }
                 }
                 """.stripIndent()
 
@@ -78,6 +86,11 @@ class WeblogMessageSpecification extends Specification {
         then:
         assert fakeWeblogPayload
         assert message.runInfo.name == "awesomerun"
+        assert message.metadata instanceof MetaData
+        assert message.metadata.parameters instanceof Map
+        assert message.trace instanceof Trace
+        assert message.trace.getProperty('task_id') == 3
+        assert !message.trace.getProperty('notpresent')
     }
 
 

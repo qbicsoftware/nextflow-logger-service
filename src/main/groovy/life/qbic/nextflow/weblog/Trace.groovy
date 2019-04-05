@@ -1,23 +1,22 @@
 package life.qbic.nextflow.weblog
 
 import groovy.transform.EqualsAndHashCode
-import org.codehaus.groovy.runtime.NullObject
 
 @EqualsAndHashCode()
 class Trace {
 
-    private Map traceInformation
+    private final Map traceInformation
 
     Trace() {
-        traceInformation = [:]
+        traceInformation = [:].asImmutable()
     }
 
     Trace(Map trace) {
-        traceInformation = trace
+        traceInformation = trace.asImmutable()
     }
 
     @Override
     Object getProperty(String s) {
-        return traceInformation.get(s) ?: NullObject
+        return traceInformation.get(s)
     }
 }
