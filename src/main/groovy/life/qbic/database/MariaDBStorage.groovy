@@ -11,13 +11,12 @@ import life.qbic.nextflow.weblog.Trace
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.sql.DataSource
-import java.sql.Connection
 
 @Singleton
 @Requires(property='database.name', defaultValue="workflows")
 @Requires(property='database.tables.runs', defaultValue="runs")
 @Requires(property='database.tables.traces', defaultValue="traces" )
-class MariaDBStorageImplementation implements WeblogStorage{
+class MariaDBStorage implements WeblogStorage{
 
     private DataSource dataSource
 
