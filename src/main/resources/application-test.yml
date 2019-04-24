@@ -2,6 +2,7 @@ micronaut:
     application:
         name: nxflogger
 database:
+    schema-uri: "src/test/resources/db-setup.sql"
     name: workflows
     tables:
         runs: WorkflowRuns

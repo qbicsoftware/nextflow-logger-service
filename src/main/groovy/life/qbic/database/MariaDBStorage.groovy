@@ -1,16 +1,21 @@
 package life.qbic.database
 
 import groovy.sql.Sql
+import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.annotation.Value
+import io.micronaut.context.event.BeanCreatedEvent
+import io.micronaut.context.event.BeanCreatedEventListener
 import life.qbic.nextflow.WeblogMessage
 import life.qbic.nextflow.weblog.MetaData
 import life.qbic.nextflow.weblog.RunInfo
 import life.qbic.nextflow.weblog.Trace
 
+import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.sql.DataSource
+import java.sql.Connection
 
 @Singleton
 @Requires(property='database.name', defaultValue="workflows")
@@ -21,16 +26,21 @@ class MariaDBStorage implements WeblogStorage{
     private DataSource dataSource
 
     @Value('${database.name}')
-    private static String WF_DATABASE_NAME
+    private String WF_DATABASE_NAME
 
     @Value('${database.tables.runs}')
-    private static String WF_RUNS_TABLE
+    String WF_RUNS_TABLE
 
     @Value('${database.tables.traces}')
-    private static String WF_TRACES_TABLE
+    private String WF_TRACES_TABLE
 
-    @Inject MariaDBStorageImplementation(DataSource dataSource) {
+    @Inject MariaDBStorage(DataSource dataSource) {
         this.dataSource = dataSource
+    }
+
+
+    @PostConstruct
+    void initialize() {
     }
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{
@@ -61,5 +71,30 @@ class MariaDBStorage implements WeblogStorage{
 
     private void insertTraceInfo(Trace trace, Sql sql) {
         //TODO Implement trace info insertion
+    }
+}
+
+
+@Requires(env="test")
+@Requires(property="database.schema-uri")
+@Singleton
+class DatabaseInit implements BeanCreatedEventListener<WeblogStorage> {
+
+    String schemaUri
+
+    DatabaseInit(@Property(name='database.schema-uri') schemaUri) {
+        this.schemaUri = schemaUri
+    }
+
+    WeblogStorage onCreated(BeanCreatedEvent<WeblogStorage> event) {
+        def sqlStatement = new File(schemaUri).text
+        MariaDBStorage storage = event.bean as MariaDBStorage
+        setupDatabase(storage.dataSource.connection, sqlStatement)
+        return event.bean
+    }
+
+    private static setupDatabase(Connection connection, String sqlStatement) {
+        Sql sql = new Sql(connection)
+        sql.execute(sqlStatement)
     }
 }
