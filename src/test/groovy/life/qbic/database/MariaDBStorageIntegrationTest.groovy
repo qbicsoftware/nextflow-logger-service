@@ -1,6 +1,5 @@
 package life.qbic.database
 
-import groovy.sql.GroovyResultSet
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.test.annotation.*
@@ -10,12 +9,9 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 import java.sql.Connection
-import java.sql.ResultSet
 
 @MicronautTest(environments=['test'])
 class MariaDBStorageIntegrationTest extends Specification {
-
-    String DATABASE_SCHEMA_FILE
 
     @Inject
     WeblogStorage storage
@@ -49,7 +45,8 @@ class MariaDBStorageIntegrationTest extends Specification {
 
     List<GroovyRowResult> queryColumnNames(Connection connection) {
         Sql sql = new Sql(connection)
-        def result = sql.rows ("SELECT column_name FROM information_schema.columns WHERE table_name='WORKFLOWRUNS';")
+        def result = sql.rows ("""SELECT column_name FROM information_schema.columns \
+                WHERE table_name='RUNS' OR table_name='TRACES';""")
         return result
     }
 
@@ -64,10 +61,11 @@ class MariaDBStorageIntegrationTest extends Specification {
     def "store weblog message"() {
         when:
         storage.storeWeblogMessage(message)
-        def weblogEntry = storage.getWeblogEntryById(message.runInfo.runId)
+        def weblogEntryList = storage.findWeblogEntryWithRunId(message.runInfo.id)
 
         then:
-        assert weblogEntry.runInfo.runId == message.runInfo.runId
+        assert weblogEntryList.size() == 1
+        assert weblogEntryList[0].runInfo.id == message.runInfo.id
     }
 
 }

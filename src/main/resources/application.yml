@@ -3,9 +3,6 @@ micronaut:
         name: nxflogger
 database:
     name: workflows
-    tables:
-        runs: WorkflowRuns
-        traces: WorkflowTraces
 datasources:
         default:
             url: jdbc:mariadb://$WF_DB_HOST/$WF_DB_NAME
