@@ -1,6 +1,7 @@
 package life.qbic.nextflow.weblog
 
 import groovy.transform.EqualsAndHashCode
+
 import java.text.SimpleDateFormat
 
 enum NextflowEventType

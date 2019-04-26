@@ -21,31 +21,59 @@ class MariaDBStorage implements WeblogStorage{
 
     private DataSource dataSource
 
+    private Sql sql
+
     @Inject MariaDBStorage(DataSource dataSource) {
         this.dataSource = dataSource
     }
 
-    List<WeblogMessage> findWeblogEntryWithRunId(String runId) {
-        final def sql = new Sql(dataSource.connection)
+    List<Trace> findTracesForRunWithId(String id) {
+        sql = new Sql(dataSource.connection)
         try {
-            def weblogMessage = tryToFindWeblogEntryWithRunId(runId, sql)
-            sql.close()
-            return weblogMessage
+            def result = tryToFetchTracesForRun(id)
+            return result
         } catch (Exception e) {
-            sql.close()
-            throw new WeblogStorageException("Could not query weblog message!", e)
+            throw new WeblogStorageException("Could not fetch trace information for run with id $id.", e)
         }
     }
 
-    private static List<WeblogMessage> tryToFindWeblogEntryWithRunId(String runId, Sql sql) {
+    private List<Trace> tryToFetchTracesForRun(String runId) {
+        def resultRows = tryToFindWeblogEntryWithRunId(runId)
+        if( resultRows.size() > 1 ) {
+            throw new WeblogStorageException("More than one run found for id $runId!. Expected unique result.")
+        }
+        def primaryKeyRun = resultRows.get(0)["ID"] as Integer
+        def traces = findTracesForRunWithPrimaryKey(primaryKeyRun)
+        return traces
+    }
+
+    private List<Trace> findTracesForRunWithPrimaryKey(Integer key) {
+        def result = sql.rows("""SELECT * FROM WORKFLOWS.TRACES WHERE RUNID=$key;""")
+        List<Trace> traces = result.collect{ convertRowResultToTrace(it) }
+        return traces
+    }
+
+    private Trace convertRowResultToTrace(GroovyRowResult row) {
+        return new Trace(["task_id": row.get('TASKID')])
+    }
+
+    List<WeblogMessage> findWeblogEntryWithRunId(String runId) {
+        sql = new Sql(dataSource.connection)
+        try {
+            def result = tryToFindWeblogEntryWithRunId(runId)
+            def weblogMessages = result.collect { convertRowResultToWeblog(it) }
+            sql.close()
+            return weblogMessages
+        } catch (Exception e) {
+            sql.close()
+            throw new WeblogStorageException("Could not query weblog message with run id $runId!", e)
+        }
+    }
+
+    private List<GroovyRowResult> tryToFindWeblogEntryWithRunId(String runId) {
         final def query = "SELECT * FROM WORKFLOWS.RUNS WHERE RUNID=${runId};"
         def rowResult = sql.rows(query)
-        def weblogMessages = new LinkedList<WeblogMessage>()
-        rowResult.each {
-            def weblog = convertRowResultToWeblog(it)
-            weblogMessages.add(weblog)
-        }
-        return weblogMessages
+        return rowResult
     }
 
     private static WeblogMessage convertRowResultToWeblog(GroovyRowResult rowResult) {
@@ -56,9 +84,9 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{
-        final def sql = new Sql(dataSource.connection)
+       this.sql = new Sql(dataSource.connection)
         try {
-            tryToStoreWeblogMessage(message, sql)
+            tryToStoreWeblogMessage(message)
             sql.close()
         } catch (Exception e) {
             sql.close()
@@ -66,24 +94,45 @@ class MariaDBStorage implements WeblogStorage{
         }
     }
 
-    private static void tryToStoreWeblogMessage(WeblogMessage message, Sql sql) {
-        insertRunInfo(message.runInfo, sql)
-        insertTraceInfo(message.trace, sql)
-        insertMetadataInfo(message.metadata, sql)
+    private void tryToStoreWeblogMessage(WeblogMessage message) {
+        def primaryKeyRun = storeRunInfo(message.runInfo)
+        insertTraceInfo(message.trace, primaryKeyRun)
+        insertMetadataInfo(message.metadata, primaryKeyRun)
     }
 
-    private static void insertMetadataInfo(MetaData metaData, Sql sql) {
+    private void insertMetadataInfo(MetaData metaData, Integer primaryKeyRun) {
         //TODO Implement metadata insertion
     }
 
 
-    private static void insertRunInfo(RunInfo runInfo, Sql sql) {
-        sql.execute("""insert into WORKFLOWS.RUNS (runId) values \
-            ($runInfo.id);""")
+    private Integer storeRunInfo(RunInfo runInfo) {
+        def primaryKey
+        if( tryToFindWeblogEntryWithRunId(runInfo.id) ) {
+            primaryKey = updateWeblogRunInfo(runInfo)
+        } else {
+            primaryKey = insertWeblogRunInfo(runInfo)
+        }
+        return primaryKey
     }
 
-    private static void insertTraceInfo(Trace trace, Sql sql) {
-        //TODO Implement trace info insertion
+    private Integer updateWeblogRunInfo(RunInfo runInfo){
+        //TODO update status of a Nextflow run info
+    }
+
+    private Integer insertWeblogRunInfo(RunInfo runInfo) {
+        sql.execute("""insert into WORKFLOWS.RUNS (runId) values \
+            ($runInfo.id);""")
+        def result = tryToFindWeblogEntryWithRunId(runInfo.id)
+        if( !result ) {
+            throw new WeblogStorageException("Insertion went wrong")
+        }
+        return result[0].get('id') as Integer
+
+    }
+
+    private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
+        sql.execute("""insert into WORKFLOWS.TRACES (taskId, runId) values \
+            (${trace.'task_id'}, $primaryKeyRun);""")
     }
 }
 

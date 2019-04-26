@@ -25,21 +25,22 @@ ENGINE = InnoDB;
 
 
 CREATE TABLE IF NOT EXISTS `workflows`.`traces` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `taskId` INT(11) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  `status` VARCHAR(45) NOT NULL,
-  `exit` INT(11) NOT NULL,
-  `attempt` INT(11) NOT NULL,
-  `queue` VARCHAR(45) NOT NULL,
-  `memory` INT(11) NOT NULL,
-  `duration` BIGINT(20) NOT NULL,
-  `cpus` INT(11) NOT NULL,
-  `submissionTime` DATETIME NOT NULL,
-  `startTime` DATETIME NOT NULL,
+  `id` INT(11) AUTO_INCREMENT,
+  `runId` INT(11),
+  `taskId` INT(11),
+  `name` VARCHAR(45),
+  `status` VARCHAR(45),
+  `exit` INT(11),
+  `attempt` INT(11),
+  `queue` VARCHAR(45),
+  `memory` INT(11),
+  `duration` BIGINT(20),
+  `cpus` INT(11),
+  `submissionTime` DATETIME,
+  `startTime` DATETIME,
   PRIMARY KEY (`id`),
   CONSTRAINT `runId`
-    FOREIGN KEY (`id`)
+    FOREIGN KEY (`runId`)
     REFERENCES `workflows`.`runs` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

@@ -16,20 +16,17 @@ class MariaDBStorageIntegrationTest extends Specification {
     @Inject
     WeblogStorage storage
 
-    @Shared WeblogMessage message
+    @Shared WeblogMessage messageWithTrace
+
+    @Shared WeblogMessage messageWithMetadata
 
     def setupSpec() {
-        message = WeblogMessage.createFromJson(createTestWeblogJsonPayload())
-    }
-
-    static String createTestWeblogJsonPayload(){
-        def payload = """{   
-                    "runName": "awesomerun",
-                    "runId": "1234-1234",
-                    "event": "started"
-                }
-                """.stripIndent()
-        return payload
+        messageWithTrace = WeblogMessage.createFromJson(
+                new File("src/test/resources/WeblogPayloadWithTrace.json").text
+        )
+        messageWithMetadata = WeblogMessage.createFromJson(
+                new File("src/test/resources/WeblogPayloadWithMetaData.json").text
+        )
     }
 
     def "confirm that database was setup"() {
@@ -60,12 +57,15 @@ class MariaDBStorageIntegrationTest extends Specification {
 
     def "store weblog message"() {
         when:
-        storage.storeWeblogMessage(message)
-        def weblogEntryList = storage.findWeblogEntryWithRunId(message.runInfo.id)
+        storage.storeWeblogMessage(messageWithTrace)
+        def weblogEntryList = storage.findWeblogEntryWithRunId(messageWithTrace.runInfo.id)
+        def traces = storage.findTracesForRunWithId(messageWithTrace.runInfo.id)
 
         then:
         assert weblogEntryList.size() == 1
-        assert weblogEntryList[0].runInfo.id == message.runInfo.id
+        assert weblogEntryList[0].runInfo.id == messageWithTrace.runInfo.id
+        assert traces.size() == 1
+        assert traces[0].getProperty('task_id') == messageWithTrace.trace.getProperty('task_id')
     }
 
 }
