@@ -1,0 +1,27 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode
+ 
+# Intellij
+.idea/
+*.iml
+*.iws
+ 
+# Mac
+.DS_Store
+ 
+# Maven
+target/
+
+# Some of our applications generate logs, which should be ignored by git
+logs/
+
+# Other
+**/.factorypath
+
+# compiled Vaadin widgetsets
+src/main/webapp/VAADIN/widgetsets
