@@ -1,83 +1,61 @@
-# Build script for Travis CI
-#
-
-# use xenial distribution
 dist: xenial
-
-# no need to check for oracle's java
 language: java
 jdk: openjdk8
-
-
-# speed up builds by caching maven local repository
-# we are also using python via conda/pip
 cache:
   directories:
-  - "$HOME/.m2/repository"
-  - "$HOME/.cache/pip"
-  - "$HOME/miniconda3"
-
-# as agreed in our SOP
+  - $HOME/.m2/repository
+  - $HOME/.cache/pip
+  - $HOME/miniconda3
 branches:
   only:
   - master
   - development
-  # Travis treats pushed tags as branches
-  - /^[vV]?\d+\.\d+\.\d+$/ # matches e.g., v1.2.3, 1.2.3, V1.2.3
-
-# added to make logs look cleaner, crisper, certified fresh
-before_install: unset _JAVA_OPTIONS 
-
-# dependencies for report generation (use cache to speed up builds)
-install: 
-  - $HOME/miniconda3/bin/conda --version || ./.install-reports-dependencies.sh
-
-# check if we need to add a license file for Vaadin charts
-before_script: if [ "$VAADIN_CHARTS_LICENSE_CODE" != "" ]; then
-                  echo "$VAADIN_CHARTS_LICENSE_CODE" > ~/.vaadin.charts.developer.license;
-               fi;
-
-# as agreed in our SOP, build everything (don't deploy, just try to 'mvn package' locally, which covers unit tests)
-script: mvn --quiet --activate-profiles !development-build,!release-build --settings .travis.settings.xml clean cobertura:cobertura package
-# upload code coverage report, generate maven site (javadocs, documentation, static code analysis, etc.)
-after_success: 
+  - /^[vV]?\d+\.\d+\.\d+$/
+before_install: unset _JAVA_OPTIONS
+install:
+- $HOME/miniconda3/bin/conda --version || ./.install-reports-dependencies.sh
+before_script: if [ "$VAADIN_CHARTS_LICENSE_CODE" != "" ]; then echo "$VAADIN_CHARTS_LICENSE_CODE"
+  > ~/.vaadin.charts.developer.license; fi;
+script: mvn --quiet --activate-profiles !development-build,!release-build --settings
+  .travis.settings.xml clean cobertura:cobertura package
+after_success:
 - bash <(curl -s https://codecov.io/bash)
-
-# upload to maven
 deploy:
-  # as agreed in our SOP, builds on development branch will deploy to our maven repository after validating
-  # the artifact has a proper SNAPSHOT version
-  # make sure to skip integration tests! (using -DskipITs)
 - skip_cleanup: true
   provider: script
-  script: mvn --quiet --activate-profiles development-build,!release-build --settings .travis.settings.xml deploy -DskipITs
+  script: mvn --quiet --activate-profiles development-build,!release-build --settings
+    .travis.settings.xml deploy -DskipITs
   on:
     branch: development
     condition: '"$TRAVIS_EVENT_TYPE" = "push"'
-  # as agreed in our SOP, releases are performed by tagging commits,
-  # the version string and version of dependencies are validated (no snapshots allowed)
 - skip_cleanup: true
   provider: script
-  script: mvn --quiet --activate-profiles !development-build,release-build --settings .travis.settings.xml deploy -DskipITs
+  script: mvn --quiet --activate-profiles !development-build,release-build --settings
+    .travis.settings.xml deploy -DskipITs
   on:
     condition: '"$TRAVIS_EVENT_TYPE" = "push"'
     tags: true
-
-# activate our conda environment, generate maven site and upload reports to gh-pages branch
-after_deploy:   
-  - echo ". $HOME/miniconda3/etc/profile.d/conda.sh" >> ~/.bashrc && source ~/.bashrc && conda activate qbic-docs-build
-  - mvn --quiet --activate-profiles !development-build,!release-build --settings .travis.settings.xml site 
-  - ./.generate-reports.py $TRAVIS_BRANCH $TRAVIS_REPO_SLUG "[skip travis] Updated gh-pages" "This commit was performed from travis-ci.com using a personal access key" "Build ID $TRAVIS_BUILD_ID" "Job ID TRAVIS_JOB_ID" "Branch $TRAVIS_BRANCH" "Log of this build found at $TRAVIS_JOB_WEB_URL"
-
-# change according to your needs, but we recommend to deactivate email notifications
-# for now, we configured Travis to send a notification to the #travis-ci Slack channel 
+after_deploy:
+- echo ". $HOME/miniconda3/etc/profile.d/conda.sh" >> ~/.bashrc && source ~/.bashrc
+  && conda activate qbic-docs-build
+- mvn --quiet --activate-profiles !development-build,!release-build --settings .travis.settings.xml
+  site
+- ./.generate-reports.py $TRAVIS_BRANCH $TRAVIS_REPO_SLUG "[skip travis] Updated gh-pages"
+  "This commit was performed from travis-ci.com using a personal access key" "Build
+  ID $TRAVIS_BUILD_ID" "Job ID TRAVIS_JOB_ID" "Branch $TRAVIS_BRANCH" "Log of this
+  build found at $TRAVIS_JOB_WEB_URL"
 notifications:
   email:
     on_success: never
     on_failure: never
-  slack: 
+  slack:
     on_success: never
     on_failure: always
-    # edit the following section if you want to get slack notifications
     rooms:
-      - secure: "***"
+    - secure: '***'
+env:
+  global:
+  - secure: "dphzEBb5BSRHUrB11cAAluTEz/rjnvOE6EAFaS83r0aC9rjyPPgSw+G/RgNnemAFktzdgB/ijdsj7CvLhjnj/3kuaGAJUeKCZF6KJB9Ru1Cfcv4prQxCzKg6hh0dH6BQHl+A8SdcTWAlMdsWwPRFm368NC6S6Mz4TdNxk+YGi+mQsF9ejS1qzxo2zyAs1LCSRMLVtzRpc52kSdvi3FkiDydjDel3shpYg9Db0ZL8QTKcarKcl4NEcSCa8KotlcjbOzoHR9myeVDsJCWypMWdwoaFO2fDiPEoxXBTy2xhLNXKVcfVp4322EmEkz1V7bOqQ6SMdPSWvqdmqJnqN4T/Vt1nTHeFZ8HBwpHj0WD3jebYqcG2jX2flTBzBmXB57h0Aif3d6aDv42JsLz5YtqbXSO71b34y526yb35p8ri+PxR6HrS0285kcutfS6/JpbbuKEocBFsj6M/zDi/UbjZ5PXoJl1qcPh+2ZhlK3krChnAAS41lYKXC90y4R0t6mvJ16iCSN+TQhhLFqqXfFJOVrdS5Vnk75ZM88Fp0P8ruhHn7x/07c9xvaXSHV9iKQoHdZs4i9L2QwgKKy/K+Hq0dzeLFurU5IC/FwmAL2zA0ZU9R4qFhy/ZK4OaqbOubstAwYEZaaZCXTwF2mbtiLXxPnLm0gdid5SlWtsQYNMcb48="
+  - secure: "gDWdBbJwcvoEgaSXBfh/OeAcPpV2rIFiZXLiPxEcSBW9PUWnRZd4rThB3ztccX1OvzI+/cHuKggg84HHRs62Si1rmpcoyCN/N1eoy8CaHw+T31WD6cap6+DZkP+yWnZwm5CEsiddOTeEDJL4VuwRbe0T9iF2Q3cFjmiWVRsJdNZs891yjC7VCE8WL2Y0Z1Z57Tb2PE0l2tiDqm1nyjWJ5GqU8/tSiJ1MYQ/sZEKbX247jiGnMchcd6Naa2kJnfuY82PwWAf6qolKvYORhHxAoiV1uenjxzFYUMF5hq1usaV7Ksp2mqBtwD8SkxQ9503kniIC3wFkJzpnemLFTQgo49eGwOHJgPKEBHaT+BFqyMxCUMOXSytXQKHIYAFDYQz6Vhk3fG055x9wYPmzNFEZemlMHx0ac2RikJ23xycYZMdP5nRAI+byFH1I7S9QaeVNtu2RF8ToWFhX1fTUrIqEsRiRYtldmSyyB3qXcZ90n2Ts42N0Q09zoVKTvdrlg4/ZSpTkGsvE0Kk4neSvw5uGG+OqLv8U+twzFpsqAOuXAbQRQTXRMntSkQR+lt4D0cZ0pcFWi2BbayhxExuatEcAKK7XQaSxSbRXAL3dYLjluJINXSkPG4/QzDrLVRfxYOcW4ta8g3pYNXQuvUssCgRnnORYv9F1LlaIz/MVePs8xas="
+
+
