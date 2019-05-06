@@ -6,6 +6,7 @@ import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.context.event.BeanCreatedEventListener
+import life.qbic.micronaututils.QBiCDataSource
 import life.qbic.nextflow.WeblogMessage
 import life.qbic.nextflow.weblog.MetaData
 import life.qbic.nextflow.weblog.RunInfo
@@ -13,17 +14,16 @@ import life.qbic.nextflow.weblog.Trace
 
 import javax.inject.Inject
 import javax.inject.Singleton
-import javax.sql.DataSource
 import java.sql.Connection
 
 @Singleton
 class MariaDBStorage implements WeblogStorage{
 
-    private DataSource dataSource
+    private QBiCDataSource dataSource
 
     private Sql sql
 
-    @Inject MariaDBStorage(DataSource dataSource) {
+    @Inject MariaDBStorage(QBiCDataSource dataSource) {
         this.dataSource = dataSource
     }
 
