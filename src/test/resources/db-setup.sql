@@ -33,11 +33,11 @@ CREATE TABLE IF NOT EXISTS `workflows`.`traces` (
   `exit` INT(11),
   `attempt` INT(11),
   `queue` VARCHAR(45),
-  `memory` INT(11),
-  `duration` BIGINT(20),
+  `memory` BIGINT,
+  `duration` BIGINT,
   `cpus` INT(11),
-  `submissionTime` DATETIME,
-  `startTime` DATETIME,
+  `submissionTime` BIGINT,
+  `startTime` BIGINT,
   PRIMARY KEY (`id`),
   CONSTRAINT `runId`
     FOREIGN KEY (`runId`)

@@ -54,7 +54,17 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     private Trace convertRowResultToTrace(GroovyRowResult row) {
-        return new Trace(["task_id": row.get('TASKID')])
+        return new Trace(["task_id": row.get('TASKID'),
+            "start": row.get('STARTTIME'),
+            "submission": row.get('SUBMISSIONTIME'),
+            "name": row.get('NAME'),
+            "status": row.get('STATUS'),
+            "exit": row.get('EXIT'),
+            "attempt": row.get('ATTEMPT'),
+            "memory": row.get('MEMORY'),
+            "duration": row.get('DURATION'),
+            "cpus": row.get('CPUS'),
+            "queue": row.get('QUEUE')])
     }
 
     List<WeblogMessage> findWeblogEntryWithRunId(String runId) {
@@ -131,8 +141,19 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
-        sql.execute("""insert into WORKFLOWS.TRACES (taskId, runId) values \
-            (${trace.'task_id'}, $primaryKeyRun);""")
+        sql.execute("""insert into WORKFLOWS.TRACES (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
+            (${trace.'task_id'},
+            $primaryKeyRun,
+            ${trace.'start'},
+            ${trace.'submission'},
+            ${trace.'name'},
+            ${trace.'status'},
+            ${trace.'exit'},
+            ${trace.'attempt'},
+            ${trace.'memory'},
+            ${trace.'cpus'},
+            ${trace.'queue'},
+            ${trace.'duration'});""")
     }
 }
 

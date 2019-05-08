@@ -1,8 +1,5 @@
 package life.qbic.nextflow.weblog
 
-import groovy.transform.EqualsAndHashCode
-
-@EqualsAndHashCode()
 class Trace {
 
     private final Map traceInformation
@@ -18,5 +15,21 @@ class Trace {
     @Override
     Object getProperty(String s) {
         return traceInformation.get(s)
+    }
+
+    @Override
+    boolean equals(Object o) {
+        if( !o instanceof Trace ) {
+            return false
+        }
+        def trace = o as Trace
+        for( String key in this.traceInformation.keySet() ) {
+            def thisProperty = this.getProperty(key)
+            def otherProperty = trace.getProperty(key)
+            if( ! otherProperty || ( otherProperty != thisProperty ) ) {
+                return false
+            }
+        }
+        return true
     }
 }

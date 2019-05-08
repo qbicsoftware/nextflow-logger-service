@@ -66,6 +66,16 @@ class MariaDBStorageIntegrationTest extends Specification {
         assert weblogEntryList[0].runInfo.id == messageWithTrace.runInfo.id
         assert traces.size() == 1
         assert traces[0].getProperty('task_id') == messageWithTrace.trace.getProperty('task_id')
+        assert traces[0].getProperty('start') == messageWithTrace.trace.getProperty('start')
+        assert traces[0].getProperty('submission') == messageWithTrace.trace.getProperty('submission')
+        assert traces[0].getProperty('name') == messageWithTrace.trace.getProperty('name')
+        assert traces[0].getProperty('status') == messageWithTrace.trace.getProperty('status')
+        assert traces[0].getProperty('exit') == messageWithTrace.trace.getProperty('exit')
+        assert traces[0].getProperty('attempt') == messageWithTrace.trace.getProperty('attempt')
+        assert traces[0].getProperty('queue') == messageWithTrace.trace.getProperty('queue')
+        assert traces[0].getProperty('memory') == messageWithTrace.trace.getProperty('memory')
+        assert traces[0].getProperty('cpus') == messageWithTrace.trace.getProperty('cpus')
+        assert traces[0].getProperty('duration') == messageWithTrace.trace.getProperty('duration')
     }
 
 }

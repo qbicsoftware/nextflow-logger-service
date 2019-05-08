@@ -36,6 +36,7 @@ class WeblogMessageSpecification extends Specification {
         then:
         assert message.runInfo == runInfo
         assert message.trace == trace
+        assert message.trace != new Trace()
         assert message.trace.task_id == 6
         assert message.metadata == new MetaData()
 
