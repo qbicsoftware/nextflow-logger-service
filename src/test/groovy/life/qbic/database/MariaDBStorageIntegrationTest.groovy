@@ -4,6 +4,8 @@ import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.test.annotation.*
 import life.qbic.nextflow.WeblogMessage
+import life.qbic.nextflow.weblog.MetaData
+import life.qbic.nextflow.weblog.Trace
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -12,6 +14,24 @@ import java.sql.Connection
 
 @MicronautTest(environments=['test'])
 class MariaDBStorageIntegrationTest extends Specification {
+
+    @Shared List<String> traceFields = [
+            'task_id',
+            'start',
+            'name',
+            'status',
+            'exit',
+            'attempt',
+            'queue',
+            'memory',
+            'cpus',
+            'duration'
+    ]
+
+    @Shared List<String> metadataFields = [
+            'params',
+            'workflow'
+    ]
 
     @Inject
     WeblogStorage storage
@@ -55,27 +75,42 @@ class MariaDBStorageIntegrationTest extends Specification {
         assert dataSource
     }
 
-    def "store weblog message"() {
+    def "store weblog message with trace"() {
         when:
         storage.storeWeblogMessage(messageWithTrace)
-        def weblogEntryList = storage.findWeblogEntryWithRunId(messageWithTrace.runInfo.id)
+        def weblogEntryList = storage.findRunWithRunId(messageWithTrace.runInfo.id)
         def traces = storage.findTracesForRunWithId(messageWithTrace.runInfo.id)
 
         then:
         assert weblogEntryList.size() == 1
         assert weblogEntryList[0].runInfo.id == messageWithTrace.runInfo.id
         assert traces.size() == 1
-        assert traces[0].getProperty('task_id') == messageWithTrace.trace.getProperty('task_id')
-        assert traces[0].getProperty('start') == messageWithTrace.trace.getProperty('start')
-        assert traces[0].getProperty('submission') == messageWithTrace.trace.getProperty('submission')
-        assert traces[0].getProperty('name') == messageWithTrace.trace.getProperty('name')
-        assert traces[0].getProperty('status') == messageWithTrace.trace.getProperty('status')
-        assert traces[0].getProperty('exit') == messageWithTrace.trace.getProperty('exit')
-        assert traces[0].getProperty('attempt') == messageWithTrace.trace.getProperty('attempt')
-        assert traces[0].getProperty('queue') == messageWithTrace.trace.getProperty('queue')
-        assert traces[0].getProperty('memory') == messageWithTrace.trace.getProperty('memory')
-        assert traces[0].getProperty('cpus') == messageWithTrace.trace.getProperty('cpus')
-        assert traces[0].getProperty('duration') == messageWithTrace.trace.getProperty('duration')
+        compareTraces(traces[0], messageWithTrace.trace)
+    }
+
+    private compareTraces(Trace trace, Trace otherTrace) {
+        traceFields.each {field ->
+            assert trace.getProperty(field) == otherTrace.getProperty(field)
+        }
+    }
+
+    def "store weblog message with workflow metadata"() {
+        when:
+        storage.storeWeblogMessage(messageWithMetadata)
+        def weblogEntryList = storage.findRunWithRunId(messageWithMetadata.runInfo.id)
+        def metadata = storage.findMetadataForRunWithId(messageWithMetadata.runInfo.id)
+
+        then:
+        assert weblogEntryList.size() == 1
+        assert weblogEntryList[0].runInfo.id == messageWithMetadata.runInfo.id
+        assert metadata
+        compareMetadata(metadata[0], messageWithMetadata.metadata)
+    }
+
+    private compareMetadata(MetaData meta, MetaData otherMeta) {
+        metadataFields.each { field ->
+            assert meta.getProperty(field) == otherMeta.getProperty(field)
+        }
     }
 
 }

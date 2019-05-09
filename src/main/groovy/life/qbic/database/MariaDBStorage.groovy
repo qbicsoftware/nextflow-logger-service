@@ -1,5 +1,6 @@
 package life.qbic.database
 
+import groovy.json.JsonOutput
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.context.annotation.Property
@@ -14,6 +15,7 @@ import life.qbic.nextflow.weblog.Trace
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.sql.Clob
 import java.sql.Connection
 
 @Singleton
@@ -53,7 +55,7 @@ class MariaDBStorage implements WeblogStorage{
         return traces
     }
 
-    private Trace convertRowResultToTrace(GroovyRowResult row) {
+    private static Trace convertRowResultToTrace(GroovyRowResult row) {
         return new Trace(["task_id": row.get('TASKID'),
             "start": row.get('STARTTIME'),
             "submission": row.get('SUBMISSIONTIME'),
@@ -67,7 +69,7 @@ class MariaDBStorage implements WeblogStorage{
             "queue": row.get('QUEUE')])
     }
 
-    List<WeblogMessage> findWeblogEntryWithRunId(String runId) {
+    List<WeblogMessage> findRunWithRunId(String runId) {
         sql = new Sql(dataSource.connection)
         try {
             def result = tryToFindWeblogEntryWithRunId(runId)
@@ -81,14 +83,16 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     private List<GroovyRowResult> tryToFindWeblogEntryWithRunId(String runId) {
-        final def query = "SELECT * FROM WORKFLOWS.RUNS WHERE RUNID=${runId};"
-        def rowResult = sql.rows(query)
-        return rowResult
+        final def statement = "SELECT * FROM WORKFLOWS.RUNS WHERE RUNID=${runId};"
+        return sql.rows(statement)
     }
 
     private static WeblogMessage convertRowResultToWeblog(GroovyRowResult rowResult) {
         RunInfo info = new RunInfo()
-        info.id = rowResult.get("RUNID") as String
+        info.id = rowResult.get("RUNID")
+        info.status = rowResult.get("LASTEVENT" )
+        info.name = rowResult.get("NAME")
+        info.time = rowResult.get("LASTRECORD")
 
         return WeblogMessage.withRunInfo(info)
     }
@@ -106,14 +110,35 @@ class MariaDBStorage implements WeblogStorage{
 
     private void tryToStoreWeblogMessage(WeblogMessage message) {
         def primaryKeyRun = storeRunInfo(message.runInfo)
+        println "pk: $primaryKeyRun"
         insertTraceInfo(message.trace, primaryKeyRun)
         insertMetadataInfo(message.metadata, primaryKeyRun)
     }
 
     private void insertMetadataInfo(MetaData metaData, Integer primaryKeyRun) {
-        //TODO Implement metadata insertion
+        if( metaData == new MetaData() ) {
+            return
+        }
+        sql.execute("""insert into WORKFLOWS.METADATA (runId,
+            startTime, parameters, workDir, container, user, manifest,
+            revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
+            values (
+                $primaryKeyRun,
+                ${metaData.workflow.'start'},
+                ${JsonOutput.toJson(metaData.params)},
+                ${metaData.workflow.'workDir'},
+                ${metaData.workflow.'container'},
+                ${metaData.workflow.'userName'},
+                ${JsonOutput.toJson(metaData.workflow.'manifest')},
+                ${metaData.workflow.'revision'},
+                ${metaData.workflow.'duration'},
+                ${metaData.workflow.'success'},
+                ${metaData.workflow.'resume'},
+                ${metaData.workflow.'nextflow'.'version'},
+                ${metaData.workflow.'exitStatus'},
+                ${metaData.workflow.'errorMessage'}
+            );""")
     }
-
 
     private Integer storeRunInfo(RunInfo runInfo) {
         def primaryKey
@@ -122,6 +147,7 @@ class MariaDBStorage implements WeblogStorage{
         } else {
             primaryKey = insertWeblogRunInfo(runInfo)
         }
+        println primaryKey
         return primaryKey
     }
 
@@ -130,8 +156,11 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     private Integer insertWeblogRunInfo(RunInfo runInfo) {
-        sql.execute("""insert into WORKFLOWS.RUNS (runId) values \
-            ($runInfo.id);""")
+        sql.execute("""insert into WORKFLOWS.RUNS (runId, name, lastEvent, lastRecord) values \
+            ($runInfo.id,
+            $runInfo.name,
+            ${runInfo.event.toString()},
+            ${runInfo.time.toTimestamp()});""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
         if( !result ) {
             throw new WeblogStorageException("Insertion went wrong")
@@ -141,6 +170,8 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
+        if( trace == new Trace() )
+            return
         sql.execute("""insert into WORKFLOWS.TRACES (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
             (${trace.'task_id'},
             $primaryKeyRun,
@@ -154,6 +185,56 @@ class MariaDBStorage implements WeblogStorage{
             ${trace.'cpus'},
             ${trace.'queue'},
             ${trace.'duration'});""")
+    }
+
+    List<MetaData> findMetadataForRunWithId(String id) {
+        sql = new Sql(dataSource.connection)
+        try {
+            def result = tryToFetchMetadataForRun(id)
+            return result
+        } catch (Exception e) {
+            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id", e)
+        }
+    }
+
+    private List<MetaData> tryToFetchMetadataForRun(String runId) {
+        def resultRows = tryToFindWeblogEntryWithRunId(runId)
+        if( resultRows.size() > 1 ) {
+            throw new WeblogStorageException("More than one run found for id $runId!. Expected unique result.")
+        }
+        def primaryKeyRun = resultRows.get(0)["ID"] as Integer
+        println primaryKeyRun
+        return findMetadataForRunWithForeignKey(primaryKeyRun)
+    }
+
+    private List<MetaData> findMetadataForRunWithForeignKey(Integer key) {
+        def result = sql.rows("SELECT * FROM WORKFLOWS.METADATA WHERE RUNID=$key;")
+        println result
+        List<MetaData> metadata = result.collect{ convertRowResultToMetadata(it) }
+        return metadata
+    }
+
+    private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
+        return new MetaData([
+                'startTime': rowResult.get('STARTTIME'),
+                'params': parseClob(rowResult.get('PARAMETERS') as Clob),
+                'workDir': rowResult.get('WORKDIR'),
+                'container': rowResult.get('CONTAINER'),
+                'user': rowResult.get('USER'),
+                'manifest': parseClob(rowResult.get('MANIFEST') as Clob),
+                'revision': rowResult.get('REVISION'),
+                'duration': rowResult.get('DURATION'),
+                'success': rowResult.get('SUCCESS'),
+                'resume': rowResult.get('RESUME'),
+                'nextflowVersion': rowResult.get('NEXTFLOWVERSION'),
+                'exitStatus': rowResult.get('EXITSTATUS'),
+                'errorMessage': rowResult.get('ERRORMESSAGE')
+        ])
+    }
+
+    private static String parseClob(Clob clob) {
+        Reader reader = clob.getCharacterStream()
+        return reader.getText()
     }
 }
 
