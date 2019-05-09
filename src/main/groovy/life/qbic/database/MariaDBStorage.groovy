@@ -1,6 +1,7 @@
 package life.qbic.database
 
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.context.annotation.Property
@@ -215,20 +216,26 @@ class MariaDBStorage implements WeblogStorage{
     }
 
     private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
-        return new MetaData([
-                'startTime': rowResult.get('STARTTIME'),
-                'params': parseClob(rowResult.get('PARAMETERS') as Clob),
+        def slurper = new JsonSlurper()
+        def workflow = [
+                'start': rowResult.get('STARTTIME'),
                 'workDir': rowResult.get('WORKDIR'),
                 'container': rowResult.get('CONTAINER'),
-                'user': rowResult.get('USER'),
-                'manifest': parseClob(rowResult.get('MANIFEST') as Clob),
+                'userName': rowResult.get('USER'),
+                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') as Clob)),
                 'revision': rowResult.get('REVISION'),
                 'duration': rowResult.get('DURATION'),
                 'success': rowResult.get('SUCCESS'),
                 'resume': rowResult.get('RESUME'),
-                'nextflowVersion': rowResult.get('NEXTFLOWVERSION'),
+                'nextflow': ['version': rowResult.get('NEXTFLOWVERSION')],
                 'exitStatus': rowResult.get('EXITSTATUS'),
                 'errorMessage': rowResult.get('ERRORMESSAGE')
+        ]
+
+
+        return new MetaData([
+                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') as Clob)),
+                'workflow': workflow
         ])
     }
 

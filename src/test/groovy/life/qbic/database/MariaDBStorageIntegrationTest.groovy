@@ -107,10 +107,8 @@ class MariaDBStorageIntegrationTest extends Specification {
         compareMetadata(metadata[0], messageWithMetadata.metadata)
     }
 
-    private compareMetadata(MetaData meta, MetaData otherMeta) {
-        metadataFields.each { field ->
-            assert meta.getProperty(field) == otherMeta.getProperty(field)
-        }
+    private static compareMetadata(MetaData meta, MetaData otherMeta) {
+        meta.'startTime' == otherMeta.'workflow'.'start'
     }
 
 }
