@@ -8,6 +8,7 @@ import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.context.event.BeanCreatedEventListener
+import life.qbic.Constants
 import life.qbic.micronaututils.QBiCDataSource
 import life.qbic.nextflow.WeblogMessage
 import life.qbic.nextflow.weblog.MetaData
@@ -18,9 +19,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import java.sql.Clob
 import java.sql.Connection
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 @Singleton
 class MariaDBStorage implements WeblogStorage{
+
+    private static final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+    private static final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)
 
     private QBiCDataSource dataSource
 
@@ -125,7 +132,7 @@ class MariaDBStorage implements WeblogStorage{
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
                 $primaryKeyRun,
-                ${metaData.workflow.'start'},
+                ${ utcDateFormat.parse(metaData.workflow.'start' as String) },
                 ${JsonOutput.toJson(metaData.params)},
                 ${metaData.workflow.'workDir'},
                 ${metaData.workflow.'container'},
@@ -204,13 +211,11 @@ class MariaDBStorage implements WeblogStorage{
             throw new WeblogStorageException("More than one run found for id $runId!. Expected unique result.")
         }
         def primaryKeyRun = resultRows.get(0)["ID"] as Integer
-        println primaryKeyRun
         return findMetadataForRunWithForeignKey(primaryKeyRun)
     }
 
     private List<MetaData> findMetadataForRunWithForeignKey(Integer key) {
         def result = sql.rows("SELECT * FROM WORKFLOWS.METADATA WHERE RUNID=$key;")
-        println result
         List<MetaData> metadata = result.collect{ convertRowResultToMetadata(it) }
         return metadata
     }
@@ -218,7 +223,7 @@ class MariaDBStorage implements WeblogStorage{
     private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
         def slurper = new JsonSlurper()
         def workflow = [
-                'start': rowResult.get('STARTTIME'),
+                'start': toUTCTime(rowResult.get('STARTTIME') as String),
                 'workDir': rowResult.get('WORKDIR'),
                 'container': rowResult.get('CONTAINER'),
                 'userName': rowResult.get('USER'),
@@ -242,6 +247,11 @@ class MariaDBStorage implements WeblogStorage{
     private static String parseClob(Clob clob) {
         Reader reader = clob.getCharacterStream()
         return reader.getText()
+    }
+
+    private static String toUTCTime(String timestamp) {
+        Date parsedDate = databaseDateFormat.parse(timestamp)
+        parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
     }
 }
 
