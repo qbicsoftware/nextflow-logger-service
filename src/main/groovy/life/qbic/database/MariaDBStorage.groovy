@@ -100,7 +100,7 @@ class MariaDBStorage implements WeblogStorage{
         info.id = rowResult.get("RUNID")
         info.status = rowResult.get("LASTEVENT" )
         info.name = rowResult.get("NAME")
-        info.time = rowResult.get("LASTRECORD")
+        info.time = utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
 
         return WeblogMessage.withRunInfo(info)
     }
@@ -118,7 +118,6 @@ class MariaDBStorage implements WeblogStorage{
 
     private void tryToStoreWeblogMessage(WeblogMessage message) {
         def primaryKeyRun = storeRunInfo(message.runInfo)
-        println "pk: $primaryKeyRun"
         insertTraceInfo(message.trace, primaryKeyRun)
         insertMetadataInfo(message.metadata, primaryKeyRun)
     }
@@ -168,7 +167,7 @@ class MariaDBStorage implements WeblogStorage{
             ($runInfo.id,
             $runInfo.name,
             ${runInfo.event.toString()},
-            ${runInfo.time.toTimestamp()});""")
+            ${ runInfo.time });""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
         if( !result ) {
             throw new WeblogStorageException("Insertion went wrong")
@@ -251,7 +250,7 @@ class MariaDBStorage implements WeblogStorage{
 
     private static String toUTCTime(String timestamp) {
         Date parsedDate = databaseDateFormat.parse(timestamp)
-        parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
+        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
     }
 }
 

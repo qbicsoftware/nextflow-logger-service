@@ -20,7 +20,7 @@ class WeblogMessage {
     private WeblogMessage(){}
 
     static WeblogMessage createFromJson(String json) {
-        final def messageProperties = new JsonSlurper().parseText(json) as Map
+        final def messageProperties = new JsonSlurper(checkDates: true).parseText(json) as Map
         return new WeblogMessage().tap {
             it.runInfo = new RunInfo(messageProperties)
             it.trace = createTraceInfoFromMap(messageProperties)

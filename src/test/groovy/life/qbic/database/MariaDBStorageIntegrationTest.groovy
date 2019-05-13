@@ -108,7 +108,7 @@ class MariaDBStorageIntegrationTest extends Specification {
     }
 
     private static void compareMetadata(MetaData meta, MetaData otherMeta) {
-        assert meta.'workflow'.'start' == otherMeta.'workflow'.'start'
+        assert meta.'workflow'.'start'.toString() == otherMeta.'workflow'.'start'
         assert meta.'workflow'.'manifest' == otherMeta.'workflow'.'manifest'
     }
 
