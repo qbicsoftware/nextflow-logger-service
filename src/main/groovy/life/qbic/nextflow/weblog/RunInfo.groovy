@@ -1,6 +1,7 @@
 package life.qbic.nextflow.weblog
 
 import groovy.transform.EqualsAndHashCode
+import life.qbic.Constants
 
 import java.text.SimpleDateFormat
 
@@ -11,8 +12,6 @@ enum NextflowEventType
 
 @EqualsAndHashCode()
 class RunInfo {
-
-    static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
     private NextflowEventType event
 
@@ -43,7 +42,7 @@ class RunInfo {
     private static Date convertStringToDate(String s) {
         Date date
         try {
-            date = new SimpleDateFormat(DATE_TIME_PATTERN).parse(s)
+            date = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT).parse(s)
         } catch (Exception e) {
             date = new Date()
         }
