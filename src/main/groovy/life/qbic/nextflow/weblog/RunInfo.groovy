@@ -40,12 +40,7 @@ class RunInfo {
     }
 
     private static Date convertStringToDate(String s) {
-        Date date
-        try {
-            date = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT).parse(s)
-        } catch (Exception e) {
-            date = new Date()
-        }
+        Date date = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT).parse(s)
         return date
     }
 
