@@ -154,7 +154,6 @@ class MariaDBStorage implements WeblogStorage{
         } else {
             primaryKey = insertWeblogRunInfo(runInfo)
         }
-        println primaryKey
         return primaryKey
     }
 

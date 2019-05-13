@@ -69,6 +69,7 @@ class WeblogMessageSpecification extends Specification {
                     "runName": "awesomerun",
                     "runId": "1234-1234",
                     "event": "started",
+                    "utcTime": "2018-10-07T11:45:30Z",
                     "metadata": {
                         "parameters": {
                             "myparam": 123
