@@ -149,7 +149,7 @@ class MariaDBStorage implements WeblogStorage{
 
     private Integer storeRunInfo(RunInfo runInfo) {
         def primaryKey
-        if( tryToFindWeblogEntryWithRunId(runInfo.id) ) {
+        if( isRunInfoStored(runInfo) ) {
             primaryKey = updateWeblogRunInfo(runInfo)
         } else {
             primaryKey = insertWeblogRunInfo(runInfo)
@@ -157,8 +157,15 @@ class MariaDBStorage implements WeblogStorage{
         return primaryKey
     }
 
+    private boolean isRunInfoStored(RunInfo runInfo) {
+        return tryToFindWeblogEntryWithRunId(runInfo.id)
+    }
+
     private Integer updateWeblogRunInfo(RunInfo runInfo){
-        //TODO update status of a Nextflow run info
+        sql.execute(""" update WORKFLOWS.RUNS set lastEvent = ${runInfo.event.toString()}, \
+                lastRecord = ${runInfo.time} where runId = ${runInfo.id} and name = ${runInfo.name};""")
+        def result = tryToFindWeblogEntryWithRunId(runInfo.id)
+        return result[0].get('id') as Integer
     }
 
     private Integer insertWeblogRunInfo(RunInfo runInfo) {

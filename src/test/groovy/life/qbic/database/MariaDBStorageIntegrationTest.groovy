@@ -5,6 +5,7 @@ import groovy.sql.Sql
 import io.micronaut.test.annotation.*
 import life.qbic.nextflow.WeblogMessage
 import life.qbic.nextflow.weblog.MetaData
+import life.qbic.nextflow.weblog.RunInfo
 import life.qbic.nextflow.weblog.Trace
 import spock.lang.Shared
 import spock.lang.Specification
@@ -110,6 +111,27 @@ class MariaDBStorageIntegrationTest extends Specification {
     private static void compareMetadata(MetaData meta, MetaData otherMeta) {
         assert meta.'workflow'.'start'.toString() == otherMeta.'workflow'.'start'
         assert meta.'workflow'.'manifest' == otherMeta.'workflow'.'manifest'
+    }
+
+    def "update run info when there is already a workflow information in the database"() {
+        given:
+        RunInfo newInfo = new RunInfo().tap {
+            name = messageWithMetadata.runInfo.name
+            id = messageWithMetadata.runInfo.id
+            status = "completed"
+            time = new Date()
+        }
+        WeblogMessage messageWithUpdate = WeblogMessage.withRunInfo(newInfo)
+
+
+        when:
+        storage.storeWeblogMessage(messageWithMetadata)
+        storage.storeWeblogMessage(messageWithUpdate)
+        def weblogEntryList = storage.findRunWithRunId(messageWithMetadata.runInfo.id)
+
+        then:
+        assert weblogEntryList.size() == 1
+        assert weblogEntryList[0].runInfo.event == newInfo.event
     }
 
 }
