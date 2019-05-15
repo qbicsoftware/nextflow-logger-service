@@ -1,6 +1,11 @@
 micronaut:
     application:
         name: nxflogger
+    router:
+        static-resources:
+            swagger:
+                paths: classpath:META-INF/swagger
+                mapping: /swagger/**
 database:
     name: workflows
 datasources:
