@@ -1,8 +1,9 @@
-package life.qbic.database
+package life.qbic.handler
 
-import life.qbic.nextflow.WeblogMessage
-import life.qbic.nextflow.weblog.MetaData
-import life.qbic.nextflow.weblog.Trace
+import life.qbic.database.WeblogStorageException
+import life.qbic.model.WeblogMessage
+import life.qbic.model.weblog.MetaData
+import life.qbic.model.weblog.Trace
 
 import javax.inject.Singleton
 

@@ -1,9 +1,9 @@
-package life.qbic.nextflow
+package life.qbic.model
 
 import groovy.json.JsonSlurper
-import life.qbic.nextflow.weblog.MetaData
-import life.qbic.nextflow.weblog.RunInfo
-import life.qbic.nextflow.weblog.Trace
+import life.qbic.model.weblog.MetaData
+import life.qbic.model.weblog.RunInfo
+import life.qbic.model.weblog.Trace
 
 class WeblogMessage {
 

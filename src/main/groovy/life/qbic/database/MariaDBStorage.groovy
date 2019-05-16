@@ -9,11 +9,12 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.context.event.BeanCreatedEventListener
 import life.qbic.Constants
+import life.qbic.handler.WeblogStorage
 import life.qbic.micronaututils.QBiCDataSource
-import life.qbic.nextflow.WeblogMessage
-import life.qbic.nextflow.weblog.MetaData
-import life.qbic.nextflow.weblog.RunInfo
-import life.qbic.nextflow.weblog.Trace
+import life.qbic.model.WeblogMessage
+import life.qbic.model.weblog.MetaData
+import life.qbic.model.weblog.RunInfo
+import life.qbic.model.weblog.Trace
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -141,7 +142,7 @@ class MariaDBStorage implements WeblogStorage{
                 ${metaData.workflow.'duration'},
                 ${metaData.workflow.'success'},
                 ${metaData.workflow.'resume'},
-                ${metaData.workflow.'nextflow'.'version'},
+                ${metaData.workflow.'model'.'version'},
                 ${metaData.workflow.'exitStatus'},
                 ${metaData.workflow.'errorMessage'}
             );""")
@@ -237,7 +238,7 @@ class MariaDBStorage implements WeblogStorage{
                 'duration': rowResult.get('DURATION'),
                 'success': rowResult.get('SUCCESS'),
                 'resume': rowResult.get('RESUME'),
-                'nextflow': ['version': rowResult.get('NEXTFLOWVERSION')],
+                'model': ['version': rowResult.get('NEXTFLOWVERSION')],
                 'exitStatus': rowResult.get('EXITSTATUS'),
                 'errorMessage': rowResult.get('ERRORMESSAGE')
         ]

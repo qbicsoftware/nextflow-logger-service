@@ -1,4 +1,4 @@
-package life.qbic.nextflow.weblog
+package life.qbic.model.weblog
 
 import groovy.json.JsonSlurper
 import spock.lang.Specification

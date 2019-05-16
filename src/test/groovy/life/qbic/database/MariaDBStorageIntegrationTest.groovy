@@ -3,10 +3,11 @@ package life.qbic.database
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.test.annotation.*
-import life.qbic.nextflow.WeblogMessage
-import life.qbic.nextflow.weblog.MetaData
-import life.qbic.nextflow.weblog.RunInfo
-import life.qbic.nextflow.weblog.Trace
+import life.qbic.handler.WeblogStorage
+import life.qbic.model.WeblogMessage
+import life.qbic.model.weblog.MetaData
+import life.qbic.model.weblog.RunInfo
+import life.qbic.model.weblog.Trace
 import spock.lang.Shared
 import spock.lang.Specification
 
