@@ -142,7 +142,7 @@ class MariaDBStorage implements WeblogStorage{
                 ${metaData.workflow.'duration'},
                 ${metaData.workflow.'success'},
                 ${metaData.workflow.'resume'},
-                ${metaData.workflow.'model'.'version'},
+                ${metaData.workflow.'nextflow'.'version'},
                 ${metaData.workflow.'exitStatus'},
                 ${metaData.workflow.'errorMessage'}
             );""")
