@@ -6,6 +6,10 @@ micronaut:
             swagger:
                 paths: classpath:META-INF/swagger
                 mapping: /swagger/**
+contact:
+    first-name: $WF_CONTACT_FIRST_NAME
+    last-name: $WF_CONTACT_LAST_NAME
+    email: $WF_CONTACT_EMAIL
 database:
     name: workflows
 datasources:

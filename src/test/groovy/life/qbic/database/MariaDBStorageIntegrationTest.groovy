@@ -3,7 +3,7 @@ package life.qbic.database
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.test.annotation.*
-import life.qbic.handler.WeblogStorage
+import life.qbic.service.WeblogStorage
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo

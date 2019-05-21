@@ -1,13 +1,15 @@
-package life.qbic.handler
+package life.qbic.service
 
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
+import javax.inject.Singleton
 
-interface Handler {
+@Singleton
+interface WorkflowService {
 
-    storeWeblogMessage(WeblogMessage message)
+    URL storeWeblogMessage(WeblogMessage message)
 
     RunInfo getWorkflowRunInfoForId(String runId)
 

@@ -1,4 +1,4 @@
-package life.qbic.handler
+package life.qbic.service
 
 import life.qbic.database.WeblogStorageException
 import life.qbic.model.WeblogMessage

@@ -9,7 +9,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.context.event.BeanCreatedEventListener
 import life.qbic.Constants
-import life.qbic.handler.WeblogStorage
+import life.qbic.service.WeblogStorage
 import life.qbic.micronaututils.QBiCDataSource
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
