@@ -8,7 +8,6 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.annotation.MicronautTest
 import life.qbic.model.WeblogMessage
-import life.qbic.service.WeblogStorage
 import life.qbic.service.WorkflowService
 import spock.lang.Shared
 import spock.lang.Specification
@@ -38,7 +37,6 @@ class MessagesControllerSpecification extends Specification {
     @Client("/")
     RxHttpClient client
 
-
     @Unroll
     void "store a weblog payload with metadata and return resource location"() {
         given:
@@ -52,8 +50,6 @@ class MessagesControllerSpecification extends Specification {
         assert context.containsBean(WorkflowService)
         assert result.status() == HttpStatus.CREATED
         assert result.getHeaders().get("Location") == "/messages/${message.runInfo.id}"
-
-
     }
 
 
