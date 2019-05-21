@@ -147,7 +147,6 @@
     <dependency>
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-junit5</artifactId>
-      <version>1.0.2</version>
       <scope>test</scope>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.micronaut/micronaut-management -->

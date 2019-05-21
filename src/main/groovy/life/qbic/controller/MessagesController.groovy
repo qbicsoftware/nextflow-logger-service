@@ -8,6 +8,8 @@ import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
 import life.qbic.Contact
+import life.qbic.model.WeblogMessage
+import life.qbic.service.WorkflowInformationCenter
 import life.qbic.service.WorkflowService
 
 import javax.inject.Inject
@@ -16,7 +18,7 @@ import javax.inject.Inject
 @Controller("/messages")
 class MessagesController {
 
-    private WorkflowService informationCenter
+    WorkflowService informationCenter
 
     private Contact contact
 
@@ -28,12 +30,15 @@ class MessagesController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Post(uri = "/")
     HttpResponse storeWeblogMessage(@Body String message) {
+        WeblogMessage weblogMessage
         try {
-            log.info("Incoming message")
+            weblogMessage = WeblogMessage.createFromJson(message)
+            log.debug("Incoming weblog message with for run id: ${weblogMessage.runInfo.id}")
+            informationCenter.storeWeblogMessage(weblogMessage)
         } catch ( Exception e ) {
             log.error(e)
             return HttpResponse.serverError("Unexpected error, resource could not be created.")
         }
-        return HttpResponse.created(new URI('/messages/8173-1234'))
+        return HttpResponse.created(new URI("/messages/${weblogMessage.runInfo.id}"))
     }
 }

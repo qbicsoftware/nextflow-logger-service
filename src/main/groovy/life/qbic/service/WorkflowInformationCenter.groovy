@@ -18,8 +18,8 @@ class WorkflowInformationCenter implements WorkflowService {
     }
 
     @Override
-    URL storeWeblogMessage(WeblogMessage message) {
-        return null
+    void storeWeblogMessage(WeblogMessage message) {
+        storage.storeWeblogMessage(message)
     }
 
     @Override

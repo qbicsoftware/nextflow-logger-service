@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 interface WorkflowService {
 
-    URL storeWeblogMessage(WeblogMessage message)
+    void storeWeblogMessage(WeblogMessage message)
 
     RunInfo getWorkflowRunInfoForId(String runId)
 
