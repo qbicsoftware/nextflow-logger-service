@@ -3,6 +3,7 @@ package life.qbic.service
 import life.qbic.database.WeblogStorageException
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
+import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
 
 import javax.inject.Singleton
@@ -12,7 +13,7 @@ interface WeblogStorage {
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException
 
-    List<WeblogMessage> findRunWithRunId(String runId)
+    List<RunInfo> findRunWithRunId(String runId)
 
     List<Trace> findTracesForRunWithId(String id)
 

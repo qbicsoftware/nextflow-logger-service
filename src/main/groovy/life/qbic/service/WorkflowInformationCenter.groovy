@@ -23,8 +23,8 @@ class WorkflowInformationCenter implements WorkflowService {
     }
 
     @Override
-    RunInfo getWorkflowRunInfoForId(String runId) {
-        return null
+    List<RunInfo> getWorkflowRunInfoForId(String runId) {
+        storage.findRunWithRunId(runId)
     }
 
     @Override

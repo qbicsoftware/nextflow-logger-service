@@ -11,7 +11,7 @@ interface WorkflowService {
 
     void storeWeblogMessage(WeblogMessage message)
 
-    RunInfo getWorkflowRunInfoForId(String runId)
+    List<RunInfo> getWorkflowRunInfoForId(String runId)
 
     List<Trace> getTracesForWorkflowWithId(String runId)
 

@@ -1,5 +1,6 @@
 package life.qbic.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.json.JsonSlurper
 import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
@@ -11,10 +12,13 @@ class WeblogMessage {
 
     static final String METADATA_FIELDNAME = 'metadata'
 
+    @JsonProperty("runinfo")
     private RunInfo runInfo
 
+    @JsonProperty("trace")
     private Trace trace
 
+    @JsonProperty("metadata")
     private MetaData metadata
     
     private WeblogMessage(){}

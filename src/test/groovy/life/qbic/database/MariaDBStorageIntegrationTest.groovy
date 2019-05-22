@@ -80,12 +80,12 @@ class MariaDBStorageIntegrationTest extends Specification {
     def "store weblog message with trace"() {
         when:
         storage.storeWeblogMessage(messageWithTrace)
-        def weblogEntryList = storage.findRunWithRunId(messageWithTrace.runInfo.id)
+        def runInfoList = storage.findRunWithRunId(messageWithTrace.runInfo.id)
         def traces = storage.findTracesForRunWithId(messageWithTrace.runInfo.id)
 
         then:
-        assert weblogEntryList.size() == 1
-        assert weblogEntryList[0].runInfo.id == messageWithTrace.runInfo.id
+        assert runInfoList.size() == 1
+        assert runInfoList[0].id == messageWithTrace.runInfo.id
         assert traces.size() == 1
         compareTraces(traces[0], messageWithTrace.trace)
     }
@@ -99,12 +99,12 @@ class MariaDBStorageIntegrationTest extends Specification {
     def "store weblog message with workflow metadata"() {
         when:
         storage.storeWeblogMessage(messageWithMetadata)
-        def weblogEntryList = storage.findRunWithRunId(messageWithMetadata.runInfo.id)
+        def runInfoList = storage.findRunWithRunId(messageWithMetadata.runInfo.id)
         def metadata = storage.findMetadataForRunWithId(messageWithMetadata.runInfo.id)
 
         then:
-        assert weblogEntryList.size() == 1
-        assert weblogEntryList[0].runInfo.id == messageWithMetadata.runInfo.id
+        assert runInfoList.size() == 1
+        assert runInfoList[0].id == messageWithMetadata.runInfo.id
         assert metadata
         compareMetadata(metadata[0], messageWithMetadata.metadata)
     }
@@ -128,11 +128,11 @@ class MariaDBStorageIntegrationTest extends Specification {
         when:
         storage.storeWeblogMessage(messageWithMetadata)
         storage.storeWeblogMessage(messageWithUpdate)
-        def weblogEntryList = storage.findRunWithRunId(messageWithMetadata.runInfo.id)
+        def runInfoList = storage.findRunWithRunId(messageWithMetadata.runInfo.id)
 
         then:
-        assert weblogEntryList.size() == 1
-        assert weblogEntryList[0].runInfo.event == newInfo.event
+        assert runInfoList.size() == 1
+        assert runInfoList[0].event == newInfo.event
     }
 
 }

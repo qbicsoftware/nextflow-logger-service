@@ -78,11 +78,11 @@ class MariaDBStorage implements WeblogStorage{
             "queue": row.get('QUEUE')])
     }
 
-    List<WeblogMessage> findRunWithRunId(String runId) {
+    List<RunInfo> findRunWithRunId(String runId) {
         sql = new Sql(dataSource.connection)
         try {
             def result = tryToFindWeblogEntryWithRunId(runId)
-            def weblogMessages = result.collect { convertRowResultToWeblog(it) }
+            def weblogMessages = result.collect { convertRowResultToRunInfo(it) }
             sql.close()
             return weblogMessages
         } catch (Exception e) {
@@ -96,14 +96,13 @@ class MariaDBStorage implements WeblogStorage{
         return sql.rows(statement)
     }
 
-    private static WeblogMessage convertRowResultToWeblog(GroovyRowResult rowResult) {
+    private static RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
         RunInfo info = new RunInfo()
         info.id = rowResult.get("RUNID")
         info.status = rowResult.get("LASTEVENT" )
         info.name = rowResult.get("NAME")
         info.time = utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
-
-        return WeblogMessage.withRunInfo(info)
+        return info
     }
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{

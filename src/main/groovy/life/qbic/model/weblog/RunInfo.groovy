@@ -1,5 +1,7 @@
 package life.qbic.model.weblog
 
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 import life.qbic.Constants
 
@@ -13,14 +15,20 @@ enum NextflowEventType
 @EqualsAndHashCode()
 class RunInfo {
 
+    @JsonProperty("event")
     private NextflowEventType event
 
+    @JsonProperty("runName")
     private String name
 
+    @JsonProperty("runStatus")
     private String status
 
+    @JsonProperty("runId")
     private String id
 
+    @JsonProperty("utcTime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.ISO_8601_DATETIME_FORMAT)
     private Date time
 
     RunInfo(){
