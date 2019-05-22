@@ -11,7 +11,6 @@ import io.micronaut.test.annotation.MicronautTest
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.RunInfo
 import life.qbic.service.WorkflowService
-import org.apache.groovy.json.internal.LazyMap
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
