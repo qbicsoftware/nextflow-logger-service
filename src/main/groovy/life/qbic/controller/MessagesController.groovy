@@ -8,7 +8,6 @@ import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Produces
 import life.qbic.Contact
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.RunInfo
