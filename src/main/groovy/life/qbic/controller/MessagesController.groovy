@@ -31,7 +31,7 @@ class MessagesController {
 
     @Consumes(MediaType.APPLICATION_JSON)
     @Post(uri="/")
-    HttpResponse<?> storeWeblogMessage(@Body String message) {
+    HttpResponse storeWeblogMessage(@Body String message) {
         WeblogMessage weblogMessage
         try {
             weblogMessage = WeblogMessage.createFromJson(message)
@@ -45,7 +45,7 @@ class MessagesController {
     }
 
     @Get("/{runId}")
-    HttpResponse<?> getBasicWorkflowInformation(String runId) {
+    HttpResponse getBasicWorkflowInformation(String runId) {
         log.debug("Resource request for runId: $runId.")
 
         List<RunInfo> runInfo

@@ -72,8 +72,6 @@ class MessagesControllerSpecification extends Specification {
         RunInfo runInfo = new RunInfo(list.get(0) as Map)
         assert runInfo.id == message.runInfo.id
         assert runInfo.name == message.runInfo.name
-
-
     }
 
     URI createWeblogResource(String message) {
