@@ -53,7 +53,6 @@ class MessagesController {
         } catch ( Exception e ) {
             log.error(e)
             return HttpResponse.serverError("Unexpected error, resource could not be accessed.")
-                    .contentType(MediaType.TEXT_PLAIN)
         }
 
         return HttpResponse.ok(runInfo)
