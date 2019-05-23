@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>life.qbic</groupId>
+  <parent>
+    <groupId>life.qbic</groupId>
+    <artifactId>service-parent-pom</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+  </parent>
   <artifactId>nxflogger</artifactId>
   <version>0.1</version>
   <properties>
@@ -104,7 +108,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -118,15 +121,13 @@
       <version>1.3</version>
       <scope>test</scope>
     </dependency>
-  <dependency>
+    <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy</artifactId>
-    <version>2.5.6</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-sql</artifactId>
-      <version>2.5.6</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -141,62 +142,34 @@
     <dependency>
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-spock</artifactId>
-      <version>1.0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-junit5</artifactId>
-      <version>1.0.2</version>
       <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/io.micronaut/micronaut-management -->
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-management</artifactId>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>life.qbic</groupId>
       <artifactId>micronaut-utils-lib</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-dateutil -->
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-dateutil</artifactId>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.1</version>
-        <configuration>
-          <excludes>
-            <exclude>**/*IntegrationTest.*</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <id>test</id>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <excludes>
-                <exclude>**/*IntegrationTest.*</exclude>
-              </excludes>
-              <includes>**/*Specification.*</includes>
-            </configuration>
-          </execution>
-          <execution>
-            <id>integration-test</id>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <phase>verify</phase>
-            <configuration>
-              <excludes>
-                <exclude>**/*Specification.*</exclude>
-              </excludes>
-              <includes>
-                <include>**/*IntegrationTest.*</include>
-              </includes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>

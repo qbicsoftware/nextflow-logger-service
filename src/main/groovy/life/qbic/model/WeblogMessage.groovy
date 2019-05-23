@@ -1,9 +1,10 @@
-package life.qbic.nextflow
+package life.qbic.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.json.JsonSlurper
-import life.qbic.nextflow.weblog.MetaData
-import life.qbic.nextflow.weblog.RunInfo
-import life.qbic.nextflow.weblog.Trace
+import life.qbic.model.weblog.MetaData
+import life.qbic.model.weblog.RunInfo
+import life.qbic.model.weblog.Trace
 
 class WeblogMessage {
 
@@ -11,16 +12,19 @@ class WeblogMessage {
 
     static final String METADATA_FIELDNAME = 'metadata'
 
+    @JsonProperty("runinfo")
     private RunInfo runInfo
 
+    @JsonProperty("trace")
     private Trace trace
 
+    @JsonProperty("metadata")
     private MetaData metadata
     
     private WeblogMessage(){}
 
     static WeblogMessage createFromJson(String json) {
-        final def messageProperties = new JsonSlurper().parseText(json) as Map
+        final def messageProperties = new JsonSlurper(checkDates: true).parseText(json) as Map
         return new WeblogMessage().tap {
             it.runInfo = new RunInfo(messageProperties)
             it.trace = createTraceInfoFromMap(messageProperties)

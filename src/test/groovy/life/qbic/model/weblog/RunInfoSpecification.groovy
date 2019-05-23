@@ -1,4 +1,4 @@
-package life.qbic.nextflow.weblog
+package life.qbic.model.weblog
 
 import groovy.json.JsonSlurper
 import spock.lang.Specification
@@ -12,7 +12,8 @@ class RunInfoSpecification extends Specification {
                 {
                     "runName": "awesomerun",
                     "runId": "1234-1234",
-                    "event": "started"
+                    "event": "started",
+                    "utcTime": "2018-10-07T11:45:30Z"
                 }
                 """.stripIndent()
 

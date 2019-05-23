@@ -1,6 +1,9 @@
-package life.qbic.nextflow.weblog
+package life.qbic.model.weblog
 
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import life.qbic.Constants
 
 import java.text.SimpleDateFormat
 
@@ -12,16 +15,20 @@ enum NextflowEventType
 @EqualsAndHashCode()
 class RunInfo {
 
-    static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-
+    @JsonProperty("event")
     private NextflowEventType event
 
+    @JsonProperty("runName")
     private String name
 
+    @JsonProperty("runStatus")
     private String status
 
+    @JsonProperty("runId")
     private String id
 
+    @JsonProperty("utcTime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.ISO_8601_DATETIME_FORMAT)
     private Date time
 
     RunInfo(){
@@ -41,12 +48,7 @@ class RunInfo {
     }
 
     private static Date convertStringToDate(String s) {
-        Date date
-        try {
-            date = new SimpleDateFormat(DATE_TIME_PATTERN).parse(s)
-        } catch (Exception e) {
-            date = new Date()
-        }
+        Date date = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT).parse(s)
         return date
     }
 

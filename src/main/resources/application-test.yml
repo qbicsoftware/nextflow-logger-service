@@ -1,6 +1,10 @@
 micronaut:
     application:
         name: nxflogger
+contact:
+    first-name: Hellow
+    last-name: Word
+    email: hellow.word@example.com
 database:
     schema-uri: "src/test/resources/db-setup.sql"
 datasources:
