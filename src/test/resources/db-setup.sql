@@ -1,5 +1,5 @@
 
-DROP SCHEMA IF EXISTS `workflows` ;
+DROP SCHEMA IF EXISTS `workflows` CASCADE ;
 
 CREATE SCHEMA IF NOT EXISTS `workflows`;
 USE `workflows` ;

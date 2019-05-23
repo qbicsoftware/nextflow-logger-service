@@ -29,7 +29,7 @@ class WorkflowInformationCenter implements WorkflowService {
 
     @Override
     List<Trace> getTracesForWorkflowWithId(String runId) {
-        return null
+        storage.findTracesForRunWithId(runId)
     }
 
     @Override

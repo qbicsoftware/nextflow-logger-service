@@ -2,6 +2,7 @@ package life.qbic.database
 
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
+import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.annotation.*
 import life.qbic.service.WeblogStorage
 import life.qbic.model.WeblogMessage
@@ -37,6 +38,10 @@ class MariaDBStorageIntegrationTest extends Specification {
 
     @Inject
     WeblogStorage storage
+
+    @Inject
+    @Shared
+    EmbeddedServer server
 
     @Shared WeblogMessage messageWithTrace
 
@@ -133,6 +138,10 @@ class MariaDBStorageIntegrationTest extends Specification {
         then:
         assert runInfoList.size() == 1
         assert runInfoList[0].event == newInfo.event
+    }
+
+    def cleanupSpec() {
+        server.stop()
     }
 
 }

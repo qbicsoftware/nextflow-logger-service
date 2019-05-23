@@ -1,7 +1,11 @@
 package life.qbic.model.weblog
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
+
 class Trace {
 
+    @JsonProperty("properties")
     private final Map traceInformation
 
     Trace() {

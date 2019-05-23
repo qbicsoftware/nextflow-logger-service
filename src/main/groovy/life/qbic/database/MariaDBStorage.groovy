@@ -24,7 +24,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 @Singleton
-class MariaDBStorage implements WeblogStorage{
+class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
@@ -67,7 +67,7 @@ class MariaDBStorage implements WeblogStorage{
     private static Trace convertRowResultToTrace(GroovyRowResult row) {
         return new Trace(["task_id": row.get('TASKID'),
             "start": row.get('STARTTIME'),
-            "submission": row.get('SUBMISSIONTIME'),
+            "submit": row.get('SUBMISSIONTIME'),
             "name": row.get('NAME'),
             "status": row.get('STATUS'),
             "exit": row.get('EXIT'),
@@ -189,7 +189,7 @@ class MariaDBStorage implements WeblogStorage{
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
-            ${trace.'submission'},
+            ${trace.'submit'},
             ${trace.'name'},
             ${trace.'status'},
             ${trace.'exit'},
@@ -257,6 +257,12 @@ class MariaDBStorage implements WeblogStorage{
     private static String toUTCTime(String timestamp) {
         Date parsedDate = databaseDateFormat.parse(timestamp)
         return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
+    }
+
+    @Override
+    void close() throws Exception {
+        sql.close()
+        dataSource.connection.close()
     }
 }
 

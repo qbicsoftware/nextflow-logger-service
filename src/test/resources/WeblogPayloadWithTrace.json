@@ -19,7 +19,7 @@
         "script": "\n    configbuilder --max-cpus 2 --solver glpk > config.ini\n    ",
         "scratch": null,
         "workdir": "/home/sven1103/git/hlatyping-workflow/work/a1/0024fd028375e2b601aaed44d112e3",
-        "queue": null,
+        "queue": "cfc",
         "cpus": 1,
         "memory": 7516192768,
         "disk": null,

@@ -11,19 +11,20 @@ import io.micronaut.http.annotation.Post
 import life.qbic.Contact
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.RunInfo
+import life.qbic.model.weblog.Trace
 import life.qbic.service.WorkflowService
 
 import javax.inject.Inject
 
 @Log4j2
-@Controller("/messages")
+@Controller("/workflows")
 class MessagesController {
 
     WorkflowService informationCenter
 
     private Contact contact
 
-    @Inject WeblogController(WorkflowService informationCenter, Contact contact) {
+    @Inject MessagesController(WorkflowService informationCenter, Contact contact) {
         this.informationCenter = informationCenter
         this.contact = contact
     }
@@ -40,22 +41,40 @@ class MessagesController {
             log.error(e)
             return HttpResponse.serverError("Unexpected error, resource could not be created.")
         }
-        return HttpResponse.created(new URI("/messages/${weblogMessage.runInfo.id}"))
+        return HttpResponse.created(new URI("/workflows/info/${weblogMessage.runInfo.id}"))
     }
 
-    @Get("/{runId}")
+    @Get("/info/{runId}")
     HttpResponse getBasicWorkflowInformation(String runId) {
         log.debug("Resource request for runId: $runId.")
 
-        List<RunInfo> runInfo
+        List<RunInfo> runInfoList
         try {
-            runInfo = informationCenter.getWorkflowRunInfoForId(runId)
+            runInfoList = informationCenter.getWorkflowRunInfoForId(runId)
         } catch ( Exception e ) {
             log.error(e)
-            return HttpResponse.serverError("Unexpected error, resource could not be accessed.")
+            return HttpResponse.serverError(serverErrorResponse())
         }
+        runInfoList ? HttpResponse.ok(runInfoList): HttpResponse.notFound()
+    }
 
-        return HttpResponse.ok(runInfo)
+    @Get("/traces/{runId}")
+    HttpResponse getTracesForWorkflow(String runId) {
+        log.debug("Traces request for runId: $runId.")
+
+        List<Trace> traces
+        try {
+            traces = informationCenter.getTracesForWorkflowWithId(runId)
+        } catch ( Exception e) {
+            log.error(e)
+            return HttpResponse.serverError(serverErrorResponse())
+        }
+        traces ? HttpResponse.ok(traces) : HttpResponse.notFound()
+
+    }
+
+    static String serverErrorResponse() {
+        "Unexpected error, resource could not be accessed."
     }
 
 
