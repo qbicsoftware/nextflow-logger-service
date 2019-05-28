@@ -30,7 +30,7 @@ deploy:
     condition: '"$TRAVIS_EVENT_TYPE" = "push"'
 - skip_cleanup: true
   provider: script
-  script: mvn --activate-profiles !development-build,release-build --settings .travis.settings.xml
+  script: mvn --quiet --activate-profiles !development-build,release-build --settings .travis.settings.xml
     deploy -DskipITs
   on:
     condition: '"$TRAVIS_EVENT_TYPE" = "push"'
