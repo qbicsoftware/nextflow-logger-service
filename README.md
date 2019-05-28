@@ -19,10 +19,16 @@ java -jar nfxlogger-<version>.jar
 
 Keep in mind that this will run the flowstore with the [default configuration](https://raw.githubusercontent.com/qbicsoftware/nextflow-logger-service/master/src/main/resources/application.yml) setup.
 
-You can pass your own configuration file with:
+You can pass your **own configuration** file with:
 
 ```bash
 java -Dmicronaut.config.files=myconfig.yml -jar nfxlogger-<version>.jar
+```
+
+The default **port** bound is `8080`. If you want to change that, you can pass the micronaut property like this:
+
+```bash
+java -Dmicronaut.server.port=8081 -jar nxflogger-<version>.jar
 ```
 
 ## Development
