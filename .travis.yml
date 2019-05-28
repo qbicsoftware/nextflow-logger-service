@@ -16,14 +16,14 @@ install:
 - "$HOME/miniconda3/bin/conda --version || ./.install-reports-dependencies.sh"
 before_script: if [ "$VAADIN_CHARTS_LICENSE_CODE" != "" ]; then echo "$VAADIN_CHARTS_LICENSE_CODE"
   > ~/.vaadin.charts.developer.license; fi;
-script: mvn --quiet --activate-profiles !development-build,!release-build --settings
+script: mvn --activate-profiles !development-build,!release-build --settings
   .travis.settings.xml clean cobertura:cobertura package
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
 - skip_cleanup: true
   provider: script
-  script: mvn --quiet --activate-profiles development-build,!release-build --settings
+  script: mvn --activate-profiles development-build,!release-build --settings
     .travis.settings.xml deploy -DskipITs
   on:
     branch: development
