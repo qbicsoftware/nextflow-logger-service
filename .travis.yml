@@ -16,22 +16,22 @@ install:
 - "$HOME/miniconda3/bin/conda --version || ./.install-reports-dependencies.sh"
 before_script: if [ "$VAADIN_CHARTS_LICENSE_CODE" != "" ]; then echo "$VAADIN_CHARTS_LICENSE_CODE"
   > ~/.vaadin.charts.developer.license; fi;
-script: mvn --activate-profiles !development-build,!release-build --settings
-  .travis.settings.xml clean cobertura:cobertura package
+script: mvn --activate-profiles !development-build,!release-build --settings .travis.settings.xml
+  clean cobertura:cobertura package
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
 - skip_cleanup: true
   provider: script
-  script: mvn --activate-profiles development-build,!release-build --settings
-    .travis.settings.xml deploy -DskipITs
+  script: mvn --activate-profiles development-build,!release-build --settings .travis.settings.xml
+    deploy -DskipITs
   on:
     branch: development
     condition: '"$TRAVIS_EVENT_TYPE" = "push"'
 - skip_cleanup: true
   provider: script
-  script: mvn --activate-profiles !development-build,release-build --settings
-    .travis.settings.xml deploy -DskipITs
+  script: mvn --activate-profiles !development-build,release-build --settings .travis.settings.xml
+    deploy -DskipITs
   on:
     condition: '"$TRAVIS_EVENT_TYPE" = "push"'
     tags: true
@@ -57,3 +57,5 @@ env:
   global:
   - secure: KBg3sNDpU6cW8Cm18M65M3HxgmGQalY3v+8Vz6lqjNzIVkVWhgFUktga35HzU8AG3zvS6Fr4DHGF450YnDrK+Ggk0NqReWnd4MLGVvctL2tswj1XopciwiWM+ImTz9aWgaap3nbKoEjmzikZvp0VIA1Zo2JUnea7jHR6v4MkDJs7x09AAlQX1v3NVubU2IX8lG5N5JA7p408w1QyiXiSwh9wL/BNty3CKRz8htaLjp+LHleObX0NmbxXLjekld1RwG8f+yFSYNFUsBh1cKBIh+NveWPtD7DIgAs7nkJKK1+1umW32ei7wI+oVeZ+67Pg8TkjxRe6YiQTEREQcclIDNyBjrkqzUgl/8w1AZTErjNgCQKrktAEx+2tOSkP/A/rd/i4SwJ+efvl0uoO2NVZJUaf03lILm+slNn11MdxBwTIf0X5Vlsb9SL5PURpNco6v4fkYLoEcEhr8Cn8FvjD73eT1ia1ee0xIEl7bZe3EM8Kjf9mB4blf2NXEIFJKX1P+bTJE/bVGMZsjvmy6/hp3F06fg4oT7UtiK1n39kT3zUZPo4MFk3BUW4IXs/3Gt0TdcLJPKrZkvwofQAjF7P/p7fGr5NSIGVZMyya7Cg11YKRsdEv0np1c4Rnr/6voEXZX5+MF/8yaD9jOH6LoeBPVqcb3WiPJ7y8LCibqsKE9x8=
   - secure: JcXNI1wHtDNO2RGfAFM/3orOh5xVQnzY+jr18U+41rL5/xamrQiwJRWeBD6J6UWCPADXhCN7Gk+fYV8fFAWYS6t3F5J8lK4wkByhQ3Lv58EXi4AV7adQAZ5Idv97blE5otNYW9YLPWzq4UJIWxNKtzPDMvRQTJrp4e3IVDFo0JoEF1jPpRfGZk6dCSDuz/h2PN4C8mkfIWBPiEr7LaO+nOjm0OJHMCRRD5gKEzzShHtLDCgbOo37rBMzBtbz6QIX7qSA+PWQsa25Wt8QFE6ng+C9hjxx5jdNcm3Znm8Hory4eAjR8BOFm+QrrzM3TI9rM8Axe51CM2LsxG5+nWymqviSpoXz2OIZpmvTK7MIijW2HAQGSmJd34C+aKUfSngyu6xvC8+AXLLwj8Naq9t+rwdeNnGwC4FLjeM5125ZBXrJ5o/hVARYPIfcqExUY1kwOkx7uArew8m96AohTVIio/1M/pZerBzMTk90dP3W3GVownLXmY4BCXQ621XiQ7DwKcZeY7amQDcl8uWm3vyZ4or31Vx5a+W8DLR67FjoXS8xcvS5vZJ8Y59WVMMIHRfKm1BUGRiUJkUU5EpmF8cT0yNZYyVDGuFWMb9PLu1HX1lua8hgE5WD4QLZaWqum/3h3sYpjrAzFeaBiCnHZMQ4lqYxDAXULkvpfC4hwwKY4SE=
+  - secure: XKzIxze0RskM6o3VZX3fsF579l3KdurOficTo4XJXGu1gojXTSMa/iyHSpGRP14K6G3iJ0RE3yIsgFKjpQq/aK3WzJ3V11GgYYWlml4w2l5QRedoCfIOfECMWiRKeGknDe3Ik3TyqjBXtj0UMQwfwhcqExbkmsj76+JcadUWOpslCCwG20QOTWZ1Q8oKqiCmgZsYmWAvCbWrnHOYy/0vyrIVkT1xb2rI7sycJf3v16AYKrrmrYLIzc5mOyPGzVnM2Ns/O1sI0AYXfkyl7ltCW0/siTc2DPQcFb4IYbOCE0ocV833uNAJf6IUy4STb3DtZXb3MMzzZ90Ev62VglGU+a69d2Ho1fowDHuChJSI4SoI9nl5J6mo/GQfiJDcbYIylP+EftF/usplcxMK9I+LGVJ2kMIVaYXmY+54rWVM01lu14ZZ/sQ0dUIYedaLon0loXhjEA3ln1dvw7zuxJ/EJSMvXpGCNTAyGvCYb3j+jvLSZEIMR76f4I0ljaZH1i/1L1cfFw7XeLUJ/F5zX3B2X/DVB4X+ZBohpR7zIHgJzkrhiDAtOgM4f5FCbkqvF+LM5tIf2STAkdwF0l8USmFZsAtRIshdoBT60KFN/Tiw7leivflzev/S/bHASid3ngxwcsXcggoCqut+pjHXvfj5frQAdS2SQrqq9cY/bu1Y6AA=
+  - secure: EFi0HqNOiwCaTGfelbERKUF3WfYDOHnCEhz+Kk9Z9PZIX0zpbyRAUTfnGdmoBvNCJ3cmEWeEuY7zRnY8NNQmeV1Lt390wPj7dUW8bWR1yX6T8pbxMai8FlkFXs7Ig8yn/iSyJks8zeeLzk52HG8Lce0TSA5Q7jY4TSoHVSUang+A/cwsiNGzlFdXz/gae1lRTlqJ/wRYU+TmURbO/66tQY137zhYULq2LTSKBCDxRDRJvTEFk2MmRA5W+YPhoy42hkVTMozi75Am5NyUFbXW3s4beuUuJrC40T4e36WFyg3aJZoJAnKW8zh2nY9QKEiaIpVC4byUMmyBfEM5ZXxL7mzJU0Arnl33t2M+Z2wxPQUFsFmEApS7krNvs3Ad8G+McXszvNcrKXwy4zYZvI4ghVPWUGAJ4VU7uTRPj7l6Sq3rSttj1b0IwUMjGqbvl1nQflguUJ3bm9PrVjoKprlgIKgAY1DRzg6k4WUws2MLqpTUW9ge6gHZI4/YZKYgOn7wlMGKMh/aGx3oi2YeNopatWphaL0X//71reUOdMbzotj5xDEPtAAU0+TB2QzqyEzoHTmIt+96yF6gHoIMiHyERxN9GGRjD25ZdbPNgdRjTtAAnlZ5Pvo60+h+aZNWCPbcSEb9IqwJND3cgK6sfj2WDX95J6Y45lq3UwuI5Z9u+Z4=
