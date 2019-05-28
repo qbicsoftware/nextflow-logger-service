@@ -5,6 +5,7 @@ Store and find Nextflow weblog payloads.
 Check out:
 
 * [Run flowstore](#run-flowstore) - How to quickly run _flowstore_
+* [Development](#development) - How to continue developing flowstore
 * [Configure databases](#configure-databases) - How to link to a running database instance
 * [Underlying Data Models](#underlying-data-models)
 
