@@ -59,9 +59,8 @@ class MessagesController {
     }
 
     @Get("/traces/{runId}")
-    HttpResponse getTracesForWorkflow(String runId) {
+    HttpResponse<List<Trace>> getTracesForWorkflow(String runId) {
         log.debug("Traces request for runId: $runId.")
-
         List<Trace> traces
         try {
             traces = informationCenter.getTracesForWorkflowWithId(runId)
@@ -70,7 +69,6 @@ class MessagesController {
             return HttpResponse.serverError(serverErrorResponse())
         }
         traces ? HttpResponse.ok(traces) : HttpResponse.notFound()
-
     }
 
     static String serverErrorResponse() {
