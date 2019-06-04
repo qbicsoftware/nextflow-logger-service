@@ -24,7 +24,9 @@ class Application {
 <span class="nc" id="L24">        def envVars = System.getenv()</span>
 <span class="nc bnc" id="L25" title="All 2 branches missed.">        log.info(envVars['WF_DB_HOST'])</span>
 <span class="nc bnc" id="L26" title="All 2 branches missed.">        log.info(envVars['WF_DB_NAME'])</span>
-<span class="nc" id="L27">        Micronaut.run(Application)</span>
-<span class="nc" id="L28">    }</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        log.info(envVars['WF_DB_PWD'])</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        log.info(envVars['WF_DB_USER'])</span>
+<span class="nc" id="L29">        Micronaut.run(Application)</span>
+<span class="nc" id="L30">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
