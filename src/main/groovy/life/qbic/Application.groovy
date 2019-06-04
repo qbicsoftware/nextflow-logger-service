@@ -1,5 +1,6 @@
 package life.qbic
 
+import groovy.util.logging.Log4j2
 import io.micronaut.runtime.Micronaut
 import groovy.transform.CompileStatic
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
@@ -17,8 +18,12 @@ import io.swagger.v3.oas.annotations.info.Contact
         )
 )
 @CompileStatic
+@Log4j2
 class Application {
     static void main(String[] args) {
+        def envVars = System.getenv()
+        log.info(envVars['WF_DB_HOST'])
+        log.info(envVars['WF_DB_NAME'])
         Micronaut.run(Application)
     }
 }
