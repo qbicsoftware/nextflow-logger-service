@@ -7,9 +7,9 @@ micronaut:
                 paths: classpath:META-INF/swagger
                 mapping: /swagger/**
 contact:
-    first-name: ${wf-contact-first-name}
-    last-name: ${wf-contact-last-name}
-    email: ${wf-contact-email}
+    first-name: ${wf-contact-first-name:Max}
+    last-name: ${wf-contact-last-name:Mustermann}
+    email: ${wf-contact-email:'max.mustermann@uni-tuebingen.de'}
 database:
     name: workflows
 datasources:
