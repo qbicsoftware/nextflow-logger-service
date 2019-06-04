@@ -17,4 +17,4 @@ datasources:
             url: jdbc:mariadb://$WF_DB_HOST/$WF_DB_NAME
             username: $WF_DB_USER
             password: $WF_DB_PWD
-            driverClassName: com.mariadb.jdbc.Driver
+            driverClassName: org.mariadb.jdbc.Driver
