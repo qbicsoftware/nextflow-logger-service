@@ -24,6 +24,8 @@ class Application {
         def envVars = System.getenv()
         log.info(envVars['WF_DB_HOST'])
         log.info(envVars['WF_DB_NAME'])
+        log.info(envVars['WF_DB_PWD'])
+        log.info(envVars['WF_DB_USER'])
         Micronaut.run(Application)
     }
 }
