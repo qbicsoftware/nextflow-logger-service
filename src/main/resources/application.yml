@@ -7,14 +7,14 @@ micronaut:
                 paths: classpath:META-INF/swagger
                 mapping: /swagger/**
 contact:
-    first-name: $WF_CONTACT_FIRST_NAME
-    last-name: $WF_CONTACT_LAST_NAME
-    email: $WF_CONTACT_EMAIL
+    first-name: ${wf-contact-first-name}
+    last-name: ${wf-contact-last-name}
+    email: ${wf-contact-email}
 database:
     name: workflows
 datasources:
         default:
-            url: jdbc:mariadb://${WF_DB_HOST}/${WF_DB_NAME}
-            username: ${WF_DB_USER}
-            password: ${WF_DB_PWD}
+            url: jdbc:mariadb://${wf-db-host}/${wf-db-name}
+            username: ${wf-db-user}
+            password: ${wf-db-pwd}
             driverClassName: org.mariadb.jdbc.Driver
