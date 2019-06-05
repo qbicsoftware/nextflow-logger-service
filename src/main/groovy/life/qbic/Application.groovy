@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.info.Contact
 @Log4j2
 class Application {
     static void main(String[] args) {
-        def envVars = System.getenv()
         Micronaut.run(Application)
     }
 }
