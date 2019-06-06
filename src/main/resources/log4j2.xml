@@ -9,8 +9,9 @@
                 filePattern="${env:SERVICES_LOG_PATH}/nxflogger.%d{dd-MMM}.log.gz">
             <PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss} [%level] [%logger{1}] - %msg%n"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="100MB" />
+                <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
+            <DefaultRolloverStrategy max="14" />
         </RollingFile>
     </Appenders>
     <Loggers>
