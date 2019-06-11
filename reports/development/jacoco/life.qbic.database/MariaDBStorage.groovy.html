@@ -54,7 +54,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L54">    }</span>
 
     private List&lt;Trace&gt; findTracesForRunWithPrimaryKey(Integer key) {
-<span class="nc" id="L57">        def result = sql.rows(&quot;&quot;&quot;SELECT * FROM traces WHERE RUNID=$key;&quot;&quot;&quot;)</span>
+<span class="nc" id="L57">        def result = sql.rows(&quot;&quot;&quot;SELECT * FROM traces WHERE runId=$key;&quot;&quot;&quot;)</span>
 <span class="nc" id="L58">        List&lt;Trace&gt; traces = result.collect{ convertRowResultToTrace(it) }</span>
 <span class="nc" id="L59">        return traces</span>
 <span class="nc" id="L60">    }</span>
@@ -87,7 +87,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L87">    }</span>
 
     private List&lt;GroovyRowResult&gt; tryToFindWeblogEntryWithRunId(String runId) {
-<span class="nc" id="L90">        final def statement = &quot;SELECT * FROM RUNS WHERE RUNID=${runId};&quot;</span>
+<span class="nc" id="L90">        final def statement = &quot;SELECT * FROM runs WHERE runId=${runId};&quot;</span>
 <span class="nc" id="L91">        return sql.rows(statement)</span>
 <span class="nc" id="L92">    }</span>
 
@@ -121,7 +121,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc bnc" id="L121" title="All 2 branches missed.">        if( metaData == new MetaData() ) {</span>
 <span class="nc" id="L122">            return</span>
         }
-<span class="nc" id="L124">        sql.execute(&quot;&quot;&quot;insert into METADATA (runId,</span>
+<span class="nc" id="L124">        sql.execute(&quot;&quot;&quot;insert into metadata (runId,</span>
             startTime, parameters, workDir, container, user, manifest,
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
@@ -157,14 +157,14 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L157">    }</span>
 
     private Integer updateWeblogRunInfo(RunInfo runInfo){
-<span class="nc" id="L160">        sql.execute(&quot;&quot;&quot; update RUNS set lastEvent = ${runInfo.event.toString()}, \</span>
+<span class="nc" id="L160">        sql.execute(&quot;&quot;&quot; update runs set lastEvent = ${runInfo.event.toString()}, \</span>
                 lastRecord = ${runInfo.time} where runId = ${runInfo.id} and name = ${runInfo.name};&quot;&quot;&quot;)
 <span class="nc" id="L162">        def result = tryToFindWeblogEntryWithRunId(runInfo.id)</span>
 <span class="nc" id="L163">        return result[0].get('id') as Integer</span>
 <span class="nc" id="L164">    }</span>
 
     private Integer insertWeblogRunInfo(RunInfo runInfo) {
-<span class="nc" id="L167">        sql.execute(&quot;&quot;&quot;insert into RUNS (runId, name, lastEvent, lastRecord) values \</span>
+<span class="nc" id="L167">        sql.execute(&quot;&quot;&quot;insert into runs (runId, name, lastEvent, lastRecord) values \</span>
             ($runInfo.id,
             $runInfo.name,
 <span class="nc" id="L170">            ${runInfo.event.toString()},</span>
@@ -180,7 +180,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
 <span class="nc bnc" id="L181" title="All 2 branches missed.">        if( trace == new Trace() )</span>
 <span class="nc" id="L182">            return</span>
-<span class="nc" id="L183">        sql.execute(&quot;&quot;&quot;insert into TRACES (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \</span>
+<span class="nc" id="L183">        sql.execute(&quot;&quot;&quot;insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \</span>
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
@@ -215,7 +215,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L215">    }</span>
 
     private List&lt;MetaData&gt; findMetadataForRunWithForeignKey(Integer key) {
-<span class="nc" id="L218">        def result = sql.rows(&quot;SELECT * FROM METADATA WHERE RUNID=$key;&quot;)</span>
+<span class="nc" id="L218">        def result = sql.rows(&quot;SELECT * FROM metadata WHERE runId=$key;&quot;)</span>
 <span class="nc" id="L219">        List&lt;MetaData&gt; metadata = result.collect{ convertRowResultToMetadata(it) }</span>
 <span class="nc" id="L220">        return metadata</span>
 <span class="nc" id="L221">    }</span>
