@@ -4,10 +4,6 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
-import io.micronaut.context.annotation.Property
-import io.micronaut.context.annotation.Requires
-import io.micronaut.context.event.BeanCreatedEvent
-import io.micronaut.context.event.BeanCreatedEventListener
 import life.qbic.Constants
 import life.qbic.service.WeblogStorage
 import life.qbic.micronaututils.QBiCDataSource
@@ -19,7 +15,6 @@ import life.qbic.model.weblog.Trace
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.sql.Clob
-import java.sql.Connection
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -59,7 +54,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<Trace> findTracesForRunWithPrimaryKey(Integer key) {
-        def result = sql.rows("""SELECT * FROM WORKFLOWS.TRACES WHERE RUNID=$key;""")
+        def result = sql.rows("""SELECT * FROM traces WHERE RUNID=$key;""")
         List<Trace> traces = result.collect{ convertRowResultToTrace(it) }
         return traces
     }
@@ -92,7 +87,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<GroovyRowResult> tryToFindWeblogEntryWithRunId(String runId) {
-        final def statement = "SELECT * FROM WORKFLOWS.RUNS WHERE RUNID=${runId};"
+        final def statement = "SELECT * FROM RUNS WHERE RUNID=${runId};"
         return sql.rows(statement)
     }
 
@@ -126,7 +121,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         if( metaData == new MetaData() ) {
             return
         }
-        sql.execute("""insert into WORKFLOWS.METADATA (runId,
+        sql.execute("""insert into METADATA (runId,
             startTime, parameters, workDir, container, user, manifest,
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
@@ -162,14 +157,14 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private Integer updateWeblogRunInfo(RunInfo runInfo){
-        sql.execute(""" update WORKFLOWS.RUNS set lastEvent = ${runInfo.event.toString()}, \
+        sql.execute(""" update RUNS set lastEvent = ${runInfo.event.toString()}, \
                 lastRecord = ${runInfo.time} where runId = ${runInfo.id} and name = ${runInfo.name};""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
         return result[0].get('id') as Integer
     }
 
     private Integer insertWeblogRunInfo(RunInfo runInfo) {
-        sql.execute("""insert into WORKFLOWS.RUNS (runId, name, lastEvent, lastRecord) values \
+        sql.execute("""insert into RUNS (runId, name, lastEvent, lastRecord) values \
             ($runInfo.id,
             $runInfo.name,
             ${runInfo.event.toString()},
@@ -185,7 +180,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
         if( trace == new Trace() )
             return
-        sql.execute("""insert into WORKFLOWS.TRACES (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
+        sql.execute("""insert into TRACES (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
@@ -220,7 +215,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<MetaData> findMetadataForRunWithForeignKey(Integer key) {
-        def result = sql.rows("SELECT * FROM WORKFLOWS.METADATA WHERE RUNID=$key;")
+        def result = sql.rows("SELECT * FROM METADATA WHERE RUNID=$key;")
         List<MetaData> metadata = result.collect{ convertRowResultToMetadata(it) }
         return metadata
     }
@@ -263,30 +258,5 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     void close() throws Exception {
         sql.close()
         dataSource.connection.close()
-    }
-}
-
-
-@Requires(env="test")
-@Requires(property="database.schema-uri")
-@Singleton
-class DatabaseInit implements BeanCreatedEventListener<WeblogStorage> {
-
-    String schemaUri
-
-    DatabaseInit(@Property(name='database.schema-uri') schemaUri) {
-        this.schemaUri = schemaUri
-    }
-
-    WeblogStorage onCreated(BeanCreatedEvent<WeblogStorage> event) {
-        def sqlStatement = new File(schemaUri).text
-        MariaDBStorage storage = event.bean as MariaDBStorage
-        setupDatabase(storage.dataSource.connection, sqlStatement)
-        return event.bean
-    }
-
-    private static setupDatabase(Connection connection, String sqlStatement) {
-        Sql sql = new Sql(connection)
-        sql.execute(sqlStatement)
     }
 }

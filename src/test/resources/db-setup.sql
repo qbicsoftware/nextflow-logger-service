@@ -1,10 +1,7 @@
 
 DROP SCHEMA IF EXISTS `workflows` CASCADE ;
 
-CREATE SCHEMA IF NOT EXISTS `workflows`;
-USE `workflows` ;
-
-CREATE TABLE IF NOT EXISTS `workflows`.`runs` (
+CREATE TABLE IF NOT EXISTS `runs` (
   `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
   `runId` VARCHAR(36),
   `name` VARCHAR(45),
@@ -13,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `workflows`.`runs` (
   UNIQUE INDEX `runId_UNIQUE` (`runId` ASC))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `workflows`.`metadata` (
+CREATE TABLE IF NOT EXISTS `metadata` (
   `id` INT(11) AUTO_INCREMENT,
   `runId` INT(11),
   `startTime` DATETIME,
@@ -31,12 +28,12 @@ CREATE TABLE IF NOT EXISTS `workflows`.`metadata` (
   `errorMessage` CLOB,
   PRIMARY KEY (`id`),
     FOREIGN KEY (`runId`)
-    REFERENCES `workflows`.`runs` (`id`)
+    REFERENCES `runs` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `workflows`.`traces` (
+CREATE TABLE IF NOT EXISTS `traces` (
   `id` INT(11) AUTO_INCREMENT,
   `runId` INT(11),
   `taskId` INT(11),
@@ -52,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `workflows`.`traces` (
   `startTime` BIGINT,
   PRIMARY KEY (`id`),
     FOREIGN KEY (`runId`)
-    REFERENCES `workflows`.`runs` (`id`)
+    REFERENCES `runs` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
