@@ -59,7 +59,7 @@ class MessagesController {
 <span class="nc" id="L59">    }</span>
 
     @Get(&quot;/traces/{runId}&quot;)
-    HttpResponse&lt;Trace&gt; getTracesForWorkflow(String runId) {
+    HttpResponse&lt;List&lt;Trace&gt;&gt; getTracesForWorkflow(String runId) {
 <span class="nc bnc" id="L63" title="All 2 branches missed.">        log.debug(&quot;Traces request for runId: $runId.&quot;)</span>
 <span class="nc" id="L64">        List&lt;Trace&gt; traces</span>
         try {
@@ -68,13 +68,12 @@ class MessagesController {
 <span class="nc" id="L68">            log.error(e)</span>
 <span class="nc" id="L69">            return HttpResponse.serverError()</span>
 <span class="nc" id="L70">        }</span>
-<span class="nc" id="L71">        return HttpResponse.ok(traces.get(0))</span>
-        //traces ? HttpResponse.ok(traces) : HttpResponse.notFound()
-<span class="nc" id="L73">    }</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)</span>
+<span class="nc" id="L72">    }</span>
 
     static String serverErrorResponse() {
-<span class="nc" id="L76">        &quot;Unexpected error, resource could not be accessed.&quot;</span>
-<span class="nc" id="L77">    }</span>
+<span class="nc" id="L75">        &quot;Unexpected error, resource could not be accessed.&quot;</span>
+<span class="nc" id="L76">    }</span>
 
 
 }
