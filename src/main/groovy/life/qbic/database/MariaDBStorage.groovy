@@ -54,7 +54,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<Trace> findTracesForRunWithPrimaryKey(Integer key) {
-        def result = sql.rows("""SELECT * FROM traces WHERE RUNID=$key;""")
+        def result = sql.rows("""SELECT * FROM traces WHERE runId=$key;""")
         List<Trace> traces = result.collect{ convertRowResultToTrace(it) }
         return traces
     }
@@ -87,7 +87,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<GroovyRowResult> tryToFindWeblogEntryWithRunId(String runId) {
-        final def statement = "SELECT * FROM RUNS WHERE RUNID=${runId};"
+        final def statement = "SELECT * FROM runs WHERE runId=${runId};"
         return sql.rows(statement)
     }
 
@@ -121,7 +121,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         if( metaData == new MetaData() ) {
             return
         }
-        sql.execute("""insert into METADATA (runId,
+        sql.execute("""insert into metadata (runId,
             startTime, parameters, workDir, container, user, manifest,
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
@@ -157,14 +157,14 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private Integer updateWeblogRunInfo(RunInfo runInfo){
-        sql.execute(""" update RUNS set lastEvent = ${runInfo.event.toString()}, \
+        sql.execute(""" update runs set lastEvent = ${runInfo.event.toString()}, \
                 lastRecord = ${runInfo.time} where runId = ${runInfo.id} and name = ${runInfo.name};""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
         return result[0].get('id') as Integer
     }
 
     private Integer insertWeblogRunInfo(RunInfo runInfo) {
-        sql.execute("""insert into RUNS (runId, name, lastEvent, lastRecord) values \
+        sql.execute("""insert into runs (runId, name, lastEvent, lastRecord) values \
             ($runInfo.id,
             $runInfo.name,
             ${runInfo.event.toString()},
@@ -180,7 +180,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
         if( trace == new Trace() )
             return
-        sql.execute("""insert into TRACES (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
+        sql.execute("""insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
@@ -215,7 +215,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<MetaData> findMetadataForRunWithForeignKey(Integer key) {
-        def result = sql.rows("SELECT * FROM METADATA WHERE RUNID=$key;")
+        def result = sql.rows("SELECT * FROM metadata WHERE runId=$key;")
         List<MetaData> metadata = result.collect{ convertRowResultToMetadata(it) }
         return metadata
     }
