@@ -14,7 +14,7 @@ branches:
 before_install:
   - unset _JAVA_OPTIONS
   - wget http://repo2.maven.org/maven2/com/h2database/h2/1.4.199/h2-1.4.199.jar
-  - java -cp Downloads/h2*.jar org.h2.tools.RunScript -url jdbc:h2:$TRAVIS_BUILD_DIR/workflows -script $TRAVIS_BUILD_DIR/nxflogger/src/test/resources/db-setup.sql -user testuser
+  - java -cp $TRAVIS_BUILD_DIR/h2*.jar org.h2.tools.RunScript -url jdbc:h2:$TRAVIS_BUILD_DIR/workflows -script $TRAVIS_BUILD_DIR/nextflow-logger-service/src/test/resources/db-setup.sql -user testuser
   - export H2_PATH=$TRAVIS_BUILD_DIR
 install:
 - "$HOME/miniconda3/bin/conda --version || ./.install-reports-dependencies.sh"
