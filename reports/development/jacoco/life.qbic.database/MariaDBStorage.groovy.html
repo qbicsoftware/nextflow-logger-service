@@ -82,7 +82,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L82">            return weblogMessages</span>
 <span class="nc" id="L83">        } catch (Exception e) {</span>
 <span class="nc" id="L84">            sql.close()</span>
-<span class="nc" id="L85">            throw new WeblogStorageException(&quot;Could not query weblog message with run id $runId!&quot;, e)</span>
+<span class="nc" id="L85">            throw new WeblogStorageException(&quot;Could not query weblog message with run id $runId!&quot;, e.fillInStackTrace())</span>
 <span class="nc" id="L86">        }</span>
 <span class="nc" id="L87">    }</span>
 
@@ -171,7 +171,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             ${ runInfo.time });&quot;&quot;&quot;)
 <span class="nc" id="L172">        def result = tryToFindWeblogEntryWithRunId(runInfo.id)</span>
 <span class="nc bnc" id="L173" title="All 4 branches missed.">        if( !result ) {</span>
-<span class="nc" id="L174">            throw new WeblogStorageException(&quot;Insertion went wrong&quot;)</span>
+<span class="nc" id="L174">            throw new WeblogStorageException(&quot;Insertion went wrong!&quot;)</span>
         }
 <span class="nc" id="L176">        return result[0].get('id') as Integer</span>
 
@@ -201,7 +201,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc bnc" id="L201" title="All 4 branches missed.">            def result = tryToFetchMetadataForRun(id)</span>
 <span class="nc" id="L202">            return result</span>
 <span class="nc" id="L203">        } catch (Exception e) {</span>
-<span class="nc" id="L204">            throw new WeblogStorageException(&quot;Could not retrieve metadata information for run with id: $id&quot;, e)</span>
+<span class="nc" id="L204">            throw new WeblogStorageException(&quot;Could not retrieve metadata information for run with id: $id&quot;, e.fillInStackTrace())</span>
 <span class="nc" id="L205">        }</span>
 <span class="nc" id="L206">    }</span>
 
