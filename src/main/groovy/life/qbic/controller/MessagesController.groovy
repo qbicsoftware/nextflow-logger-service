@@ -39,6 +39,7 @@ class MessagesController {
             informationCenter.storeWeblogMessage(weblogMessage)
         } catch ( Exception e ) {
             log.error(e)
+            log.debug(e.printStackTrace())
             return HttpResponse.serverError("Unexpected error, resource could not be created.")
         }
         return HttpResponse.created(new URI("/workflows/info/${weblogMessage.runInfo.id}"))
