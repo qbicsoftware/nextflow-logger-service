@@ -188,7 +188,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             ${trace.'start'},
             ${trace.'submit'},
             "${trace.'name'}",
-            "${trace.'status'}"
+            "${trace.'status'}",
             ${trace.'exit'},
             ${trace.'attempt'},
             ${trace.'memory'},
