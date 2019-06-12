@@ -82,7 +82,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             return weblogMessages
         } catch (Exception e) {
             sql.close()
-            throw new WeblogStorageException("Could not query weblog message with run id $runId!", e)
+            throw new WeblogStorageException("Could not query weblog message with run id $runId!", e.fillInStackTrace())
         }
     }
 
@@ -171,7 +171,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             ${ runInfo.time });""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
         if( !result ) {
-            throw new WeblogStorageException("Insertion went wrong")
+            throw new WeblogStorageException("Insertion went wrong!")
         }
         return result[0].get('id') as Integer
 
@@ -201,7 +201,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             def result = tryToFetchMetadataForRun(id)
             return result
         } catch (Exception e) {
-            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id", e)
+            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id", e.fillInStackTrace())
         }
     }
 
