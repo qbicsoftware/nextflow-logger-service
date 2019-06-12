@@ -180,7 +180,20 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
 <span class="nc bnc" id="L181" title="All 2 branches missed.">        if( trace == new Trace() )</span>
 <span class="nc" id="L182">            return</span>
-<span class="nc" id="L183">        sql.execute(&quot;&quot;&quot;insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \</span>
+<span class="nc" id="L183">        println &quot;&quot;&quot;insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \</span>
+            (${trace.'task_id'},
+            $primaryKeyRun,
+            ${trace.'start'},
+            ${trace.'submit'},
+            ${trace.'name'},
+            ${trace.'status'},
+            ${trace.'exit'},
+            ${trace.'attempt'},
+            ${trace.'memory'},
+            ${trace.'cpus'},
+            ${trace.'queue'},
+            ${trace.'duration'});&quot;&quot;&quot;
+<span class="nc" id="L196">        sql.execute(&quot;&quot;&quot;insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \</span>
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
@@ -193,71 +206,71 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             ${trace.'cpus'},
             ${trace.'queue'},
             ${trace.'duration'});&quot;&quot;&quot;)
-<span class="nc" id="L196">    }</span>
+<span class="nc" id="L209">    }</span>
 
     List&lt;MetaData&gt; findMetadataForRunWithId(String id) {
-<span class="nc" id="L199">        sql = new Sql(dataSource.connection)</span>
-<span class="nc" id="L200">        try {</span>
-<span class="nc bnc" id="L201" title="All 4 branches missed.">            def result = tryToFetchMetadataForRun(id)</span>
-<span class="nc" id="L202">            return result</span>
-<span class="nc" id="L203">        } catch (Exception e) {</span>
-<span class="nc" id="L204">            throw new WeblogStorageException(&quot;Could not retrieve metadata information for run with id: $id&quot;, e.fillInStackTrace())</span>
-<span class="nc" id="L205">        }</span>
-<span class="nc" id="L206">    }</span>
+<span class="nc" id="L212">        sql = new Sql(dataSource.connection)</span>
+<span class="nc" id="L213">        try {</span>
+<span class="nc bnc" id="L214" title="All 4 branches missed.">            def result = tryToFetchMetadataForRun(id)</span>
+<span class="nc" id="L215">            return result</span>
+<span class="nc" id="L216">        } catch (Exception e) {</span>
+<span class="nc" id="L217">            throw new WeblogStorageException(&quot;Could not retrieve metadata information for run with id: $id&quot;, e.fillInStackTrace())</span>
+<span class="nc" id="L218">        }</span>
+<span class="nc" id="L219">    }</span>
 
     private List&lt;MetaData&gt; tryToFetchMetadataForRun(String runId) {
-<span class="nc bnc" id="L209" title="All 4 branches missed.">        def resultRows = tryToFindWeblogEntryWithRunId(runId)</span>
-<span class="nc bnc" id="L210" title="All 2 branches missed.">        if( resultRows.size() &gt; 1 ) {</span>
-<span class="nc" id="L211">            throw new WeblogStorageException(&quot;More than one run found for id $runId!. Expected unique result.&quot;)</span>
+<span class="nc bnc" id="L222" title="All 4 branches missed.">        def resultRows = tryToFindWeblogEntryWithRunId(runId)</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if( resultRows.size() &gt; 1 ) {</span>
+<span class="nc" id="L224">            throw new WeblogStorageException(&quot;More than one run found for id $runId!. Expected unique result.&quot;)</span>
         }
-<span class="nc" id="L213">        def primaryKeyRun = resultRows.get(0)[&quot;ID&quot;] as Integer</span>
-<span class="nc" id="L214">        return findMetadataForRunWithForeignKey(primaryKeyRun)</span>
-<span class="nc" id="L215">    }</span>
+<span class="nc" id="L226">        def primaryKeyRun = resultRows.get(0)[&quot;ID&quot;] as Integer</span>
+<span class="nc" id="L227">        return findMetadataForRunWithForeignKey(primaryKeyRun)</span>
+<span class="nc" id="L228">    }</span>
 
     private List&lt;MetaData&gt; findMetadataForRunWithForeignKey(Integer key) {
-<span class="nc" id="L218">        def result = sql.rows(&quot;SELECT * FROM metadata WHERE runId=$key;&quot;)</span>
-<span class="nc" id="L219">        List&lt;MetaData&gt; metadata = result.collect{ convertRowResultToMetadata(it) }</span>
-<span class="nc" id="L220">        return metadata</span>
-<span class="nc" id="L221">    }</span>
+<span class="nc" id="L231">        def result = sql.rows(&quot;SELECT * FROM metadata WHERE runId=$key;&quot;)</span>
+<span class="nc" id="L232">        List&lt;MetaData&gt; metadata = result.collect{ convertRowResultToMetadata(it) }</span>
+<span class="nc" id="L233">        return metadata</span>
+<span class="nc" id="L234">    }</span>
 
     private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
-<span class="nc" id="L224">        def slurper = new JsonSlurper()</span>
-<span class="nc bnc" id="L225" title="All 4 branches missed.">        def workflow = [</span>
-<span class="nc" id="L226">                'start': toUTCTime(rowResult.get('STARTTIME') as String),</span>
-<span class="nc" id="L227">                'workDir': rowResult.get('WORKDIR'),</span>
-<span class="nc" id="L228">                'container': rowResult.get('CONTAINER'),</span>
-<span class="nc" id="L229">                'userName': rowResult.get('USER'),</span>
-<span class="nc" id="L230">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') as Clob)),</span>
-<span class="nc" id="L231">                'revision': rowResult.get('REVISION'),</span>
-<span class="nc" id="L232">                'duration': rowResult.get('DURATION'),</span>
-<span class="nc" id="L233">                'success': rowResult.get('SUCCESS'),</span>
-<span class="nc" id="L234">                'resume': rowResult.get('RESUME'),</span>
-<span class="nc" id="L235">                'model': ['version': rowResult.get('NEXTFLOWVERSION')],</span>
-<span class="nc" id="L236">                'exitStatus': rowResult.get('EXITSTATUS'),</span>
-<span class="nc" id="L237">                'errorMessage': rowResult.get('ERRORMESSAGE')</span>
+<span class="nc" id="L237">        def slurper = new JsonSlurper()</span>
+<span class="nc bnc" id="L238" title="All 4 branches missed.">        def workflow = [</span>
+<span class="nc" id="L239">                'start': toUTCTime(rowResult.get('STARTTIME') as String),</span>
+<span class="nc" id="L240">                'workDir': rowResult.get('WORKDIR'),</span>
+<span class="nc" id="L241">                'container': rowResult.get('CONTAINER'),</span>
+<span class="nc" id="L242">                'userName': rowResult.get('USER'),</span>
+<span class="nc" id="L243">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') as Clob)),</span>
+<span class="nc" id="L244">                'revision': rowResult.get('REVISION'),</span>
+<span class="nc" id="L245">                'duration': rowResult.get('DURATION'),</span>
+<span class="nc" id="L246">                'success': rowResult.get('SUCCESS'),</span>
+<span class="nc" id="L247">                'resume': rowResult.get('RESUME'),</span>
+<span class="nc" id="L248">                'model': ['version': rowResult.get('NEXTFLOWVERSION')],</span>
+<span class="nc" id="L249">                'exitStatus': rowResult.get('EXITSTATUS'),</span>
+<span class="nc" id="L250">                'errorMessage': rowResult.get('ERRORMESSAGE')</span>
         ]
 
 
-<span class="nc" id="L241">        return new MetaData([</span>
-<span class="nc" id="L242">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') as Clob)),</span>
+<span class="nc" id="L254">        return new MetaData([</span>
+<span class="nc" id="L255">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') as Clob)),</span>
                 'workflow': workflow
         ])
-<span class="nc" id="L245">    }</span>
+<span class="nc" id="L258">    }</span>
 
     private static String parseClob(Clob clob) {
-<span class="nc" id="L248">        Reader reader = clob.getCharacterStream()</span>
-<span class="nc" id="L249">        return reader.getText()</span>
-<span class="nc" id="L250">    }</span>
+<span class="nc" id="L261">        Reader reader = clob.getCharacterStream()</span>
+<span class="nc" id="L262">        return reader.getText()</span>
+<span class="nc" id="L263">    }</span>
 
     private static String toUTCTime(String timestamp) {
-<span class="nc" id="L253">        Date parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L254">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L255">    }</span>
+<span class="nc" id="L266">        Date parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L267">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L268">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L259">        sql.close()</span>
-<span class="nc" id="L260">        dataSource.connection.close()</span>
-<span class="nc" id="L261">    }</span>
+<span class="nc" id="L272">        sql.close()</span>
+<span class="nc" id="L273">        dataSource.connection.close()</span>
+<span class="nc" id="L274">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
