@@ -107,7 +107,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L107">            sql.close()</span>
 <span class="nc" id="L108">        } catch (Exception e) {</span>
 <span class="nc" id="L109">            sql.close()</span>
-<span class="nc" id="L110">            throw new WeblogStorageException(&quot;Could not store weblog message: $message&quot;, e)</span>
+<span class="nc" id="L110">            throw new WeblogStorageException(&quot;Could not store weblog message: $message&quot;, e.fillInStackTrace())</span>
 <span class="nc" id="L111">        }</span>
 <span class="nc" id="L112">    }</span>
 
