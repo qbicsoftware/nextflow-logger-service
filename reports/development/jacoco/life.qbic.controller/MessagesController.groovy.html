@@ -35,7 +35,7 @@ class MessagesController {
 <span class="nc" id="L35">        WeblogMessage weblogMessage</span>
         try {
 <span class="nc" id="L37">            weblogMessage = WeblogMessage.createFromJson(message)</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">            log.debug(&quot;Incoming weblog message with for run id: ${weblogMessage.runInfo.id}&quot;)</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            log.info(&quot;Incoming weblog message with for run id: ${weblogMessage.runInfo.id}&quot;)</span>
 <span class="nc" id="L39">            informationCenter.storeWeblogMessage(weblogMessage)</span>
 <span class="nc" id="L40">        } catch ( Exception e ) {</span>
 <span class="nc" id="L41">            log.error(e)</span>
@@ -47,7 +47,7 @@ class MessagesController {
 
     @Get(&quot;/info/{runId}&quot;)
     HttpResponse getBasicWorkflowInformation(String runId) {
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        log.debug(&quot;Resource request for runId: $runId.&quot;)</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        log.info(&quot;Resource request for runId: $runId.&quot;)</span>
 
 <span class="nc" id="L52">        List&lt;RunInfo&gt; runInfoList</span>
         try {
@@ -61,7 +61,7 @@ class MessagesController {
 
     @Get(&quot;/traces/{runId}&quot;)
     HttpResponse&lt;List&lt;Trace&gt;&gt; getTracesForWorkflow(String runId) {
-<span class="nc bnc" id="L64" title="All 2 branches missed.">        log.debug(&quot;Traces request for runId: $runId.&quot;)</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        log.info(&quot;Traces request for runId: $runId.&quot;)</span>
 <span class="nc" id="L65">        List&lt;Trace&gt; traces</span>
         try {
 <span class="nc" id="L67">            traces = informationCenter.getTracesForWorkflowWithId(runId)</span>
