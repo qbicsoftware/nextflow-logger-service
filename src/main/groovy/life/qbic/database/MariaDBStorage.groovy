@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
+import groovy.util.logging.Log4j2
 import life.qbic.Constants
 import life.qbic.service.WeblogStorage
 import life.qbic.micronaututils.QBiCDataSource
@@ -18,6 +19,7 @@ import java.sql.Clob
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
+@Log4j2
 @Singleton
 class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
@@ -180,7 +182,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
         if( trace == new Trace() )
             return
-        println """insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
+        log.debug """insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
