@@ -182,27 +182,14 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
         if( trace == new Trace() )
             return
-        log.debug """insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
-            (${trace.'task_id'},
-            $primaryKeyRun,
-            ${trace.'start'},
-            ${trace.'submit'},
-            ${trace.'name'},
-            ${trace.'status'},
-            ${trace.'exit'},
-            ${trace.'attempt'},
-            ${trace.'memory'},
-            ${trace.'cpus'},
-            ${trace.'queue'},
-            ${trace.'duration'});"""
         sql.execute("""insert into traces (taskId, runId, startTime, submissionTime, name, status, exit, attempt, memory, cpus, queue, duration) values \
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
             ${trace.'submit'},
             ${trace.'name'},
-            ${trace.'status'},
-            ${trace.'exit'},
+            `${trace.'status'}`,
+            `${trace.'exit'}`,
             ${trace.'attempt'},
             ${trace.'memory'},
             ${trace.'cpus'},
