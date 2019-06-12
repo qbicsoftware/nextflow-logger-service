@@ -35,7 +35,7 @@ class MessagesController {
         WeblogMessage weblogMessage
         try {
             weblogMessage = WeblogMessage.createFromJson(message)
-            log.debug("Incoming weblog message with for run id: ${weblogMessage.runInfo.id}")
+            log.info("Incoming weblog message with for run id: ${weblogMessage.runInfo.id}")
             informationCenter.storeWeblogMessage(weblogMessage)
         } catch ( Exception e ) {
             log.error(e)
@@ -47,7 +47,7 @@ class MessagesController {
 
     @Get("/info/{runId}")
     HttpResponse getBasicWorkflowInformation(String runId) {
-        log.debug("Resource request for runId: $runId.")
+        log.info("Resource request for runId: $runId.")
 
         List<RunInfo> runInfoList
         try {
@@ -61,7 +61,7 @@ class MessagesController {
 
     @Get("/traces/{runId}")
     HttpResponse<List<Trace>> getTracesForWorkflow(String runId) {
-        log.debug("Traces request for runId: $runId.")
+        log.info("Traces request for runId: $runId.")
         List<Trace> traces
         try {
             traces = informationCenter.getTracesForWorkflowWithId(runId)

@@ -39,7 +39,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             def result = tryToFetchTracesForRun(id)
             return result
         } catch (Exception e) {
-            throw new WeblogStorageException("Could not fetch trace information for run with id $id.", e)
+            throw new WeblogStorageException("Could not fetch trace information for run with id $id.", e.fillInStackTrace())
         }
     }
 
