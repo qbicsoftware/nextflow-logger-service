@@ -252,14 +252,16 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L252">    }</span>
 
     private static String toUTCTime(String timestamp) {
-<span class="nc" id="L255">        Date parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L256">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L257">    }</span>
+<span class="nc" id="L255">        log.info(timestamp)</span>
+<span class="nc" id="L256">        Date parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L257">        log.info(parsedDate)</span>
+<span class="nc" id="L258">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L259">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L261">        sql.close()</span>
-<span class="nc" id="L262">        dataSource.connection.close()</span>
-<span class="nc" id="L263">    }</span>
+<span class="nc" id="L263">        sql.close()</span>
+<span class="nc" id="L264">        dataSource.connection.close()</span>
+<span class="nc" id="L265">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
