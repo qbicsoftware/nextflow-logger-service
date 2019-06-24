@@ -89,7 +89,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private List<GroovyRowResult> tryToFindWeblogEntryWithRunId(String runId) {
-        final def statement = "SELECT * FROM runs WHERE runId=${runId};"
+        final def statement = "SELECT * FROM runs WHERE runId='${runId}';"
         return sql.rows(statement)
     }
 
@@ -203,7 +203,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             def result = tryToFetchMetadataForRun(id)
             return result
         } catch (Exception e) {
-            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id", e.fillInStackTrace())
+            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id. Reason: $e", e.fillInStackTrace())
         }
     }
 
