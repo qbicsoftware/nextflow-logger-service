@@ -84,7 +84,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             return weblogMessages
         } catch (Exception e) {
             sql.close()
-            throw new WeblogStorageException("Could not query weblog message with run id $runId!", e.fillInStackTrace())
+            throw new WeblogStorageException("Could not query weblog message with run id $runId! Reason: $e", e.fillInStackTrace())
         }
     }
 
