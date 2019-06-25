@@ -23,9 +23,9 @@ import java.text.SimpleDateFormat
 @Singleton
 class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
-    private final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private static final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    private final DateFormat utcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private static final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)
 
     private QBiCDataSource dataSource
 
@@ -93,7 +93,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         return sql.rows(statement)
     }
 
-    private RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
+    private static RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
         RunInfo info = new RunInfo()
         info.id = rowResult.get("RUNID")
         info.status = rowResult.get("LASTEVENT" )
@@ -256,13 +256,13 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         return reader.getText()
     }
 
-    private String toUTCTime(String timestamp) {
+    private static String toUTCTime(String timestamp) {
         log.info(timestamp)
         def parsedDate = databaseDateFormat.parse(timestamp)
         log.info(parsedDate)
         log.info(parsedDate.class)
-        log.info(parsedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'"))
-        return parsedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))
+        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
     }
 
     @Override
