@@ -98,8 +98,8 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L98">        info.id = rowResult.get(&quot;RUNID&quot;)</span>
 <span class="nc" id="L99">        info.status = rowResult.get(&quot;LASTEVENT&quot; )</span>
 <span class="nc" id="L100">        info.name = rowResult.get(&quot;NAME&quot;)</span>
-<span class="nc" id="L101">        println rowResult.get(&quot;LASTRECORD&quot;)</span>
-<span class="nc bnc" id="L102" title="All 4 branches missed.">        utcDateFormat.parse(toUTCTime(rowResult.get(&quot;LASTRECORD&quot;) as String))</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        log.info rowResult.get(&quot;LASTRECORD&quot;)</span>
+<span class="nc bnc" id="L102" title="All 8 branches missed.">        log.info utcDateFormat.parse(toUTCTime(rowResult.get(&quot;LASTRECORD&quot;) as String))</span>
 <span class="nc bnc" id="L103" title="All 4 branches missed.">        info.time = utcDateFormat.parse(toUTCTime(rowResult.get(&quot;LASTRECORD&quot;) as String))</span>
 <span class="nc" id="L104">        return info</span>
 <span class="nc" id="L105">    }</span>
