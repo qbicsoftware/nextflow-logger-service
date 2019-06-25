@@ -23,9 +23,9 @@ import java.text.SimpleDateFormat
 @Singleton
 class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
-<span class="nc" id="L26">    private static final DateFormat databaseDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;)</span>
+<span class="nc" id="L26">    private final DateFormat databaseDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;)</span>
 
-<span class="nc" id="L28">    private static final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L28">    private final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)</span>
 
     private QBiCDataSource dataSource
 
@@ -93,7 +93,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L93">        return sql.rows(statement)</span>
 <span class="nc" id="L94">    }</span>
 
-    private static RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
+    private RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
 <span class="nc" id="L97">        RunInfo info = new RunInfo()</span>
 <span class="nc" id="L98">        info.id = rowResult.get(&quot;RUNID&quot;)</span>
 <span class="nc" id="L99">        info.status = rowResult.get(&quot;LASTEVENT&quot; )</span>
@@ -229,7 +229,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
 <span class="nc" id="L231">        def slurper = new JsonSlurper()</span>
-<span class="nc bnc" id="L232" title="All 4 branches missed.">        def workflow = [</span>
+<span class="nc" id="L232">        def workflow = [</span>
 <span class="nc" id="L233">                'start': toUTCTime(rowResult.get('STARTTIME') as String),</span>
 <span class="nc" id="L234">                'workDir': rowResult.get('WORKDIR'),</span>
 <span class="nc" id="L235">                'container': rowResult.get('CONTAINER'),</span>
@@ -256,19 +256,20 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L256">        return reader.getText()</span>
 <span class="nc" id="L257">    }</span>
 
-    static def toUTCTime(String timestamp) {
+    private String toUTCTime(String timestamp) {
 <span class="nc" id="L260">        log.info(timestamp)</span>
 <span class="nc" id="L261">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
 <span class="nc" id="L262">        log.info(parsedDate)</span>
 <span class="nc bnc" id="L263" title="All 2 branches missed.">        log.info(parsedDate.class)</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))</span>
-<span class="nc" id="L265">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L266">    }</span>
+<span class="nc" id="L264">        parsedDate.format()</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))</span>
+<span class="nc" id="L266">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L267">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L270">        sql.close()</span>
-<span class="nc" id="L271">        dataSource.connection.close()</span>
-<span class="nc" id="L272">    }</span>
+<span class="nc" id="L271">        sql.close()</span>
+<span class="nc" id="L272">        dataSource.connection.close()</span>
+<span class="nc" id="L273">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
