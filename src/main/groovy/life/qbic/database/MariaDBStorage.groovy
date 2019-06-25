@@ -101,6 +101,8 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         log.info rowResult.get("LASTRECORD")
         log.info utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         info.time = utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
+        log.info "again"
+        log.info utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         return info
     }
 
