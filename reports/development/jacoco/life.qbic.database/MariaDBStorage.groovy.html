@@ -262,8 +262,8 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L262">        log.info(parsedDate)</span>
 <span class="nc bnc" id="L263" title="All 2 branches missed.">        log.info(parsedDate.class)</span>
 <span class="nc" id="L264">        parsedDate.format()</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))</span>
-<span class="nc" id="L266">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        log.info(parsedDate.format(&quot;yyyy-MM-dd'T'HH:mm:ss'Z'&quot;))</span>
+<span class="nc" id="L266">        return parsedDate.format(&quot;yyyy-MM-dd'T'HH:mm:ss'Z'&quot;)</span>
 <span class="nc" id="L267">    }</span>
 
     @Override
