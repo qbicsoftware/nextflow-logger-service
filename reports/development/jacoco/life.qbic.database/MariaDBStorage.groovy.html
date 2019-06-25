@@ -258,7 +258,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static String toUTCTime(String timestamp) {
 <span class="nc" id="L260">        log.info(timestamp)</span>
-<span class="nc" id="L261">        Date parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L261">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
 <span class="nc" id="L262">        log.info(parsedDate)</span>
 <span class="nc bnc" id="L263" title="All 2 branches missed.">        log.info(parsedDate.class)</span>
 <span class="nc bnc" id="L264" title="All 2 branches missed.">        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))</span>
