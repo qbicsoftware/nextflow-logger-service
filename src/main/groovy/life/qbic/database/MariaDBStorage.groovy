@@ -261,7 +261,6 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         def parsedDate = databaseDateFormat.parse(timestamp)
         log.info(parsedDate)
         log.info(parsedDate.class)
-        parsedDate.format()
         log.info(parsedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'"))
         return parsedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
     }
