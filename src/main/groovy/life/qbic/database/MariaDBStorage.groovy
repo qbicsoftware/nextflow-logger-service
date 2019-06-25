@@ -262,8 +262,8 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         log.info(parsedDate)
         log.info(parsedDate.class)
         parsedDate.format()
-        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))
-        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
+        log.info(parsedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'"))
+        return parsedDate.format("yyyy-MM-dd'T'HH:mm:ss'Z'")
     }
 
     @Override
