@@ -25,7 +25,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    private final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)
+    private final DateFormat utcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     private QBiCDataSource dataSource
 
