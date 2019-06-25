@@ -8,7 +8,6 @@
   <artifactId>nxflogger</artifactId>
   <version>0.1-SNAPSHOT</version>
   <properties>
-    <micronaut.version>1.1.2</micronaut.version>
     <jdk.version>1.8</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <exec.mainClass>life.qbic.Application</exec.mainClass>
@@ -151,17 +150,6 @@
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-junit5</artifactId>
       <scope>test</scope>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/io.micronaut/micronaut-management -->
-    <dependency>
-      <groupId>io.micronaut</groupId>
-      <artifactId>micronaut-management</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>life.qbic</groupId>
-      <artifactId>micronaut-utils-lib</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
