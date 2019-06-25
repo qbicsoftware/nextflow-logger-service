@@ -256,7 +256,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         return reader.getText()
     }
 
-    private static String toUTCTime(String timestamp) {
+    static def toUTCTime(String timestamp) {
         log.info(timestamp)
         def parsedDate = databaseDateFormat.parse(timestamp)
         log.info(parsedDate)
