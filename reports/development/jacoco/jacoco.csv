@@ -13,7 +13,7 @@ nxflogger,life.qbic,Application,17,0,0,0,2,0,2,0,2,0
 nxflogger,life.qbic.service,WorkflowInformationCenter,75,0,0,0,10,0,5,0,5,0
 nxflogger,life.qbic.controller,MessagesController,464,0,16,0,34,0,14,0,6,0
 nxflogger,life.qbic.database,MariaDBStorage._findTracesForRunWithPrimaryKey_closure1,18,0,0,0,1,0,2,0,2,0
-nxflogger,life.qbic.database,MariaDBStorage,2535,0,68,0,153,0,58,0,24,0
+nxflogger,life.qbic.database,MariaDBStorage,2529,0,68,0,152,0,58,0,24,0
 nxflogger,life.qbic.database,MariaDBStorage._findRunWithRunId_closure2,18,0,0,0,1,0,2,0,2,0
 nxflogger,life.qbic.database,WeblogStorageException,135,0,6,0,6,0,8,0,3,0
 nxflogger,life.qbic.database,MariaDBStorage._findMetadataForRunWithForeignKey_closure3,18,0,0,0,1,0,2,0,2,0
