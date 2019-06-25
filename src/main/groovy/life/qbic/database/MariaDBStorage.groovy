@@ -99,6 +99,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         info.status = rowResult.get("LASTEVENT" )
         info.name = rowResult.get("NAME")
         log.info rowResult.get("LASTRECORD")
+        log.info toUTCTime(rowResult.get("LASTRECORD") as String)
         log.info utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         info.time = utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         log.info "again"
