@@ -253,19 +253,14 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L253">    }</span>
 
     private static String toUTCTime(String timestamp) {
-<span class="nc" id="L256">        log.info(timestamp)</span>
-<span class="nc" id="L257">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L258">        log.info(parsedDate)</span>
-<span class="nc bnc" id="L259" title="All 2 branches missed.">        log.info(parsedDate.class)</span>
-<span class="nc bnc" id="L260" title="All 2 branches missed.">        log.info DateGroovyMethods.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc bnc" id="L261" title="All 2 branches missed.">        log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))</span>
-<span class="nc" id="L262">        return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L263">    }</span>
+<span class="nc" id="L256">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L257">        return DateGroovyMethods.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L258">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L267">        sql.close()</span>
-<span class="nc" id="L268">        dataSource.connection.close()</span>
-<span class="nc" id="L269">    }</span>
+<span class="nc" id="L262">        sql.close()</span>
+<span class="nc" id="L263">        dataSource.connection.close()</span>
+<span class="nc" id="L264">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
