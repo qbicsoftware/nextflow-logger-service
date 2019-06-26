@@ -255,6 +255,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static String toUTCTime(String timestamp) {
         def parsedDate = databaseDateFormat.parse(timestamp)
+        log.info parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
         return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)
     }
 
