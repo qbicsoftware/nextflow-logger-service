@@ -12,6 +12,7 @@ import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
+import org.codehaus.groovy.runtime.DateGroovyMethods
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -256,7 +257,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         def parsedDate = databaseDateFormat.parse(timestamp)
         log.info(parsedDate)
         log.info(parsedDate.class)
-        log.info parsedDate.class.metaPropertyValues.toString()
+        log.info DateGroovyMethods.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT))
         log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))
         return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
     }
