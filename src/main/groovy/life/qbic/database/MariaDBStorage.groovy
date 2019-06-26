@@ -98,12 +98,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         info.id = rowResult.get("RUNID")
         info.status = rowResult.get("LASTEVENT" )
         info.name = rowResult.get("NAME")
-        log.info rowResult.get("LASTRECORD")
-        log.info toUTCTime(rowResult.get("LASTRECORD") as String)
-        log.info utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         info.time = utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
-        log.info "again"
-        log.info utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         return info
     }
 
@@ -261,6 +256,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         def parsedDate = databaseDateFormat.parse(timestamp)
         log.info(parsedDate)
         log.info(parsedDate.class)
+        log.info parsedDate.class.metaPropertyValues.toString()
         log.info(parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT))
         return parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)
     }
