@@ -12,6 +12,7 @@ import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
+import org.apache.groovy.dateutil.extensions.DateUtilExtensions
 import org.codehaus.groovy.runtime.DateGroovyMethods
 
 import javax.inject.Inject
@@ -254,7 +255,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static String toUTCTime(String timestamp) {
         def parsedDate = databaseDateFormat.parse(timestamp)
-        return DateGroovyMethods.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)
+        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)
     }
 
     @Override
