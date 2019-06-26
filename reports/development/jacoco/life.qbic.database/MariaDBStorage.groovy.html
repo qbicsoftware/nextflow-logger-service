@@ -255,13 +255,14 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static String toUTCTime(String timestamp) {
 <span class="nc" id="L257">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L258">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L259">    }</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        log.info parsedDate.format(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L259">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L260">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L263">        sql.close()</span>
-<span class="nc" id="L264">        dataSource.connection.close()</span>
-<span class="nc" id="L265">    }</span>
+<span class="nc" id="L264">        sql.close()</span>
+<span class="nc" id="L265">        dataSource.connection.close()</span>
+<span class="nc" id="L266">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
