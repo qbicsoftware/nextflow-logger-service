@@ -248,22 +248,25 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L248">    }</span>
 
     private static String parseClob(Clob clob) {
-<span class="nc bnc" id="L251" title="All 4 branches missed.">        if (!clob.getClass() instanceof Clob){</span>
-<span class="nc" id="L252">            return clob</span>
+<span class="nc bnc" id="L251" title="All 4 branches missed.">        if (! clob) {</span>
+<span class="nc" id="L252">            return &quot;&quot;</span>
         }
-<span class="nc" id="L254">        Reader reader = clob.getCharacterStream()</span>
-<span class="nc" id="L255">        return reader.getText()</span>
-<span class="nc" id="L256">    }</span>
+<span class="nc bnc" id="L254" title="All 4 branches missed.">        if (!clob.getClass() instanceof Clob){</span>
+<span class="nc" id="L255">            return clob</span>
+        }
+<span class="nc" id="L257">        Reader reader = clob.getCharacterStream()</span>
+<span class="nc" id="L258">        return reader.getText()</span>
+<span class="nc" id="L259">    }</span>
 
     private static String toUTCTime(String timestamp) {
-<span class="nc" id="L259">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L260">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L261">    }</span>
+<span class="nc" id="L262">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L263">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L264">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L265">        sql.close()</span>
-<span class="nc" id="L266">        dataSource.connection.close()</span>
-<span class="nc" id="L267">    }</span>
+<span class="nc" id="L268">        sql.close()</span>
+<span class="nc" id="L269">        dataSource.connection.close()</span>
+<span class="nc" id="L270">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
