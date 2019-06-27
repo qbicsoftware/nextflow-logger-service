@@ -10,10 +10,10 @@ nxflogger,life.qbic.model,WeblogMessage._withRunAndMetadataInfo_closure3,24,63,0
 nxflogger,life.qbic.model,WeblogMessage._createFromJson_closure1,10,68,0,0,1,3,1,2,1,2
 nxflogger,life.qbic,Contact,135,0,0,0,10,0,2,0,2,0
 nxflogger,life.qbic,Application,17,0,0,0,2,0,2,0,2,0
-nxflogger,life.qbic.service,WorkflowInformationCenter,75,0,0,0,10,0,5,0,5,0
-nxflogger,life.qbic.controller,MessagesController,464,0,16,0,34,0,14,0,6,0
+nxflogger,life.qbic.service,WorkflowInformationCenter,81,0,0,0,10,0,5,0,5,0
+nxflogger,life.qbic.controller,MessagesController,572,0,20,0,43,0,17,0,7,0
 nxflogger,life.qbic.database,MariaDBStorage._findTracesForRunWithPrimaryKey_closure1,18,0,0,0,1,0,2,0,2,0
-nxflogger,life.qbic.database,MariaDBStorage,2461,0,44,0,144,0,46,0,24,0
+nxflogger,life.qbic.database,MariaDBStorage,2436,0,42,0,143,0,45,0,24,0
 nxflogger,life.qbic.database,MariaDBStorage._findRunWithRunId_closure2,18,0,0,0,1,0,2,0,2,0
 nxflogger,life.qbic.database,WeblogStorageException,135,0,6,0,6,0,8,0,3,0
 nxflogger,life.qbic.database,MariaDBStorage._findMetadataForRunWithForeignKey_closure3,18,0,0,0,1,0,2,0,2,0

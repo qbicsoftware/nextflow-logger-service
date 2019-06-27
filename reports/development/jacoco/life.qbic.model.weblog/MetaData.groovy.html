@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaData.groovy</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nxflogger</a> &gt; <a href="index.source.html" class="el_package">life.qbic.model.weblog</a> &gt; <span class="el_source">MetaData.groovy</span></div><h1>MetaData.groovy</h1><pre class="source lang-java linenums">package life.qbic.model.weblog
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode()
 class MetaData {
 
+    @JsonProperty('metadata')
     private final Map metadata
 
     MetaData() {
-<span class="fc" id="L11">        metadata = [:].asImmutable()</span>
-<span class="fc" id="L12">    }</span>
+<span class="fc" id="L13">        metadata = [:].asImmutable()</span>
+<span class="fc" id="L14">    }</span>
 
     MetaData(Map metadata){
-<span class="fc" id="L15">        this.metadata = metadata.asImmutable()</span>
-<span class="fc" id="L16">    }</span>
+<span class="fc" id="L17">        this.metadata = metadata.asImmutable()</span>
+<span class="fc" id="L18">    }</span>
 
     @Override
     Object getProperty(String s) {
-<span class="fc" id="L20">        return this.metadata.get(s)</span>
-<span class="nc" id="L21">    }</span>
+<span class="fc" id="L22">        return this.metadata.get(s)</span>
+<span class="nc" id="L23">    }</span>
 
     @Override
     boolean equals(Object o) {
-<span class="pc bpc" id="L25" title="2 of 4 branches missed.">        if( !o instanceof MetaData ) {</span>
-<span class="nc" id="L26">            return false</span>
+<span class="pc bpc" id="L27" title="2 of 4 branches missed.">        if( !o instanceof MetaData ) {</span>
+<span class="nc" id="L28">            return false</span>
         }
-<span class="fc" id="L28">        def trace = o as MetaData</span>
-<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        for( String key in this.metadata.keySet() ) {</span>
-<span class="nc" id="L30">            def thisProperty = this.getProperty(key)</span>
-<span class="nc" id="L31">            def otherProperty = trace.getProperty(key)</span>
-<span class="nc bnc" id="L32" title="All 8 branches missed.">            if( ! otherProperty || ( otherProperty != thisProperty ) ) {</span>
-<span class="nc" id="L33">                return false</span>
+<span class="fc" id="L30">        def trace = o as MetaData</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        for( String key in this.metadata.keySet() ) {</span>
+<span class="nc" id="L32">            def thisProperty = this.getProperty(key)</span>
+<span class="nc" id="L33">            def otherProperty = trace.getProperty(key)</span>
+<span class="nc bnc" id="L34" title="All 8 branches missed.">            if( ! otherProperty || ( otherProperty != thisProperty ) ) {</span>
+<span class="nc" id="L35">                return false</span>
             }
-<span class="nc" id="L35">        }</span>
-<span class="fc" id="L36">        return true</span>
-<span class="nc" id="L37">    }</span>
+<span class="nc" id="L37">        }</span>
+<span class="fc" id="L38">        return true</span>
+<span class="nc" id="L39">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
