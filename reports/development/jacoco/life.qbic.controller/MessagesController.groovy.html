@@ -73,7 +73,7 @@ class MessagesController {
 <span class="nc bnc" id="L73" title="All 2 branches missed.">        traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)</span>
 <span class="nc" id="L74">    }</span>
 
-    @Get(&quot;/metadata/{runId}&quot;)
+    @Get(&quot;/metainfo/{runId}&quot;)
     HttpResponse&lt;List&lt;MetaData&gt;&gt; getMetaDataForWorkflow(String runId) {
 <span class="nc bnc" id="L78" title="All 2 branches missed.">        log.info(&quot;Metadata request for runId: $runId.&quot;)</span>
 <span class="nc" id="L79">        List&lt;MetaData&gt; metaData</span>
