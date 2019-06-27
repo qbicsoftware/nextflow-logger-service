@@ -248,7 +248,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private static String parseClob(Clob clob) {
-        if (clob.getClass() instanceof String){
+        if (!clob.getClass() instanceof Clob){
             return clob
         }
         Reader reader = clob.getCharacterStream()

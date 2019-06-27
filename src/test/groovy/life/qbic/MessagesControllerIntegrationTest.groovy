@@ -88,13 +88,13 @@ class MessagesControllerIntegrationTest extends Specification {
         ex.status == HttpStatus.NOT_FOUND
     }
 
-    void "/workflows/metainfo/{runId} access metadata information for a workflow successfully"() {
+    void "/workflows/metadata/{runId} access metadata information for a workflow successfully"() {
         given:
         WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
 
         when:
         createWeblogResource(messageWithMetadata)
-        URI metadataResourceLocation = new URI("/workflows/metainfo/${message.runInfo.id}")
+        URI metadataResourceLocation = new URI("/workflows/metadata/${message.runInfo.id}")
         HttpRequest request = HttpRequest.GET(metadataResourceLocation)
         HttpResponse result = client.toBlocking().exchange(request, String)
 
