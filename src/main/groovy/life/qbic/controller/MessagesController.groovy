@@ -73,7 +73,7 @@ class MessagesController {
         traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)
     }
 
-    @Get("/metadata/{runId}")
+    @Get("/metainfo/{runId}")
     HttpResponse<List<MetaData>> getMetaDataForWorkflow(String runId) {
         log.info("Metadata request for runId: $runId.")
         List<MetaData> metaData
