@@ -36,7 +36,7 @@ class MessagesController {
         WeblogMessage weblogMessage
         try {
             weblogMessage = WeblogMessage.createFromJson(message)
-            log.info("Incoming weblog message with for run id: ${weblogMessage.runInfo.id}")
+            log.info("Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}")
             informationCenter.storeWeblogMessage(weblogMessage)
         } catch ( Exception e ) {
             log.error(e)
