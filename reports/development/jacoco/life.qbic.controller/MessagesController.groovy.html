@@ -36,7 +36,7 @@ class MessagesController {
 <span class="nc" id="L36">        WeblogMessage weblogMessage</span>
         try {
 <span class="nc" id="L38">            weblogMessage = WeblogMessage.createFromJson(message)</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">            log.info(&quot;Incoming weblog message with for run id: ${weblogMessage.runInfo.id}&quot;)</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            log.info(&quot;Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}&quot;)</span>
 <span class="nc" id="L40">            informationCenter.storeWeblogMessage(weblogMessage)</span>
 <span class="nc" id="L41">        } catch ( Exception e ) {</span>
 <span class="nc" id="L42">            log.error(e)</span>
