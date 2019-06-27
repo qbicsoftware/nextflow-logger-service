@@ -1,10 +1,12 @@
 package life.qbic.model.weblog
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode()
 class MetaData {
 
+    @JsonProperty('metadata')
     private final Map metadata
 
     MetaData() {

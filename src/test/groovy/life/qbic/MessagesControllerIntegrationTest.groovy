@@ -10,6 +10,7 @@ import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.annotation.MicronautTest
 import life.qbic.model.WeblogMessage
+import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
 import life.qbic.service.WorkflowService
@@ -87,6 +88,23 @@ class MessagesControllerIntegrationTest extends Specification {
         ex.status == HttpStatus.NOT_FOUND
     }
 
+    void "/workflows/metadata/{runId} access metadata information for a workflow successfully"() {
+        given:
+        WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
+
+        when:
+        createWeblogResource(messageWithMetadata)
+        URI metadataResourceLocation = new URI("/workflows/metadata/${message.runInfo.id}")
+        HttpRequest request = HttpRequest.GET(metadataResourceLocation)
+        HttpResponse result = client.toBlocking().exchange(request, String)
+
+        then:
+        assert result.body()
+        List<Map> metadataList = (slurper.parseText(result.body()) as List)
+        assert metadataList.size() >= 1
+        assert metadataList[0]['metadata']['params'].container == message.metadata['params'].container
+    }
+
     void "/workflows/traces/{runId} access trace information for a workflow successfully"() {
         given:
         WeblogMessage message = WeblogMessage.createFromJson(messageWithTrace)
@@ -100,7 +118,7 @@ class MessagesControllerIntegrationTest extends Specification {
         then:
         assert result.body()
         List<Map> traces = (slurper.parseText(result.body()) as List)
-        assert traces.size() == 1
+        assert traces.size() >= 1
         Trace trace = new Trace(traces.get(0).properties as Map)
         compareTraces(trace, message.trace)
     }

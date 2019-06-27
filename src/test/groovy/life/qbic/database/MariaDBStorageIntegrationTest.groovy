@@ -91,7 +91,7 @@ class MariaDBStorageIntegrationTest extends Specification {
         then:
         assert runInfoList.size() == 1
         assert runInfoList[0].id == messageWithTrace.runInfo.id
-        assert traces.size() == 1
+        assert traces.size() >= 1
         compareTraces(traces[0], messageWithTrace.trace)
     }
 

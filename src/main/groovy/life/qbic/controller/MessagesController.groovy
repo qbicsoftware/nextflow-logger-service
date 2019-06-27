@@ -10,6 +10,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import life.qbic.Contact
 import life.qbic.model.WeblogMessage
+import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
 import life.qbic.service.WorkflowService
@@ -65,11 +66,25 @@ class MessagesController {
         List<Trace> traces
         try {
             traces = informationCenter.getTracesForWorkflowWithId(runId)
-        } catch ( Exception e) {
+        } catch( Exception e ) {
             log.error(e)
             return HttpResponse.serverError()
         }
         traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)
+    }
+
+    @Get("/metadata/{runId}")
+    HttpResponse<List<MetaData>> getMetaDataForWorkflow(String runId) {
+        log.info("Metadata request for runId: $runId.")
+        List<MetaData> metaData
+        try {
+            metaData = informationCenter.getMetadataOfWorkflow(runId)
+        } catch( Exception e ) {
+            log.error(e)
+            return HttpResponse.serverError()
+        }
+        metaData ? HttpResponse.ok(metaData) : HttpResponse.notFound(metaData)
+
     }
 
     static String serverErrorResponse() {

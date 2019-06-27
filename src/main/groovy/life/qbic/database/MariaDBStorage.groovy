@@ -13,7 +13,6 @@ import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
 import org.apache.groovy.dateutil.extensions.DateUtilExtensions
-import org.codehaus.groovy.runtime.DateGroovyMethods
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -189,13 +188,13 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             $primaryKeyRun,
             ${trace.'start'},
             ${trace.'submit'},
-            "${trace.'name'}",
-            "${trace.'status'}",
+            ${trace.'name'},
+            ${trace.'status'},
             ${trace.'exit'},
             ${trace.'attempt'},
             ${trace.'memory'},
             ${trace.'cpus'},
-            "${trace.'queue'}",
+            ${trace.'queue'},
             ${trace.'duration'});""")
     }
 

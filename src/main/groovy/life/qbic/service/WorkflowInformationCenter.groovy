@@ -34,6 +34,6 @@ class WorkflowInformationCenter implements WorkflowService {
 
     @Override
     List<MetaData> getMetadataOfWorkflow(String runId) {
-        return null
+        storage.findMetadataForRunWithId(runId)
     }
 }
