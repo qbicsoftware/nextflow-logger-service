@@ -18,14 +18,14 @@ CREATE TABLE IF NOT EXISTS `metadata` (
   `workDir` VARCHAR(256),
   `container` VARCHAR(45),
   `user` VARCHAR(45),
-  `manifest` CLOB,
+  `manifest` TEXT,
   `revision` VARCHAR(45),
   `duration` INT(11),
   `success` TINYINT(1),
   `resume` TINYINT(1),
   `nextflowVersion` VARCHAR(45),
   `exitStatus` INT(11),
-  `errorMessage` CLOB,
+  `errorMessage` TEXT,
   PRIMARY KEY (`id`),
     FOREIGN KEY (`runId`)
     REFERENCES `runs` (`id`)
