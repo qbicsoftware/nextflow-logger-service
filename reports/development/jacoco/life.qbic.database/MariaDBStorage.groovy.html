@@ -230,7 +230,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L230">                'workDir': rowResult.get('WORKDIR'),</span>
 <span class="nc" id="L231">                'container': rowResult.get('CONTAINER'),</span>
 <span class="nc" id="L232">                'userName': rowResult.get('USER'),</span>
-<span class="nc" id="L233">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') as Clob)),</span>
+<span class="nc" id="L233">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST'))),</span>
 <span class="nc" id="L234">                'revision': rowResult.get('REVISION'),</span>
 <span class="nc" id="L235">                'duration': rowResult.get('DURATION'),</span>
 <span class="nc" id="L236">                'success': rowResult.get('SUCCESS'),</span>
@@ -242,19 +242,19 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
 
 <span class="nc" id="L244">        return new MetaData([</span>
-<span class="nc" id="L245">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') as Clob)),</span>
+<span class="nc" id="L245">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS'))),</span>
                 'workflow': workflow
         ])
 <span class="nc" id="L248">    }</span>
 
-    private static String parseClob(Clob clob) {
+    private static String parseClob(Object clob) {
 <span class="nc bnc" id="L251" title="All 4 branches missed.">        if (! clob) {</span>
 <span class="nc" id="L252">            return &quot;&quot;</span>
         }
 <span class="nc bnc" id="L254" title="All 4 branches missed.">        if (!clob.getClass() instanceof Clob){</span>
 <span class="nc" id="L255">            return clob</span>
         }
-<span class="nc" id="L257">        Reader reader = clob.getCharacterStream()</span>
+<span class="nc" id="L257">        Reader reader = (clob as Clob).getCharacterStream()</span>
 <span class="nc" id="L258">        return reader.getText()</span>
 <span class="nc" id="L259">    }</span>
 
