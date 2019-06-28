@@ -230,7 +230,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
                 'workDir': rowResult.get('WORKDIR'),
                 'container': rowResult.get('CONTAINER'),
                 'userName': rowResult.get('USER'),
-                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') as Clob)),
+                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST'))),
                 'revision': rowResult.get('REVISION'),
                 'duration': rowResult.get('DURATION'),
                 'success': rowResult.get('SUCCESS'),
@@ -242,19 +242,19 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
 
         return new MetaData([
-                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') as Clob)),
+                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS'))),
                 'workflow': workflow
         ])
     }
 
-    private static String parseClob(Clob clob) {
+    private static String parseClob(Object clob) {
         if (! clob) {
             return ""
         }
         if (!clob.getClass() instanceof Clob){
             return clob
         }
-        Reader reader = clob.getCharacterStream()
+        Reader reader = (clob as Clob).getCharacterStream()
         return reader.getText()
     }
 
