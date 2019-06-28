@@ -230,7 +230,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L230">                'workDir': rowResult.get('WORKDIR'),</span>
 <span class="nc" id="L231">                'container': rowResult.get('CONTAINER'),</span>
 <span class="nc" id="L232">                'userName': rowResult.get('USER'),</span>
-<span class="nc bnc" id="L233" title="All 4 branches missed.">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST' ?: ''))),</span>
+<span class="nc bnc" id="L233" title="All 4 branches missed.">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') ?: '')),</span>
 <span class="nc" id="L234">                'revision': rowResult.get('REVISION'),</span>
 <span class="nc" id="L235">                'duration': rowResult.get('DURATION'),</span>
 <span class="nc" id="L236">                'success': rowResult.get('SUCCESS'),</span>
