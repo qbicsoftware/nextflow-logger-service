@@ -254,7 +254,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L254">            return &quot;&quot;</span>
         }
 <span class="nc bnc" id="L256" title="All 4 branches missed.">        if (! (clob instanceof Clob)){</span>
-<span class="nc" id="L257">            return clob</span>
+<span class="nc" id="L257">            return clob.toString()</span>
         }
 <span class="nc" id="L259">        Reader reader = (clob as Clob).getCharacterStream()</span>
 <span class="nc" id="L260">        return reader.getText()</span>
