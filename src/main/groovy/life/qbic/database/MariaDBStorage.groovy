@@ -230,7 +230,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
                 'workDir': rowResult.get('WORKDIR'),
                 'container': rowResult.get('CONTAINER'),
                 'userName': rowResult.get('USER'),
-                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST' ?: ''))),
+                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') ?: '')),
                 'revision': rowResult.get('REVISION'),
                 'duration': rowResult.get('DURATION'),
                 'success': rowResult.get('SUCCESS'),
