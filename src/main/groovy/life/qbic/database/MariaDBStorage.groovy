@@ -96,6 +96,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     private static RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
         RunInfo info = new RunInfo()
+        info.event = rowResult.get("LASTEVENT" )
         info.id = rowResult.get("RUNID")
         info.status = rowResult.get("LASTEVENT" )
         info.name = rowResult.get("NAME")
