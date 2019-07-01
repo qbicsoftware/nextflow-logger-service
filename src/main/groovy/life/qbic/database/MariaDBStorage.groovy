@@ -241,7 +241,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         ]
 
         return new MetaData([
-                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),
+                'parameters': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),
                 'workflow': workflow
         ])
     }
