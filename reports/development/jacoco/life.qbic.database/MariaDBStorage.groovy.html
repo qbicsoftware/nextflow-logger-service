@@ -240,35 +240,32 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L240">                'errorMessage': rowResult.get('ERRORMESSAGE')</span>
         ]
 
-
-<span class="nc" id="L244">        return new MetaData([</span>
-<span class="nc bnc" id="L245" title="All 2 branches missed.">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),</span>
+<span class="nc" id="L243">        return new MetaData([</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),</span>
                 'workflow': workflow
         ])
-<span class="nc" id="L248">    }</span>
+<span class="nc" id="L247">    }</span>
 
     private static String parseClob(Object clob) {
-<span class="nc bnc" id="L251" title="All 2 branches missed.">        log.info clob.toString()</span>
-<span class="nc bnc" id="L252" title="All 2 branches missed.">        log.info clob.getClass()</span>
-<span class="nc bnc" id="L253" title="All 4 branches missed.">        if (! clob) {</span>
-<span class="nc" id="L254">            return &quot;{}&quot;</span>
+<span class="nc bnc" id="L250" title="All 4 branches missed.">        if (! clob) {</span>
+<span class="nc" id="L251">            return &quot;{}&quot;</span>
         }
-<span class="nc bnc" id="L256" title="All 4 branches missed.">        if (! (clob instanceof Clob)){</span>
-<span class="nc" id="L257">            return clob.toString()</span>
+<span class="nc bnc" id="L253" title="All 4 branches missed.">        if (! (clob instanceof Clob)){</span>
+<span class="nc" id="L254">            return clob.toString()</span>
         }
-<span class="nc" id="L259">        Reader reader = (clob as Clob).getCharacterStream()</span>
-<span class="nc" id="L260">        return reader.getText()</span>
-<span class="nc" id="L261">    }</span>
+<span class="nc" id="L256">        Reader reader = (clob as Clob).getCharacterStream()</span>
+<span class="nc" id="L257">        return reader.getText()</span>
+<span class="nc" id="L258">    }</span>
 
     private static String toUTCTime(String timestamp) {
-<span class="nc" id="L264">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L265">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L266">    }</span>
+<span class="nc" id="L261">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L262">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L263">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L270">        sql.close()</span>
-<span class="nc" id="L271">        dataSource.connection.close()</span>
-<span class="nc" id="L272">    }</span>
+<span class="nc" id="L267">        sql.close()</span>
+<span class="nc" id="L268">        dataSource.connection.close()</span>
+<span class="nc" id="L269">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
