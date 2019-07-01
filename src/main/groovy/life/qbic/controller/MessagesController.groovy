@@ -81,7 +81,6 @@ class MessagesController {
             metaData = informationCenter.getMetadataOfWorkflow(runId)
         } catch( Exception e ) {
             log.error(e)
-            log.debug(e.printStackTrace())
             return HttpResponse.serverError()
         }
         metaData ? HttpResponse.ok(metaData) : HttpResponse.notFound(metaData)
