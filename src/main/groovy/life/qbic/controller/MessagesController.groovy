@@ -33,6 +33,7 @@ class MessagesController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Post(uri="/")
     HttpResponse storeWeblogMessage(@Body String message) {
+        log.info message
         WeblogMessage weblogMessage
         try {
             weblogMessage = WeblogMessage.createFromJson(message)

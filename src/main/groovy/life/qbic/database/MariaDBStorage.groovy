@@ -240,7 +240,6 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
                 'errorMessage': rowResult.get('ERRORMESSAGE')
         ]
 
-
         return new MetaData([
                 'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),
                 'workflow': workflow
@@ -248,8 +247,6 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     private static String parseClob(Object clob) {
-        log.info clob.toString()
-        log.info clob.getClass()
         if (! clob) {
             return "{}"
         }
