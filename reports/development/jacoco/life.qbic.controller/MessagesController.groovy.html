@@ -33,64 +33,62 @@ class MessagesController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Post(uri=&quot;/&quot;)
     HttpResponse storeWeblogMessage(@Body String message) {
-<span class="nc" id="L36">        log.info message</span>
-<span class="nc" id="L37">        WeblogMessage weblogMessage</span>
+<span class="nc" id="L36">        WeblogMessage weblogMessage</span>
         try {
-<span class="nc" id="L39">            weblogMessage = WeblogMessage.createFromJson(message)</span>
-<span class="nc bnc" id="L40" title="All 2 branches missed.">            log.info(&quot;Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}&quot;)</span>
-<span class="nc" id="L41">            informationCenter.storeWeblogMessage(weblogMessage)</span>
-<span class="nc" id="L42">        } catch ( Exception e ) {</span>
-<span class="nc" id="L43">            log.error(e)</span>
-<span class="nc bnc" id="L44" title="All 2 branches missed.">            log.debug(e.printStackTrace())</span>
-<span class="nc" id="L45">            return HttpResponse.serverError(&quot;Unexpected error, resource could not be created.&quot;)</span>
-<span class="nc" id="L46">        }</span>
-<span class="nc" id="L47">        return HttpResponse.created(new URI(&quot;/workflows/info/${weblogMessage.runInfo.id}&quot;))</span>
-<span class="nc" id="L48">    }</span>
+<span class="nc" id="L38">            weblogMessage = WeblogMessage.createFromJson(message)</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            log.info(&quot;Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}&quot;)</span>
+<span class="nc" id="L40">            informationCenter.storeWeblogMessage(weblogMessage)</span>
+<span class="nc" id="L41">        } catch ( Exception e ) {</span>
+<span class="nc" id="L42">            log.error(e)</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            log.debug(e.printStackTrace())</span>
+<span class="nc" id="L44">            return HttpResponse.serverError(&quot;Unexpected error, resource could not be created.&quot;)</span>
+<span class="nc" id="L45">        }</span>
+<span class="nc" id="L46">        return HttpResponse.created(new URI(&quot;/workflows/info/${weblogMessage.runInfo.id}&quot;))</span>
+<span class="nc" id="L47">    }</span>
 
     @Get(&quot;/info/{runId}&quot;)
     HttpResponse getBasicWorkflowInformation(String runId) {
-<span class="nc bnc" id="L52" title="All 2 branches missed.">        log.info(&quot;Resource request for runId: $runId.&quot;)</span>
-
-<span class="nc" id="L54">        List&lt;RunInfo&gt; runInfoList</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        log.info(&quot;Resource request for runId: $runId.&quot;)</span>
+<span class="nc" id="L52">        List&lt;RunInfo&gt; runInfoList</span>
         try {
-<span class="nc" id="L56">            runInfoList = informationCenter.getWorkflowRunInfoForId(runId)</span>
-<span class="nc" id="L57">        } catch ( Exception e ) {</span>
-<span class="nc" id="L58">            log.error(e)</span>
-<span class="nc bnc" id="L59" title="All 4 branches missed.">            return HttpResponse.serverError(serverErrorResponse())</span>
-<span class="nc" id="L60">        }</span>
-<span class="nc bnc" id="L61" title="All 2 branches missed.">        runInfoList ? HttpResponse.ok(runInfoList): HttpResponse.notFound()</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L54">            runInfoList = informationCenter.getWorkflowRunInfoForId(runId)</span>
+<span class="nc" id="L55">        } catch ( Exception e ) {</span>
+<span class="nc" id="L56">            log.error(e)</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">            return HttpResponse.serverError(serverErrorResponse())</span>
+<span class="nc" id="L58">        }</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        runInfoList ? HttpResponse.ok(runInfoList): HttpResponse.notFound()</span>
+<span class="nc" id="L60">    }</span>
 
     @Get(&quot;/traces/{runId}&quot;)
     HttpResponse&lt;List&lt;Trace&gt;&gt; getTracesForWorkflow(String runId) {
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        log.info(&quot;Traces request for runId: $runId.&quot;)</span>
-<span class="nc" id="L67">        List&lt;Trace&gt; traces</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        log.info(&quot;Traces request for runId: $runId.&quot;)</span>
+<span class="nc" id="L65">        List&lt;Trace&gt; traces</span>
         try {
-<span class="nc" id="L69">            traces = informationCenter.getTracesForWorkflowWithId(runId)</span>
-<span class="nc" id="L70">        } catch( Exception e ) {</span>
-<span class="nc" id="L71">            log.error(e)</span>
-<span class="nc" id="L72">            return HttpResponse.serverError()</span>
-<span class="nc" id="L73">        }</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">        traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)</span>
-<span class="nc" id="L75">    }</span>
+<span class="nc" id="L67">            traces = informationCenter.getTracesForWorkflowWithId(runId)</span>
+<span class="nc" id="L68">        } catch( Exception e ) {</span>
+<span class="nc" id="L69">            log.error(e)</span>
+<span class="nc" id="L70">            return HttpResponse.serverError()</span>
+<span class="nc" id="L71">        }</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)</span>
+<span class="nc" id="L73">    }</span>
 
     @Get(&quot;/metadata/{runId}&quot;)
     HttpResponse&lt;List&lt;MetaData&gt;&gt; getMetaDataForWorkflow(String runId) {
-<span class="nc bnc" id="L79" title="All 2 branches missed.">        log.info(&quot;Metadata request for runId: $runId.&quot;)</span>
-<span class="nc" id="L80">        List&lt;MetaData&gt; metaData</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        log.info(&quot;Metadata request for runId: $runId.&quot;)</span>
+<span class="nc" id="L78">        List&lt;MetaData&gt; metaData</span>
         try {
-<span class="nc" id="L82">            metaData = informationCenter.getMetadataOfWorkflow(runId)</span>
-<span class="nc" id="L83">        } catch( Exception e ) {</span>
-<span class="nc" id="L84">            log.error(e)</span>
-<span class="nc" id="L85">            return HttpResponse.serverError()</span>
-<span class="nc" id="L86">        }</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">        metaData ? HttpResponse.ok(metaData) : HttpResponse.notFound(metaData)</span>
+<span class="nc" id="L80">            metaData = informationCenter.getMetadataOfWorkflow(runId)</span>
+<span class="nc" id="L81">        } catch( Exception e ) {</span>
+<span class="nc" id="L82">            log.error(e)</span>
+<span class="nc" id="L83">            return HttpResponse.serverError()</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        metaData ? HttpResponse.ok(metaData) : HttpResponse.notFound(metaData)</span>
 
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L87">    }</span>
 
     static String serverErrorResponse() {
-<span class="nc" id="L92">        &quot;Unexpected error, resource could not be accessed.&quot;</span>
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L90">        &quot;Unexpected error, resource could not be accessed.&quot;</span>
+<span class="nc" id="L91">    }</span>
 
 
 }
