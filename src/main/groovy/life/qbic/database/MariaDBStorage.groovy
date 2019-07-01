@@ -130,7 +130,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             values (
                 $primaryKeyRun,
                 ${ utcDateFormat.parse(metaData.workflow.'start' as String) },
-                ${JsonOutput.toJson(metaData.params)},
+                ${JsonOutput.toJson(metaData.'parameters')},
                 ${metaData.workflow.'workDir'},
                 ${metaData.workflow.'container'},
                 ${metaData.workflow.'userName'},
