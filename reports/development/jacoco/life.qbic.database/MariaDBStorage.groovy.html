@@ -241,7 +241,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         ]
 
 <span class="nc" id="L243">        return new MetaData([</span>
-<span class="nc bnc" id="L244" title="All 2 branches missed.">                'params': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                'parameters': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),</span>
                 'workflow': workflow
         ])
 <span class="nc" id="L247">    }</span>
