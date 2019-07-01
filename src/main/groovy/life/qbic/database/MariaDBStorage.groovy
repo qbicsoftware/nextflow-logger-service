@@ -204,7 +204,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
             def result = tryToFetchMetadataForRun(id)
             return result
         } catch (Exception e) {
-            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id. Reason: $e", e.fillInStackTrace())
+            throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id. Reason: $e\n${e.printStackTrace()}", e.fillInStackTrace())
         }
     }
 
