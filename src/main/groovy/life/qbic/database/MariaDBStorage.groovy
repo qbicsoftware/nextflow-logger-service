@@ -37,11 +37,13 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     List<Trace> findTracesForRunWithId(String id) {
-        sql = new Sql(dataSource.connection)
+        sql = new Sql(dataSource.source)
         try {
             def result = tryToFetchTracesForRun(id)
+            sql.close()
             return result
         } catch (Exception e) {
+            sql.close()
             throw new WeblogStorageException("Could not fetch trace information for run with id $id.", e.fillInStackTrace())
         }
     }
@@ -203,8 +205,10 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         sql = new Sql(dataSource.connection)
         try {
             def result = tryToFetchMetadataForRun(id)
+            sql.close()
             return result
         } catch (Exception e) {
+            sql.close()
             throw new WeblogStorageException("Could not retrieve metadata information for run with id: $id. Reason: $e", e)
         }
     }
