@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `traces` (
   `id` INT(11) AUTO_INCREMENT,
   `runId` INT(11),
   `taskId` INT(11),
-  `name` VARCHAR(45),
+  `name` VARCHAR(245),
   `status` VARCHAR(45),
   `exit` INT(11),
   `attempt` INT(11),
