@@ -152,6 +152,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         def primaryKey
         if( isRunInfoStored(runInfo) ) {
             primaryKey = updateWeblogRunInfo(runInfo)
+            log.info "Updated run info for run with id ${runInfo.id}"
         } else {
             primaryKey = insertWeblogRunInfo(runInfo)
         }
