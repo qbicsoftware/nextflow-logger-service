@@ -36,5 +36,10 @@ class WorkflowInformationCenter implements WorkflowService {
     List&lt;MetaData&gt; getMetadataOfWorkflow(String runId) {
 <span class="nc" id="L37">        storage.findMetadataForRunWithId(runId)</span>
 <span class="nc" id="L38">    }</span>
+
+    @Override
+    List&lt;RunInfo&gt; getAllWorkflowRunInfo() {
+<span class="nc" id="L42">        storage.findAllRunInfo()</span>
+<span class="nc" id="L43">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessagesController.groovy</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nxflogger</a> &gt; <a href="index.source.html" class="el_package">life.qbic.controller</a> &gt; <span class="el_source">MessagesController.groovy</span></div><h1>MessagesController.groovy</h1><pre class="source lang-java linenums">package life.qbic.controller
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessagesController.groovy</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nxflogger</a> &gt; <a href="index.source.html" class="el_package">life.qbic.endpoints</a> &gt; <span class="el_source">MessagesController.groovy</span></div><h1>MessagesController.groovy</h1><pre class="source lang-java linenums">package life.qbic.endpoints
 
 import groovy.util.logging.Log4j2
 import io.micronaut.http.HttpResponse
@@ -36,7 +36,7 @@ class MessagesController {
 <span class="nc" id="L36">        WeblogMessage weblogMessage</span>
         try {
 <span class="nc" id="L38">            weblogMessage = WeblogMessage.createFromJson(message)</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">            log.info(&quot;Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}&quot;)</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            log.info &quot;Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}&quot;</span>
 <span class="nc" id="L40">            informationCenter.storeWeblogMessage(weblogMessage)</span>
 <span class="nc" id="L41">        } catch ( Exception e ) {</span>
 <span class="nc" id="L42">            log.error(e)</span>
@@ -48,7 +48,7 @@ class MessagesController {
 
     @Get(&quot;/info/{runId}&quot;)
     HttpResponse getBasicWorkflowInformation(String runId) {
-<span class="nc bnc" id="L51" title="All 2 branches missed.">        log.info(&quot;Resource request for runId: $runId.&quot;)</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        log.info &quot;Resource request for runId: $runId.&quot;</span>
 <span class="nc" id="L52">        List&lt;RunInfo&gt; runInfoList</span>
         try {
 <span class="nc" id="L54">            runInfoList = informationCenter.getWorkflowRunInfoForId(runId)</span>
@@ -61,7 +61,7 @@ class MessagesController {
 
     @Get(&quot;/traces/{runId}&quot;)
     HttpResponse&lt;List&lt;Trace&gt;&gt; getTracesForWorkflow(String runId) {
-<span class="nc bnc" id="L64" title="All 2 branches missed.">        log.info(&quot;Traces request for runId: $runId.&quot;)</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        log.info &quot;Traces request for runId: $runId.&quot;</span>
 <span class="nc" id="L65">        List&lt;Trace&gt; traces</span>
         try {
 <span class="nc" id="L67">            traces = informationCenter.getTracesForWorkflowWithId(runId)</span>
@@ -74,7 +74,7 @@ class MessagesController {
 
     @Get(&quot;/metadata/{runId}&quot;)
     HttpResponse&lt;List&lt;MetaData&gt;&gt; getMetaDataForWorkflow(String runId) {
-<span class="nc bnc" id="L77" title="All 2 branches missed.">        log.info(&quot;Metadata request for runId: $runId.&quot;)</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        log.info &quot;Metadata request for runId: $runId.&quot;</span>
 <span class="nc" id="L78">        List&lt;MetaData&gt; metaData</span>
         try {
 <span class="nc" id="L80">            metaData = informationCenter.getMetadataOfWorkflow(runId)</span>
@@ -86,9 +86,22 @@ class MessagesController {
 
 <span class="nc" id="L87">    }</span>
 
+    @Get(&quot;/&quot;)
+    HttpResponse&lt;List&lt;RunInfo&gt;&gt; getAllRunInfoForWorkflows() {
+<span class="nc" id="L91">        log.info &quot;Complete run info request.&quot;</span>
+<span class="nc" id="L92">        List&lt;RunInfo&gt; runInfoList</span>
+        try {
+<span class="nc" id="L94">            runInfoList = informationCenter.getAllWorkflowRunInfo()</span>
+<span class="nc" id="L95">        } catch ( Exception e ) {</span>
+<span class="nc" id="L96">            log.error(e)</span>
+<span class="nc" id="L97">            return HttpResponse.serverError()</span>
+<span class="nc" id="L98">        }</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        runInfoList ? HttpResponse.ok(runInfoList) : HttpResponse.notFound(runInfoList)</span>
+<span class="nc" id="L100">    }</span>
+
     static String serverErrorResponse() {
-<span class="nc" id="L90">        &quot;Unexpected error, resource could not be accessed.&quot;</span>
-<span class="nc" id="L91">    }</span>
+<span class="nc" id="L103">        &quot;Unexpected error, resource could not be accessed.&quot;</span>
+<span class="nc" id="L104">    }</span>
 
 
 }
