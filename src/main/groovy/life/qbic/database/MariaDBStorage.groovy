@@ -252,6 +252,25 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         ])
     }
 
+    @Override
+    List<RunInfo> findAllRunInfo() {
+        this.sql = new Sql(dataSource.connection)
+        try {
+            def runInfoList = tryToFindAllRunInfo()
+            sql.close()
+            return runInfoList
+        } catch (Exception e) {
+            sql.close()
+            throw new WeblogStorageException("Could not request all run info Reason: $e", e.fillInStackTrace())
+        }
+    }
+
+    private List<RunInfo> tryToFindAllRunInfo() {
+        def result = sql.rows("SELECT * FROM runs;")
+        List<RunInfo> runInfoList = result.collect{ convertRowResultToRunInfo(it) }
+        return runInfoList
+    }
+
     private static String parseClob(Object clob) {
         if (! clob) {
             return "{}"

@@ -16,4 +16,6 @@ interface WorkflowService {
     List<Trace> getTracesForWorkflowWithId(String runId)
 
     List<MetaData> getMetadataOfWorkflow(String runId)
+
+    List<RunInfo> getAllWorkflowRunInfo()
 }

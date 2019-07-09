@@ -1,4 +1,4 @@
-package life.qbic.controller
+package life.qbic.endpoints
 
 import groovy.util.logging.Log4j2
 import io.micronaut.http.HttpResponse
@@ -36,7 +36,7 @@ class MessagesController {
         WeblogMessage weblogMessage
         try {
             weblogMessage = WeblogMessage.createFromJson(message)
-            log.info("Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}")
+            log.info "Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}"
             informationCenter.storeWeblogMessage(weblogMessage)
         } catch ( Exception e ) {
             log.error(e)
@@ -48,7 +48,7 @@ class MessagesController {
 
     @Get("/info/{runId}")
     HttpResponse getBasicWorkflowInformation(String runId) {
-        log.info("Resource request for runId: $runId.")
+        log.info "Resource request for runId: $runId."
         List<RunInfo> runInfoList
         try {
             runInfoList = informationCenter.getWorkflowRunInfoForId(runId)
@@ -61,7 +61,7 @@ class MessagesController {
 
     @Get("/traces/{runId}")
     HttpResponse<List<Trace>> getTracesForWorkflow(String runId) {
-        log.info("Traces request for runId: $runId.")
+        log.info "Traces request for runId: $runId."
         List<Trace> traces
         try {
             traces = informationCenter.getTracesForWorkflowWithId(runId)
@@ -74,7 +74,7 @@ class MessagesController {
 
     @Get("/metadata/{runId}")
     HttpResponse<List<MetaData>> getMetaDataForWorkflow(String runId) {
-        log.info("Metadata request for runId: $runId.")
+        log.info "Metadata request for runId: $runId."
         List<MetaData> metaData
         try {
             metaData = informationCenter.getMetadataOfWorkflow(runId)
@@ -84,6 +84,19 @@ class MessagesController {
         }
         metaData ? HttpResponse.ok(metaData) : HttpResponse.notFound(metaData)
 
+    }
+
+    @Get("/")
+    HttpResponse<List<RunInfo>> getAllRunInfoForWorkflows() {
+        log.info "Complete run info request."
+        List<RunInfo> runInfoList
+        try {
+            runInfoList = informationCenter.getAllWorkflowRunInfo()
+        } catch ( Exception e ) {
+            log.error(e)
+            return HttpResponse.serverError()
+        }
+        runInfoList ? HttpResponse.ok(runInfoList) : HttpResponse.notFound(runInfoList)
     }
 
     static String serverErrorResponse() {

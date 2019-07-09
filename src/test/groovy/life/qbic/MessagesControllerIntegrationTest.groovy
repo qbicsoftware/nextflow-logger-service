@@ -102,16 +102,16 @@ class MessagesControllerIntegrationTest extends Specification {
         assert result.body()
         List<Map> metadataList = (slurper.parseText(result.body()) as List)
         assert metadataList.size() >= 1
-        assert metadataList[0]['metadata']['params'].container == message.metadata['params'].container
+        assert metadataList[0]['metadata']['parameters'].container == message.metadata['parameters'].container
     }
 
     void "/workflows/traces/{runId} access trace information for a workflow successfully"() {
         given:
         WeblogMessage message = WeblogMessage.createFromJson(messageWithTrace)
+        URI traceResourceLocation = new URI("/workflows/traces/${message.runInfo.id}")
 
         when:
         createWeblogResource(messageWithTrace)
-        URI traceResourceLocation = new URI("/workflows/traces/${message.runInfo.id}")
         HttpRequest request = HttpRequest.GET(traceResourceLocation)
         HttpResponse result = client.toBlocking().exchange(request, String)
 
@@ -121,6 +121,21 @@ class MessagesControllerIntegrationTest extends Specification {
         assert traces.size() >= 1
         Trace trace = new Trace(traces.get(0).properties as Map)
         compareTraces(trace, message.trace)
+    }
+
+    void "/workflows GET request lists all available workflows run info"() {
+        given:
+        URI allWorkflowsRunInfoRessourceLocation = new URI("/workflows")
+
+        when:
+        createWeblogResource(messageWithMetadata)
+        HttpRequest request = HttpRequest.GET(allWorkflowsRunInfoRessourceLocation)
+        HttpResponse result = client.toBlocking().exchange(request, String)
+
+        then:
+        assert result.body()
+        List<Map> runInfoList = (slurper.parseText(result.body()) as List)
+        assert runInfoList.size() >= 1
     }
 
     private URI createWeblogResource(String message) {

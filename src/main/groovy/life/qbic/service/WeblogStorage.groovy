@@ -19,4 +19,6 @@ interface WeblogStorage {
 
     List<MetaData> findMetadataForRunWithId(String id)
 
+    List<RunInfo> findAllRunInfo()
+
 }

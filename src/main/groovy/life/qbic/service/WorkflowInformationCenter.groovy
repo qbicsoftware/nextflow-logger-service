@@ -36,4 +36,9 @@ class WorkflowInformationCenter implements WorkflowService {
     List<MetaData> getMetadataOfWorkflow(String runId) {
         storage.findMetadataForRunWithId(runId)
     }
+
+    @Override
+    List<RunInfo> getAllWorkflowRunInfo() {
+        storage.findAllRunInfo()
+    }
 }
