@@ -18,3 +18,8 @@ datasources:
             username: ${wf-db-user}
             password: ${wf-db-pwd}
             driverClassName: org.mariadb.jdbc.Driver
+endpoints:
+    health:
+        enabled: true
+        sensitive: true
+        details-visible: ANONYMOUS
