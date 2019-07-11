@@ -266,7 +266,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L266">    }</span>
 
     private List&lt;RunInfo&gt; tryToFindAllRunInfo() {
-<span class="nc" id="L269">        def result = sql.rows(&quot;SELECT * FROM runs;&quot;)</span>
+<span class="nc" id="L269">        def result = sql.rows(&quot;SELECT * FROM runs ORDER BY lastRecord DESC;&quot;)</span>
 <span class="nc" id="L270">        List&lt;RunInfo&gt; runInfoList = result.collect{ convertRowResultToRunInfo(it) }</span>
 <span class="nc" id="L271">        return runInfoList</span>
 <span class="nc" id="L272">    }</span>
