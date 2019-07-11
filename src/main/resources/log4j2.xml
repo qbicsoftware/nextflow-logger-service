@@ -1,4 +1,4 @@
-<Configuration status="ERROR">
+<Configuration status="ERROR" shutdownHook="disable">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss} [%level] [%logger{1}] - %msg%n"/>

@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.info.License
 import io.swagger.v3.oas.annotations.info.Contact
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.core.LoggerContext
+import org.apache.logging.log4j.core.config.Configurator
 
 @OpenAPIDefinition(
         info = @Info(
@@ -21,6 +24,19 @@ import io.swagger.v3.oas.annotations.info.Contact
 @Log4j2
 class Application {
     static void main(String[] args) {
+        log.info "Application started."
+        registerShutdownHook()
         Micronaut.run(Application)
     }
+
+    static void registerShutdownHook() {
+        Runtime.runtime.addShutdownHook(new Thread(new Runnable() {
+            @Override
+            void run() {
+                log.info "Application shutting down ..."
+                Configurator.shutdown(LogManager.getContext() as LoggerContext)
+            }
+        }))
+    }
+
 }
