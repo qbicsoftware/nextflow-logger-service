@@ -22,18 +22,18 @@ import org.apache.logging.log4j.core.config.Configurator
 )
 @CompileStatic
 @Log4j2
-class Application {
+class Flowstore {
     static void main(String[] args) {
-        log.info "Application started."
+        log.info "Flowstore started."
         registerShutdownHook()
-        Micronaut.run(Application)
+        Micronaut.run(Flowstore)
     }
 
     static void registerShutdownHook() {
         Runtime.runtime.addShutdownHook(new Thread(new Runnable() {
             @Override
             void run() {
-                log.info "Application shutting down ..."
+                log.info "Flowstore shutting down ..."
                 Configurator.shutdown(LogManager.getContext() as LoggerContext)
             }
         }))
