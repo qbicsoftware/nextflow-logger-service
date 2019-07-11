@@ -19,9 +19,9 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>nxflogger - Checkstyle report</title>
+    <title>flowstore - Checkstyle report</title>
     <link>${project.url}</link>
-    <description>nxflogger - Checkstyle report</description>
+    <description>flowstore - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2019</copyright>
     <item>
