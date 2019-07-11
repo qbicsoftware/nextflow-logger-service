@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.info.License
 import io.swagger.v3.oas.annotations.info.Contact
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.core.LoggerContext
+import org.apache.logging.log4j.core.config.Configurator
 
 @OpenAPIDefinition(
         info = @Info(
@@ -21,7 +24,20 @@ import io.swagger.v3.oas.annotations.info.Contact
 @Log4j2
 class Application {
     static void main(String[] args) {
-<span class="nc" id="L24">        Micronaut.run(Application)</span>
-<span class="nc" id="L25">    }</span>
+<span class="nc" id="L27">        log.info &quot;Application started.&quot;</span>
+<span class="nc" id="L28">        registerShutdownHook()</span>
+<span class="nc" id="L29">        Micronaut.run(Application)</span>
+<span class="nc" id="L30">    }</span>
+
+    static void registerShutdownHook() {
+<span class="nc" id="L33">        Runtime.runtime.addShutdownHook(new Thread(new Runnable() {</span>
+            @Override
+            void run() {
+<span class="nc" id="L36">                log.info &quot;Application shutting down ...&quot;</span>
+<span class="nc" id="L37">                Configurator.shutdown(LogManager.getContext() as LoggerContext)</span>
+<span class="nc" id="L38">            }</span>
+        }))
+<span class="nc" id="L40">    }</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
