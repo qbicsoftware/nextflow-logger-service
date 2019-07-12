@@ -31,39 +31,6 @@ The default **port** bound is `8080`. If you want to change that, you can pass t
 java -Dmicronaut.server.port=8081 -jar nxflogger-<version>.jar
 ```
 
-### Configure flowstore
-
-Flowstore comes with a default configuration and variable placeholders that can be defined by the system environment. 
-
-```yaml
-micronaut:
-    application:
-        name: nxflogger
-    router:
-        static-resources:
-            swagger:
-                paths: classpath:META-INF/swagger
-                mapping: /swagger/**
-contact:
-    first-name: ${wf-contact-first-name:Max}
-    last-name: ${wf-contact-last-name:Mustermann}
-    email: ${wf-contact-email:'max.mustermann@uni-tuebingen.de'}
-database:
-    name: workflows
-datasources:
-        default:
-            url: jdbc:mariadb://${wf-db-host}/${wf-db-name}?maxPoolSize=150&pool
-            username: ${wf-db-user}
-            password: ${wf-db-pwd}
-            driverClassName: org.mariadb.jdbc.Driver
-endpoints:
-    health:
-        enabled: true
-        sensitive: false
-        details-visible: ANONYMOUS
-```
-
-This basic configuration can be used, if you have a MariaDB instance as data source. The default `WeblogStorage` interface implementation is for MariaDB, so if you want to use a different backend database, you need to change the driver and provide an own implementation of this interface.
 
 ## Development
 
@@ -115,7 +82,64 @@ mvn clean package
 
 ## Configure
 
-Coming soon...
+Flowstore comes with a default configuration and variable placeholders that can be defined by the system environment. 
+
+```yaml
+micronaut:
+    application:
+        name: nxflogger
+    router:
+        static-resources:
+            swagger:
+                paths: classpath:META-INF/swagger
+                mapping: /swagger/**
+contact:
+    first-name: ${wf-contact-first-name:Max}
+    last-name: ${wf-contact-last-name:Mustermann}
+    email: ${wf-contact-email:'max.mustermann@uni-tuebingen.de'}
+database:
+    name: workflows
+datasources:
+        default:
+            url: jdbc:mariadb://${wf-db-host}/${wf-db-name}?maxPoolSize=150&pool
+            username: ${wf-db-user}
+            password: ${wf-db-pwd}
+            driverClassName: org.mariadb.jdbc.Driver
+endpoints:
+    health:
+        enabled: true
+        sensitive: false
+        details-visible: ANONYMOUS
+```
+
+This basic configuration can be used, if you have a MariaDB instance as data source. The default `WeblogStorage` interface implementation is for MariaDB, so if you want to use a different backend database, you need to change the driver and provide an own implementation of this interface.
+
+## Endpoints
+
+### /workflows
+
+This endpoint can consume **POST** and **GET** requests. 
+
+**POST**
+
+Excepts a JSON weblog payload from Nextflow.
+
+**GET**
+
+Returns a JSON with a list of all stored workflow basic run information.
+
+### GET /workflows/info/{runId}
+
+Returns basic workflow run information for workflow with a given run id.
+
+### GET /workflows/traces/{runId}
+
+Returns detailed Nextflow trace information for a workflow with a given run id.
+
+### GET /workflows/metadata/{runId}
+
+Returns detailed workflow metadata such as parameter settings, input files and manifest information.
+
 
 ## Data Models
 
