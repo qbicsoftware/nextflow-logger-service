@@ -7,6 +7,7 @@ Check out:
 * [Run flowstore](#run-flowstore) - How to quickly run _flowstore_
 * [Development](#development) - How to continue developing flowstore
 * [Configure databases](#configure-databases) - How to link to a running database instance
+* [Endpoints](#endpoints) - API endpoints
 * [Underlying Data Models](#underlying-data-models)
 
 ## Run flowstore
