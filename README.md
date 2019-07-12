@@ -116,17 +116,13 @@ This basic configuration can be used, if you have a MariaDB instance as data sou
 
 ## Endpoints
 
-### /workflows
-
-This endpoint can consume **POST** and **GET** requests. 
-
-**POST**
-
-Excepts a JSON weblog payload from Nextflow.
-
-**GET**
+### GET /workflows
 
 Returns a JSON with a list of all stored workflow basic run information.
+
+### POST /workflows
+
+Expects a JSON weblog payload from Nextflow and stores it.
 
 ### GET /workflows/info/{runId}
 
