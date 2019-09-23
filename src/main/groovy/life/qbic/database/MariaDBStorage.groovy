@@ -79,7 +79,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     List<RunInfo> findRunWithRunId(String runId) {
-        sql = new Sql(dataSource.connection)
+        sql = new Sql(dataSource.source)
         try {
             def result = tryToFindWeblogEntryWithRunId(runId)
             def weblogMessages = result.collect { convertRowResultToRunInfo(it) }
@@ -107,7 +107,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{
-       this.sql = new Sql(dataSource.connection)
+       this.sql = new Sql(dataSource.source)
         try {
             tryToStoreWeblogMessage(message)
             sql.close()
@@ -203,7 +203,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
     }
 
     List<MetaData> findMetadataForRunWithId(String id) {
-        sql = new Sql(dataSource.connection)
+        sql = new Sql(dataSource.source)
         try {
             def result = tryToFetchMetadataForRun(id)
             sql.close()
@@ -254,7 +254,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     @Override
     List<RunInfo> findAllRunInfo() {
-        this.sql = new Sql(dataSource.connection)
+        this.sql = new Sql(dataSource.source)
         try {
             def runInfoList = tryToFindAllRunInfo()
             sql.close()
