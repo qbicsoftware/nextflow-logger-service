@@ -79,7 +79,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L79">    }</span>
 
     List&lt;RunInfo&gt; findRunWithRunId(String runId) {
-<span class="nc" id="L82">        sql = new Sql(dataSource.connection)</span>
+<span class="nc" id="L82">        sql = new Sql(dataSource.source)</span>
 <span class="nc" id="L83">        try {</span>
 <span class="nc bnc" id="L84" title="All 4 branches missed.">            def result = tryToFindWeblogEntryWithRunId(runId)</span>
 <span class="nc" id="L85">            def weblogMessages = result.collect { convertRowResultToRunInfo(it) }</span>
@@ -107,7 +107,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L107">    }</span>
 
     void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{
-<span class="nc" id="L110">       this.sql = new Sql(dataSource.connection)</span>
+<span class="nc" id="L110">       this.sql = new Sql(dataSource.source)</span>
         try {
 <span class="nc" id="L112">            tryToStoreWeblogMessage(message)</span>
 <span class="nc" id="L113">            sql.close()</span>
@@ -203,7 +203,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 <span class="nc" id="L203">    }</span>
 
     List&lt;MetaData&gt; findMetadataForRunWithId(String id) {
-<span class="nc" id="L206">        sql = new Sql(dataSource.connection)</span>
+<span class="nc" id="L206">        sql = new Sql(dataSource.source)</span>
 <span class="nc" id="L207">        try {</span>
 <span class="nc bnc" id="L208" title="All 4 branches missed.">            def result = tryToFetchMetadataForRun(id)</span>
 <span class="nc" id="L209">            sql.close()</span>
@@ -254,7 +254,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
 
     @Override
     List&lt;RunInfo&gt; findAllRunInfo() {
-<span class="nc" id="L257">        this.sql = new Sql(dataSource.connection)</span>
+<span class="nc" id="L257">        this.sql = new Sql(dataSource.source)</span>
 <span class="nc" id="L258">        try {</span>
 <span class="nc bnc" id="L259" title="All 4 branches missed.">            def runInfoList = tryToFindAllRunInfo()</span>
 <span class="nc" id="L260">            sql.close()</span>
