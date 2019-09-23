@@ -16,7 +16,7 @@ database:
     name: workflows
 datasources:
         default:
-            url: jdbc:mariadb://${wf-db-host}/${wf-db-name}?maxPoolSize=150&pool
+            url: jdbc:mariadb://${wf-db-host}/${wf-db-name}?maxPoolSize=${wf-max-pool-size:50}&pool
             username: ${wf-db-user}
             password: ${wf-db-pwd}
             driverClassName: org.mariadb.jdbc.Driver
