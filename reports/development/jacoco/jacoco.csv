@@ -9,6 +9,7 @@ flowstore,life.qbic.model,WeblogMessage._withRunInfo_closure4,13,57,0,0,1,3,1,2,
 flowstore,life.qbic.model,WeblogMessage._withRunAndMetadataInfo_closure3,24,63,0,0,1,3,2,2,2,2
 flowstore,life.qbic.model,WeblogMessage._createFromJson_closure1,10,68,0,0,1,3,1,2,1,2
 flowstore,life.qbic.endpoints,MessagesController,652,0,22,0,52,0,19,0,8,0
+flowstore,life.qbic.endpoints,Authentication,304,0,8,0,23,0,11,0,7,0
 flowstore,life.qbic,Contact,135,0,0,0,10,0,2,0,2,0
 flowstore,life.qbic,Flowstore,37,0,0,0,6,0,3,0,3,0
 flowstore,life.qbic,Flowstore.new Runnable() {...},14,0,0,0,3,0,1,0,1,0
