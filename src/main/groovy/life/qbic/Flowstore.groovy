@@ -1,6 +1,7 @@
 package life.qbic
 
 import groovy.util.logging.Log4j2
+import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.Micronaut
 import groovy.transform.CompileStatic
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
@@ -26,7 +27,7 @@ class Flowstore {
     static void main(String[] args) {
         log.info "Flowstore started."
         registerShutdownHook()
-        Micronaut.run(Flowstore)
+        Micronaut.run(Flowstore.class)
     }
 
     static void registerShutdownHook() {

@@ -8,6 +8,7 @@ import io.micronaut.http.annotation.Consumes
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.micronaut.security.annotation.Secured
 import life.qbic.Contact
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
@@ -46,6 +47,7 @@ class MessagesController {
         return HttpResponse.created(new URI("/workflows/info/${weblogMessage.runInfo.id}"))
     }
 
+    @Secured("READER")
     @Get("/info/{runId}")
     HttpResponse getBasicWorkflowInformation(String runId) {
         log.info "Resource request for runId: $runId."
@@ -59,6 +61,7 @@ class MessagesController {
         runInfoList ? HttpResponse.ok(runInfoList): HttpResponse.notFound()
     }
 
+    @Secured("READER")
     @Get("/traces/{runId}")
     HttpResponse<List<Trace>> getTracesForWorkflow(String runId) {
         log.info "Traces request for runId: $runId."
@@ -72,6 +75,7 @@ class MessagesController {
         traces ? HttpResponse.ok(traces) : HttpResponse.notFound(traces)
     }
 
+    @Secured("READER")
     @Get("/metadata/{runId}")
     HttpResponse<List<MetaData>> getMetaDataForWorkflow(String runId) {
         log.info "Metadata request for runId: $runId."
@@ -86,6 +90,7 @@ class MessagesController {
 
     }
 
+    @Secured("isAnonymous()")
     @Get("/")
     HttpResponse<List<RunInfo>> getAllRunInfoForWorkflows() {
         log.info "Complete run info request."

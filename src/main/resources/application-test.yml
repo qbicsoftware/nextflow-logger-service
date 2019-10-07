@@ -13,4 +13,3 @@ datasources:
             username: testuser
             password: ""
             driverClassName: org.h2.Driver
-

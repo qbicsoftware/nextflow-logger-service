@@ -8,12 +8,17 @@ micronaut:
             swagger:
                 paths: classpath:META-INF/swagger
                 mapping: /swagger/**
+    security:
+        enabled: true
+        endpoints:
+            login:
+                enabled: true
 contact:
     first-name: ${wf-contact-first-name:Max}
     last-name: ${wf-contact-last-name:Mustermann}
     email: ${wf-contact-email:'max.mustermann@uni-tuebingen.de'}
 userroles:
-    config: ${serivce-userroles:'/etc/micronaut.d/userroles.yml'}
+    config: ${service-userroles:/etc/micronaut.d/userroles.yml}
 database:
     name: workflows
 datasources:
