@@ -10,6 +10,7 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import life.qbic.Contact
 import life.qbic.model.WeblogMessage
 import life.qbic.model.weblog.MetaData
@@ -34,6 +35,7 @@ class MessagesController {
         this.contact = contact
     }
 
+    @Secured(SecurityRule.IS_ANONYMOUS)
     @Consumes(MediaType.APPLICATION_JSON)
     @Post(uri="/")
     HttpResponse storeWeblogMessage(@Body String message) {
@@ -93,7 +95,7 @@ class MessagesController {
 
     }
 
-    @Secured("isAnonymous()")
+    @Secured("READER")
     @Get("/")
     HttpResponse<List<RunInfo>> getAllRunInfoForWorkflows() {
         log.info "Run info request."

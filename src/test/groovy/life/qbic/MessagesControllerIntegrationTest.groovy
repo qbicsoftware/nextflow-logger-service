@@ -10,16 +10,16 @@ import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.annotation.MicronautTest
 import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
 import life.qbic.service.WorkflowService
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Stepwise
 
 import javax.inject.Inject
 
-
+@Stepwise
 @MicronautTest
 class MessagesControllerIntegrationTest extends Specification {
 
@@ -45,20 +45,7 @@ class MessagesControllerIntegrationTest extends Specification {
     @Client("/")
     RxHttpClient client
 
-    void "store a weblog payload with metadata and return resource location"() {
-        given:
-        WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
 
-        when:
-        HttpRequest request = HttpRequest.POST('/workflows', messageWithMetadata)
-                .basicAuth("servicewriter", "123456!")
-        HttpResponse result = client.toBlocking().exchange(request)
-
-        then:
-        assert context.containsBean(WorkflowService)
-        assert result.status() == HttpStatus.CREATED
-        assert result.getHeaders().get("Location") == "/workflows/info/${message.runInfo.id}"
-    }
 
     void "after a successful first weblog submission, the resource should show basic workflow information "() {
         given:
@@ -138,6 +125,35 @@ class MessagesControllerIntegrationTest extends Specification {
         List<Map> runInfoList = (slurper.parseText(result.body()) as List)
         assert runInfoList.size() >= 1
     }
+
+    void "store a weblog payload with metadata and return resource location"() {
+        given:
+        WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
+
+        when:
+        HttpRequest request = HttpRequest.POST('/workflows', messageWithMetadata)
+        HttpResponse result = client.toBlocking().exchange(request)
+
+        then:
+        assert context.containsBean(WorkflowService)
+        assert result.status() == HttpStatus.CREATED
+        assert result.getHeaders().get("Location") == "/workflows/info/${message.runInfo.id}"
+    }
+
+    void "/workflows GET without authentication should throw Exception"() {
+        given:
+        URI allWorkflowsRunInfoRessourceLocation = new URI("/workflows")
+
+        when:
+        createWeblogResource(messageWithMetadata)
+        HttpRequest request = HttpRequest.GET(allWorkflowsRunInfoRessourceLocation)
+        HttpResponse result = client.toBlocking().exchange(request, String)
+
+        then:
+        thrown HttpClientResponseException
+    }
+
+
 
     private URI createWeblogResource(String message) {
         HttpRequest request = HttpRequest.POST('/workflows', message)
