@@ -3,7 +3,7 @@
   <parent>
     <groupId>life.qbic</groupId>
     <artifactId>service-parent-pom</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0-SNAPSHOT</version>
   </parent>
   <artifactId>flowstore</artifactId>
   <version>0.1-SNAPSHOT</version>

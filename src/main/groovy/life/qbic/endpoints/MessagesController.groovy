@@ -1,6 +1,7 @@
 package life.qbic.endpoints
 
 import groovy.util.logging.Log4j2
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
@@ -15,10 +16,12 @@ import life.qbic.model.weblog.MetaData
 import life.qbic.model.weblog.RunInfo
 import life.qbic.model.weblog.Trace
 import life.qbic.service.WorkflowService
+import life.qbic.micronaututils.auth.Authentication
 
 import javax.inject.Inject
 
 @Log4j2
+@Requires(beans = Authentication.class)
 @Controller("/workflows")
 class MessagesController {
 
