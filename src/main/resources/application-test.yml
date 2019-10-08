@@ -7,6 +7,8 @@ contact:
     email: hellow.word@example.com
 database:
     schema-uri: "src/test/resources/db-setup.sql"
+userroles:
+    config: "src/test/resources/userroles.yml"
 datasources:
         default:
             url: jdbc:h2:${h2-path}/workflows;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

@@ -51,6 +51,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
         when:
         HttpRequest request = HttpRequest.POST('/workflows', messageWithMetadata)
+                .basicAuth("servicewriter", "123456!")
         HttpResponse result = client.toBlocking().exchange(request)
 
         then:
@@ -65,7 +66,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
         when:
         URI resourceLocation = createWeblogResource(messageWithMetadata)
-        HttpRequest request = HttpRequest.GET(resourceLocation)
+        HttpRequest request = HttpRequest.GET(resourceLocation).basicAuth("servicereader", "123!")
         HttpResponse result = client.toBlocking().exchange(request, String)
 
         then:
@@ -80,7 +81,7 @@ class MessagesControllerIntegrationTest extends Specification {
     void "/workflows/info/{runId} with wrong id responds 404"() {
         when:
         URI nonExistingResourceLocation = new URI("/workflows/info/1234")
-        HttpRequest request = HttpRequest.GET(nonExistingResourceLocation)
+        HttpRequest request = HttpRequest.GET(nonExistingResourceLocation).basicAuth("servicereader", "123!")
         client.toBlocking().exchange(request)
 
         then:
@@ -95,7 +96,7 @@ class MessagesControllerIntegrationTest extends Specification {
         when:
         createWeblogResource(messageWithMetadata)
         URI metadataResourceLocation = new URI("/workflows/metadata/${message.runInfo.id}")
-        HttpRequest request = HttpRequest.GET(metadataResourceLocation)
+        HttpRequest request = HttpRequest.GET(metadataResourceLocation).basicAuth("servicereader", "123!")
         HttpResponse result = client.toBlocking().exchange(request, String)
 
         then:
@@ -112,7 +113,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
         when:
         createWeblogResource(messageWithTrace)
-        HttpRequest request = HttpRequest.GET(traceResourceLocation)
+        HttpRequest request = HttpRequest.GET(traceResourceLocation).basicAuth("servicereader", "123!")
         HttpResponse result = client.toBlocking().exchange(request, String)
 
         then:
@@ -129,7 +130,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
         when:
         createWeblogResource(messageWithMetadata)
-        HttpRequest request = HttpRequest.GET(allWorkflowsRunInfoRessourceLocation)
+        HttpRequest request = HttpRequest.GET(allWorkflowsRunInfoRessourceLocation).basicAuth("servicereader", "123!")
         HttpResponse result = client.toBlocking().exchange(request, String)
 
         then:
