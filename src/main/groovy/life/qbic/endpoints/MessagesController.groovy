@@ -93,7 +93,7 @@ class MessagesController {
     @Secured("isAnonymous()")
     @Get("/")
     HttpResponse<List<RunInfo>> getAllRunInfoForWorkflows() {
-        log.info "Complete run info request."
+        log.info "Run info request."
         List<RunInfo> runInfoList
         try {
             runInfoList = informationCenter.getAllWorkflowRunInfo()
