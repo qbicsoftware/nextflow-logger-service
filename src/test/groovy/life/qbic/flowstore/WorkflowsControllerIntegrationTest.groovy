@@ -1,4 +1,4 @@
-package life.qbic
+package life.qbic.flowstore
 
 import groovy.json.JsonSlurper
 import io.micronaut.context.ApplicationContext
@@ -9,10 +9,10 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.annotation.MicronautTest
-import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
-import life.qbic.service.WorkflowService
+import life.qbic.flowstore.domain.Workflow
+import life.qbic.flowstore.domain.RunInfo
+import life.qbic.flowstore.domain.Trace
+import life.qbic.flowstore.domain.WorkflowService
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @Stepwise
 @MicronautTest
-class MessagesControllerIntegrationTest extends Specification {
+class WorkflowsControllerIntegrationTest extends Specification {
 
     @Inject
     ApplicationContext context
@@ -49,7 +49,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
     void "after a successful first weblog submission, the resource should show basic workflow information "() {
         given:
-        WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
+        Workflow message = Workflow.createFromJson(messageWithMetadata)
 
         when:
         URI resourceLocation = createWeblogResource(messageWithMetadata)
@@ -78,7 +78,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
     void "/workflows/metadata/{runId} access metadata information for a workflow successfully"() {
         given:
-        WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
+        Workflow message = Workflow.createFromJson(messageWithMetadata)
 
         when:
         createWeblogResource(messageWithMetadata)
@@ -95,7 +95,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
     void "/workflows/traces/{runId} access trace information for a workflow successfully"() {
         given:
-        WeblogMessage message = WeblogMessage.createFromJson(messageWithTrace)
+        Workflow message = Workflow.createFromJson(messageWithTrace)
         URI traceResourceLocation = new URI("/workflows/traces/${message.runInfo.id}")
 
         when:
@@ -128,7 +128,7 @@ class MessagesControllerIntegrationTest extends Specification {
 
     void "store a weblog payload with metadata and return resource location"() {
         given:
-        WeblogMessage message = WeblogMessage.createFromJson(messageWithMetadata)
+        Workflow message = Workflow.createFromJson(messageWithMetadata)
 
         when:
         HttpRequest request = HttpRequest.POST('/workflows', messageWithMetadata)

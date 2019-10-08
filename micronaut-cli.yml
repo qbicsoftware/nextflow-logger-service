@@ -1,4 +1,4 @@
-profile: service
+profile: domain
 defaultPackage: life.qbic
 ---
 testFramework: spock

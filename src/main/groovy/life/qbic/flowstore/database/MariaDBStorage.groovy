@@ -1,17 +1,18 @@
-package life.qbic.database
+package life.qbic.flowstore.database
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import groovy.util.logging.Log4j2
-import life.qbic.Constants
-import life.qbic.service.WeblogStorage
+import life.qbic.flowstore.Constants
+import life.qbic.flowstore.domain.WeblogStorageException
+import life.qbic.flowstore.domain.Workflows
 import life.qbic.micronaututils.QBiCDataSource
-import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.MetaData
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
+import life.qbic.flowstore.domain.Workflow
+import life.qbic.flowstore.domain.MetaData
+import life.qbic.flowstore.domain.RunInfo
+import life.qbic.flowstore.domain.Trace
 import org.apache.groovy.dateutil.extensions.DateUtilExtensions
 
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import java.text.SimpleDateFormat
 
 @Log4j2
 @Singleton
-class MariaDBStorage implements WeblogStorage, AutoCloseable{
+class MariaDBStorage implements Workflows, AutoCloseable{
 
     private static final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
@@ -106,7 +107,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         return info
     }
 
-    void storeWeblogMessage(WeblogMessage message) throws WeblogStorageException{
+    void storeWeblogMessage(Workflow message) throws WeblogStorageException{
        this.sql = new Sql(dataSource.source)
         try {
             tryToStoreWeblogMessage(message)
@@ -117,7 +118,7 @@ class MariaDBStorage implements WeblogStorage, AutoCloseable{
         }
     }
 
-    private void tryToStoreWeblogMessage(WeblogMessage message) {
+    private void tryToStoreWeblogMessage(Workflow message) {
         def primaryKeyRun = storeRunInfo(message.runInfo)
         insertTraceInfo(message.trace, primaryKeyRun)
         insertMetadataInfo(message.metadata, primaryKeyRun)

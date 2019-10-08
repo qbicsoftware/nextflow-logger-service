@@ -1,4 +1,4 @@
-package life.qbic
+package life.qbic.flowstore.domain
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires

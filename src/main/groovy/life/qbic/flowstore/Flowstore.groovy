@@ -1,7 +1,6 @@
-package life.qbic
+package life.qbic.flowstore
 
 import groovy.util.logging.Log4j2
-import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.Micronaut
 import groovy.transform.CompileStatic
 import io.swagger.v3.oas.annotations.OpenAPIDefinition

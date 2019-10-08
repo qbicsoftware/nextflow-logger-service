@@ -1,24 +1,21 @@
-package life.qbic.service
+package life.qbic.flowstore.domain
 
-import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.MetaData
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
 
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WorkflowInformationCenter implements WorkflowService {
+class WorkflowInfoCenter implements WorkflowService {
 
-    private final WeblogStorage storage
+    private final Workflows storage
 
-    @Inject WorkflowInformationCenter(WeblogStorage storage) {
+    @Inject
+    WorkflowInfoCenter(Workflows storage) {
         this.storage = storage
     }
 
     @Override
-    void storeWeblogMessage(WeblogMessage message) {
+    void storeWeblogMessage(Workflow message) {
         storage.storeWeblogMessage(message)
     }
 

@@ -1,4 +1,4 @@
-package life.qbic.endpoints
+package life.qbic.flowstore.endpoints
 
 import groovy.util.logging.Log4j2
 import io.micronaut.context.annotation.Requires
@@ -11,12 +11,12 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
-import life.qbic.Contact
-import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.MetaData
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
-import life.qbic.service.WorkflowService
+import life.qbic.flowstore.domain.Contact
+import life.qbic.flowstore.domain.Workflow
+import life.qbic.flowstore.domain.MetaData
+import life.qbic.flowstore.domain.RunInfo
+import life.qbic.flowstore.domain.Trace
+import life.qbic.flowstore.domain.WorkflowService
 import life.qbic.micronaututils.auth.Authentication
 
 import javax.inject.Inject
@@ -24,13 +24,14 @@ import javax.inject.Inject
 @Log4j2
 @Requires(beans = Authentication.class)
 @Controller("/workflows")
-class MessagesController {
+class WorkflowsController {
 
     WorkflowService informationCenter
 
     private Contact contact
 
-    @Inject MessagesController(WorkflowService informationCenter, Contact contact) {
+    @Inject
+    WorkflowsController(WorkflowService informationCenter, Contact contact) {
         this.informationCenter = informationCenter
         this.contact = contact
     }
@@ -39,9 +40,9 @@ class MessagesController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Post(uri="/")
     HttpResponse storeWeblogMessage(@Body String message) {
-        WeblogMessage weblogMessage
+        Workflow weblogMessage
         try {
-            weblogMessage = WeblogMessage.createFromJson(message)
+            weblogMessage = Workflow.createFromJson(message)
             log.info "Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}"
             informationCenter.storeWeblogMessage(weblogMessage)
         } catch ( Exception e ) {

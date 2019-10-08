@@ -1,15 +1,12 @@
-package life.qbic.service
+package life.qbic.flowstore.domain
 
-import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.MetaData
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
+
 import javax.inject.Singleton
 
 @Singleton
 interface WorkflowService {
 
-    void storeWeblogMessage(WeblogMessage message)
+    void storeWeblogMessage(Workflow message)
 
     List<RunInfo> getWorkflowRunInfoForId(String runId)
 

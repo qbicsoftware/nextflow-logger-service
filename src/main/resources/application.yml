@@ -18,7 +18,7 @@ contact:
     last-name: ${wf-contact-last-name:Mustermann}
     email: ${wf-contact-email:'max.mustermann@uni-tuebingen.de'}
 userroles:
-    config: ${service-userroles:/etc/micronaut.d/userroles.yml}
+    config: ${domain-userroles:/etc/micronaut.d/userroles.yml}
 database:
     name: workflows
 datasources:

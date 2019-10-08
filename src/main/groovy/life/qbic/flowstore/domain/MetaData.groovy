@@ -1,33 +1,34 @@
-package life.qbic.model.weblog
+package life.qbic.flowstore.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import groovy.transform.EqualsAndHashCode
 
+@EqualsAndHashCode()
+class MetaData {
 
-class Trace {
+    @JsonProperty('metadata')
+    private final Map metadata
 
-    @JsonProperty("properties")
-    private final Map traceInformation
-
-    Trace() {
-        traceInformation = [:].asImmutable()
+    MetaData() {
+        metadata = [:].asImmutable()
     }
 
-    Trace(Map trace) {
-        traceInformation = trace.asImmutable()
+    MetaData(Map metadata){
+        this.metadata = metadata.asImmutable()
     }
 
     @Override
     Object getProperty(String s) {
-        return traceInformation.get(s)
+        return this.metadata.get(s)
     }
 
     @Override
     boolean equals(Object o) {
-        if( !o instanceof Trace ) {
+        if( !o instanceof MetaData ) {
             return false
         }
-        def trace = o as Trace
-        for( String key in this.traceInformation.keySet() ) {
+        def trace = o as MetaData
+        for( String key in this.metadata.keySet() ) {
             def thisProperty = this.getProperty(key)
             def otherProperty = trace.getProperty(key)
             if( ! otherProperty || ( otherProperty != thisProperty ) ) {

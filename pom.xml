@@ -10,7 +10,7 @@
   <properties>
     <jdk.version>1.8</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <exec.mainClass>life.qbic.Flowstore</exec.mainClass>
+    <exec.mainClass>life.qbic.flowstore.Flowstore</exec.mainClass>
   </properties>
   <repositories>
     <repository>

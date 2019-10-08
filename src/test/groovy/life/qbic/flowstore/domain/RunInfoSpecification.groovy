@@ -1,4 +1,4 @@
-package life.qbic.model.weblog
+package life.qbic.flowstore.domain
 
 import groovy.json.JsonSlurper
 import spock.lang.Specification

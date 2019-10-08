@@ -1,4 +1,4 @@
-package life.qbic
+package life.qbic.flowstore
 
 class Constants {
 
