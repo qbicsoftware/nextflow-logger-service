@@ -1,11 +1,8 @@
-package life.qbic.model
+package life.qbic.flowstore.domain
 
-import life.qbic.model.weblog.MetaData
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
 import spock.lang.Specification
 
-class WeblogMessageSpecification extends Specification {
+class WorkflowSpecification extends Specification {
 
     def "create run info only weblog message"() {
         given :
@@ -14,7 +11,7 @@ class WeblogMessageSpecification extends Specification {
 
         when :
         RunInfo runInfo = new RunInfo(runInfoOnly)
-        WeblogMessage message = WeblogMessage.withRunInfo(runInfo)
+        Workflow message = Workflow.withRunInfo(runInfo)
 
         then:
         assert message.runInfo == runInfo
@@ -31,7 +28,7 @@ class WeblogMessageSpecification extends Specification {
         when :
         RunInfo runInfo = new RunInfo(runAndTraceInfo.findAll { k,v -> v != "trace" })
         Trace trace = new Trace(runAndTraceInfo.trace)
-        WeblogMessage message = WeblogMessage.withRunAndTraceInfo(runInfo, trace)
+        Workflow message = Workflow.withRunAndTraceInfo(runInfo, trace)
 
         then:
         assert message.runInfo == runInfo
@@ -51,7 +48,7 @@ class WeblogMessageSpecification extends Specification {
         when :
         RunInfo runInfo = new RunInfo(runAndMetadataInfo.findAll { k,v -> v != "metadata" })
         MetaData metadata = new MetaData(runAndMetadataInfo.metadata)
-        WeblogMessage message = WeblogMessage.withRunAndMetadataInfo(runInfo, metadata)
+        Workflow message = Workflow.withRunAndMetadataInfo(runInfo, metadata)
 
         then:
         assert message.runInfo == runInfo
@@ -83,7 +80,7 @@ class WeblogMessageSpecification extends Specification {
 
         when:
         assert fakeWeblogPayload
-        WeblogMessage message = WeblogMessage.createFromJson(fakeWeblogPayload)
+        Workflow message = Workflow.createFromJson(fakeWeblogPayload)
 
         then:
         assert fakeWeblogPayload

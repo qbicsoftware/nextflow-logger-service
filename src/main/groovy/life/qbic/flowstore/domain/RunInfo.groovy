@@ -1,9 +1,9 @@
-package life.qbic.model.weblog
+package life.qbic.flowstore.domain
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
-import life.qbic.Constants
+import life.qbic.flowstore.Constants
 
 import java.text.SimpleDateFormat
 

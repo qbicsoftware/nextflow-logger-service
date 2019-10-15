@@ -1,14 +1,14 @@
-package life.qbic.database
+package life.qbic.flowstore.database
 
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.annotation.*
-import life.qbic.service.WeblogStorage
-import life.qbic.model.WeblogMessage
-import life.qbic.model.weblog.MetaData
-import life.qbic.model.weblog.RunInfo
-import life.qbic.model.weblog.Trace
+import life.qbic.flowstore.domain.Workflows
+import life.qbic.flowstore.domain.Workflow
+import life.qbic.flowstore.domain.MetaData
+import life.qbic.flowstore.domain.RunInfo
+import life.qbic.flowstore.domain.Trace
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -37,21 +37,21 @@ class MariaDBStorageIntegrationTest extends Specification {
     ]
 
     @Inject
-    WeblogStorage storage
+    Workflows storage
 
     @Inject
     @Shared
     EmbeddedServer server
 
-    @Shared WeblogMessage messageWithTrace
+    @Shared Workflow messageWithTrace
 
-    @Shared WeblogMessage messageWithMetadata
+    @Shared Workflow messageWithMetadata
 
     def setupSpec() {
-        messageWithTrace = WeblogMessage.createFromJson(
+        messageWithTrace = Workflow.createFromJson(
                 new File("src/test/resources/WeblogPayloadWithTrace.json").text
         )
-        messageWithMetadata = WeblogMessage.createFromJson(
+        messageWithMetadata = Workflow.createFromJson(
                 new File("src/test/resources/WeblogPayloadWithMetaData.json").text
         )
     }
@@ -91,7 +91,7 @@ class MariaDBStorageIntegrationTest extends Specification {
         then:
         assert runInfoList.size() == 1
         assert runInfoList[0].id == messageWithTrace.runInfo.id
-        assert traces.size() == 1
+        assert traces.size() >= 1
         compareTraces(traces[0], messageWithTrace.trace)
     }
 
@@ -127,7 +127,7 @@ class MariaDBStorageIntegrationTest extends Specification {
             status = "completed"
             time = new Date()
         }
-        WeblogMessage messageWithUpdate = WeblogMessage.withRunInfo(newInfo)
+        Workflow messageWithUpdate = Workflow.withRunInfo(newInfo)
 
 
         when:

@@ -1,4 +1,4 @@
-package life.qbic.model.weblog
+package life.qbic.flowstore.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

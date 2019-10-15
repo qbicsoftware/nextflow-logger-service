@@ -1,12 +1,12 @@
-package life.qbic
+package life.qbic.flowstore.domain
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
 import javax.inject.Singleton
 
-@Requires(property="contact.first-name", defaultValue="Hubba")
-@Requires(property='contact.last-name', defaultValue="Bubba")
-@Requires(property='contact.email', defaultValue="hubba.bubby@bubblegum.com")
+@Requires(property="contact.first-name", defaultValue="Sven")
+@Requires(property="contact.last-name", defaultValue="Fillinger")
+@Requires(property="contact.email", defaultValue="sven.fillinger@qbic.uni-tuebingen.de")
 @Singleton
 class Contact {
 

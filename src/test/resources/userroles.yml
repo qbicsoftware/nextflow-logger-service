@@ -1,0 +1,11 @@
+---
+servicereader:
+  token: 123!
+  roles:
+    - READER
+servicewriter:
+  token: 123456!
+  roles:
+    - READER
+    - WRITER
+...

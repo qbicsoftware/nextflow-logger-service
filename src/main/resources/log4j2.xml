@@ -1,15 +1,23 @@
-<Configuration status="INFO">
+<Configuration status="ERROR" shutdownHook="disable">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss} [%level] [%logger{1}] - %msg%n"/>
         </Console>
+        <RollingFile
+                name="rollingFile"
+                fileName="${env:SERVICES_LOG_PATH}/nxflogger.log"
+                filePattern="${env:SERVICES_LOG_PATH}/nxflogger.%d{dd-MMM}.log.gz">
+            <PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss} [%level] [%logger{1}] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="14" />
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="life.qbic" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
         <Root level="all">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="rollingFile"/>
         </Root>
     </Loggers>
 </Configuration>
