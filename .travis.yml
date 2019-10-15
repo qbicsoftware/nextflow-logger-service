@@ -10,7 +10,7 @@ branches:
   only:
   - master
   - development
-  - "/^[vV]?\\\\d+\\\\.\\\\d+\\\\.\\\\d+$/"
+  - /^[vV]?\d+\.\d+\.\d+$/ # matches e.g., v1.2.3, 1.2.3, V1.2.3
 before_install:
   - unset _JAVA_OPTIONS
   - wget http://repo2.maven.org/maven2/com/h2database/h2/1.4.199/h2-1.4.199.jar
