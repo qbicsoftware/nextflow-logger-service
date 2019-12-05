@@ -2,6 +2,7 @@ package life.qbic.flowstore.domain
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+
 import javax.inject.Singleton
 
 @Requires(property="contact.first-name", defaultValue="Sven")

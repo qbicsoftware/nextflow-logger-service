@@ -4,11 +4,7 @@ import groovy.util.logging.Log4j2
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Consumes
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
 import life.qbic.datamodel.workflows.MetaData
@@ -16,8 +12,6 @@ import life.qbic.datamodel.workflows.RunInfo
 import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.domain.Contact
 import life.qbic.flowstore.domain.Workflow
-
-
 import life.qbic.flowstore.domain.WorkflowService
 import life.qbic.micronaututils.auth.Authentication
 

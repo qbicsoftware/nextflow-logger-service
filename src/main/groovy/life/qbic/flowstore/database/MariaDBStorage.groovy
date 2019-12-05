@@ -10,11 +10,9 @@ import life.qbic.datamodel.workflows.RunInfo
 import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.Constants
 import life.qbic.flowstore.domain.WeblogStorageException
+import life.qbic.flowstore.domain.Workflow
 import life.qbic.flowstore.domain.Workflows
 import life.qbic.micronaututils.QBiCDataSource
-import life.qbic.flowstore.domain.Workflow
-
-
 import org.apache.groovy.dateutil.extensions.DateUtilExtensions
 
 import javax.inject.Inject
