@@ -20,8 +20,8 @@ class Workflow {
 
     @JsonProperty("metadata")
     private MetaData metadata
-    
-    private Workflow(){}
+
+    private Workflow() {}
 
     static Workflow createFromJson(String json) {
         final def messageProperties = new JsonSlurper(checkDates: true).parseText(json) as Map
@@ -53,16 +53,16 @@ class Workflow {
     }
 
     static Workflow withRunAndTraceInfo(RunInfo runInfo,
-                                        Trace trace){
-       return new Workflow().tap {
-           it.runInfo = runInfo
-           it.trace = trace
-           metadata = new MetaData()
-       }
+                                        Trace trace) {
+        return new Workflow().tap {
+            it.runInfo = runInfo
+            it.trace = trace
+            metadata = new MetaData()
+        }
     }
 
     static Workflow withRunAndMetadataInfo(RunInfo runInfo,
-                                           MetaData metadata){
+                                           MetaData metadata) {
         return new Workflow().tap {
             it.runInfo = runInfo
             it.trace = new Trace()
@@ -70,7 +70,7 @@ class Workflow {
         }
     }
 
-    static Workflow withRunInfo(RunInfo runInfo){
+    static Workflow withRunInfo(RunInfo runInfo) {
         return new Workflow().tap {
             it.runInfo = runInfo
             trace = new Trace()

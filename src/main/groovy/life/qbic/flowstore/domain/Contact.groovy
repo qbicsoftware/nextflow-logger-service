@@ -5,9 +5,9 @@ import io.micronaut.context.annotation.Requires
 
 import javax.inject.Singleton
 
-@Requires(property="contact.first-name", defaultValue="Sven")
-@Requires(property="contact.last-name", defaultValue="Fillinger")
-@Requires(property="contact.email", defaultValue="sven.fillinger@qbic.uni-tuebingen.de")
+@Requires(property = "contact.first-name", defaultValue = "Sven")
+@Requires(property = "contact.last-name", defaultValue = "Fillinger")
+@Requires(property = "contact.email", defaultValue = "sven.fillinger@qbic.uni-tuebingen.de")
 @Singleton
 class Contact {
 
@@ -17,9 +17,9 @@ class Contact {
 
     String email
 
-    Contact(@Property(name="contact.first-name") String firstName,
-            @Property(name="contact.last-name") String lastName,
-            @Property(name="contact.email") String email) {
+    Contact(@Property(name = "contact.first-name") String firstName,
+            @Property(name = "contact.last-name") String lastName,
+            @Property(name = "contact.email") String email) {
         this.firstName = firstName
         this.lastName = lastName
         this.email = email
