@@ -20,6 +20,7 @@ import javax.inject.Singleton
 import java.sql.Clob
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
 @Log4j2
 @Singleton
@@ -134,7 +135,7 @@ class MariaDBStorage implements Workflows, AutoCloseable {
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
                 $primaryKeyRun,
-                ${utcDateFormat.parse(metaData.workflow.'start' as String)},
+                ${safelyConvertDate(metaData.workflow.'start' as String)},
                 ${JsonOutput.toJson(metaData.'parameters')},
                 ${metaData.workflow.'workDir'},
                 ${metaData.workflow.'container'},
@@ -148,6 +149,18 @@ class MariaDBStorage implements Workflows, AutoCloseable {
                 ${metaData.workflow.'exitStatus'},
                 ${metaData.workflow.'errorMessage'}
             );""")
+    }
+
+    private static def safelyConvertDate(String date){
+        try {
+            toUTCTime(date)
+        } catch (Exception e){
+            // Nextflow changed from Date to OffsetDateTime
+            log.info "Date seems to be an offset date time..."
+            def formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+            return formatter.parse(date)
+        }
+
     }
 
     private Integer storeRunInfo(RunInfo runInfo) {
