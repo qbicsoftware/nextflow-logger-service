@@ -20,125 +20,126 @@ import javax.inject.Singleton
 import java.sql.Clob
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
 @Log4j2
 @Singleton
 class MariaDBStorage implements Workflows, AutoCloseable{
 
-<span class="nc" id="L28">    private static final DateFormat databaseDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;)</span>
+<span class="nc" id="L29">    private static final DateFormat databaseDateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;)</span>
 
-<span class="nc" id="L30">    private static final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L31">    private static final DateFormat utcDateFormat = new SimpleDateFormat(Constants.ISO_8601_DATETIME_FORMAT)</span>
 
     private QBiCDataSource dataSource
 
     private Sql sql
 
     @Inject MariaDBStorage(QBiCDataSource dataSource) {
-<span class="nc" id="L37">        this.dataSource = dataSource</span>
-<span class="nc" id="L38">    }</span>
+<span class="nc" id="L38">        this.dataSource = dataSource</span>
+<span class="nc" id="L39">    }</span>
 
     List&lt;Trace&gt; findTracesForRunWithId(String id) {
-<span class="nc" id="L41">        sql = new Sql(dataSource.source)</span>
-<span class="nc" id="L42">        try {</span>
-<span class="nc bnc" id="L43" title="All 4 branches missed.">            def result = tryToFetchTracesForRun(id)</span>
-<span class="nc" id="L44">            sql.close()</span>
-<span class="nc" id="L45">            return result</span>
-<span class="nc" id="L46">        } catch (Exception e) {</span>
-<span class="nc" id="L47">            sql.close()</span>
-<span class="nc" id="L48">            throw new WeblogStorageException(&quot;Could not fetch trace information for run with id $id.&quot;, e.fillInStackTrace())</span>
-<span class="nc" id="L49">        }</span>
-<span class="nc" id="L50">    }</span>
+<span class="nc" id="L42">        sql = new Sql(dataSource.source)</span>
+<span class="nc" id="L43">        try {</span>
+<span class="nc bnc" id="L44" title="All 4 branches missed.">            def result = tryToFetchTracesForRun(id)</span>
+<span class="nc" id="L45">            sql.close()</span>
+<span class="nc" id="L46">            return result</span>
+<span class="nc" id="L47">        } catch (Exception e) {</span>
+<span class="nc" id="L48">            sql.close()</span>
+<span class="nc" id="L49">            throw new WeblogStorageException(&quot;Could not fetch trace information for run with id $id.&quot;, e.fillInStackTrace())</span>
+<span class="nc" id="L50">        }</span>
+<span class="nc" id="L51">    }</span>
 
     private List&lt;Trace&gt; tryToFetchTracesForRun(String runId) {
-<span class="nc bnc" id="L53" title="All 4 branches missed.">        def resultRows = tryToFindWeblogEntryWithRunId(runId)</span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if( resultRows.size() &gt; 1 ) {</span>
-<span class="nc" id="L55">            throw new WeblogStorageException(&quot;More than one run found for id $runId!. Expected unique result.&quot;)</span>
+<span class="nc bnc" id="L54" title="All 4 branches missed.">        def resultRows = tryToFindWeblogEntryWithRunId(runId)</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if( resultRows.size() &gt; 1 ) {</span>
+<span class="nc" id="L56">            throw new WeblogStorageException(&quot;More than one run found for id $runId!. Expected unique result.&quot;)</span>
         }
-<span class="nc" id="L57">        def primaryKeyRun = resultRows.get(0)[&quot;ID&quot;] as Integer</span>
-<span class="nc" id="L58">        def traces = findTracesForRunWithPrimaryKey(primaryKeyRun)</span>
-<span class="nc" id="L59">        return traces</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L58">        def primaryKeyRun = resultRows.get(0)[&quot;ID&quot;] as Integer</span>
+<span class="nc" id="L59">        def traces = findTracesForRunWithPrimaryKey(primaryKeyRun)</span>
+<span class="nc" id="L60">        return traces</span>
+<span class="nc" id="L61">    }</span>
 
     private List&lt;Trace&gt; findTracesForRunWithPrimaryKey(Integer key) {
-<span class="nc" id="L63">        def result = sql.rows(&quot;&quot;&quot;SELECT * FROM traces WHERE runId=$key;&quot;&quot;&quot;)</span>
-<span class="nc" id="L64">        List&lt;Trace&gt; traces = result.collect{ convertRowResultToTrace(it) }</span>
-<span class="nc" id="L65">        return traces</span>
-<span class="nc" id="L66">    }</span>
+<span class="nc" id="L64">        def result = sql.rows(&quot;&quot;&quot;SELECT * FROM traces WHERE runId=$key;&quot;&quot;&quot;)</span>
+<span class="nc" id="L65">        List&lt;Trace&gt; traces = result.collect{ convertRowResultToTrace(it) }</span>
+<span class="nc" id="L66">        return traces</span>
+<span class="nc" id="L67">    }</span>
 
     private static Trace convertRowResultToTrace(GroovyRowResult row) {
-<span class="nc" id="L69">        return new Trace([&quot;task_id&quot;: row.get('TASKID'),</span>
-<span class="nc" id="L70">            &quot;start&quot;: row.get('STARTTIME'),</span>
-<span class="nc" id="L71">            &quot;submit&quot;: row.get('SUBMISSIONTIME'),</span>
-<span class="nc" id="L72">            &quot;name&quot;: row.get('NAME'),</span>
-<span class="nc" id="L73">            &quot;status&quot;: row.get('STATUS'),</span>
-<span class="nc" id="L74">            &quot;exit&quot;: row.get('EXIT'),</span>
-<span class="nc" id="L75">            &quot;attempt&quot;: row.get('ATTEMPT'),</span>
-<span class="nc" id="L76">            &quot;memory&quot;: row.get('MEMORY'),</span>
-<span class="nc" id="L77">            &quot;duration&quot;: row.get('DURATION'),</span>
-<span class="nc" id="L78">            &quot;cpus&quot;: row.get('CPUS'),</span>
-<span class="nc" id="L79">            &quot;queue&quot;: row.get('QUEUE')])</span>
-<span class="nc" id="L80">    }</span>
+<span class="nc" id="L70">        return new Trace([&quot;task_id&quot;: row.get('TASKID'),</span>
+<span class="nc" id="L71">            &quot;start&quot;: row.get('STARTTIME'),</span>
+<span class="nc" id="L72">            &quot;submit&quot;: row.get('SUBMISSIONTIME'),</span>
+<span class="nc" id="L73">            &quot;name&quot;: row.get('NAME'),</span>
+<span class="nc" id="L74">            &quot;status&quot;: row.get('STATUS'),</span>
+<span class="nc" id="L75">            &quot;exit&quot;: row.get('EXIT'),</span>
+<span class="nc" id="L76">            &quot;attempt&quot;: row.get('ATTEMPT'),</span>
+<span class="nc" id="L77">            &quot;memory&quot;: row.get('MEMORY'),</span>
+<span class="nc" id="L78">            &quot;duration&quot;: row.get('DURATION'),</span>
+<span class="nc" id="L79">            &quot;cpus&quot;: row.get('CPUS'),</span>
+<span class="nc" id="L80">            &quot;queue&quot;: row.get('QUEUE')])</span>
+<span class="nc" id="L81">    }</span>
 
     List&lt;RunInfo&gt; findRunWithRunId(String runId) {
-<span class="nc" id="L83">        sql = new Sql(dataSource.source)</span>
-<span class="nc" id="L84">        try {</span>
-<span class="nc bnc" id="L85" title="All 4 branches missed.">            def result = tryToFindWeblogEntryWithRunId(runId)</span>
-<span class="nc" id="L86">            def weblogMessages = result.collect { convertRowResultToRunInfo(it) }</span>
-<span class="nc" id="L87">            sql.close()</span>
-<span class="nc" id="L88">            return weblogMessages</span>
-<span class="nc" id="L89">        } catch (Exception e) {</span>
-<span class="nc" id="L90">            sql.close()</span>
-<span class="nc" id="L91">            throw new WeblogStorageException(&quot;Could not query weblog message with run id $runId! Reason: $e&quot;, e.fillInStackTrace())</span>
-<span class="nc" id="L92">        }</span>
-<span class="nc" id="L93">    }</span>
+<span class="nc" id="L84">        sql = new Sql(dataSource.source)</span>
+<span class="nc" id="L85">        try {</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">            def result = tryToFindWeblogEntryWithRunId(runId)</span>
+<span class="nc" id="L87">            def weblogMessages = result.collect { convertRowResultToRunInfo(it) }</span>
+<span class="nc" id="L88">            sql.close()</span>
+<span class="nc" id="L89">            return weblogMessages</span>
+<span class="nc" id="L90">        } catch (Exception e) {</span>
+<span class="nc" id="L91">            sql.close()</span>
+<span class="nc" id="L92">            throw new WeblogStorageException(&quot;Could not query weblog message with run id $runId! Reason: $e&quot;, e.fillInStackTrace())</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">    }</span>
 
     private List&lt;GroovyRowResult&gt; tryToFindWeblogEntryWithRunId(String runId) {
-<span class="nc" id="L96">        final def statement = &quot;SELECT * FROM runs WHERE runId='${runId}';&quot;</span>
-<span class="nc" id="L97">        return sql.rows(statement)</span>
-<span class="nc" id="L98">    }</span>
+<span class="nc" id="L97">        final def statement = &quot;SELECT * FROM runs WHERE runId='${runId}';&quot;</span>
+<span class="nc" id="L98">        return sql.rows(statement)</span>
+<span class="nc" id="L99">    }</span>
 
     private static RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
-<span class="nc" id="L101">        RunInfo info = new RunInfo()</span>
-<span class="nc" id="L102">        info.event = rowResult.get(&quot;LASTEVENT&quot; )</span>
-<span class="nc" id="L103">        info.id = rowResult.get(&quot;RUNID&quot;)</span>
-<span class="nc" id="L104">        info.status = rowResult.get(&quot;LASTEVENT&quot; )</span>
-<span class="nc" id="L105">        info.name = rowResult.get(&quot;NAME&quot;)</span>
-<span class="nc bnc" id="L106" title="All 4 branches missed.">        info.time = utcDateFormat.parse(toUTCTime(rowResult.get(&quot;LASTRECORD&quot;) as String))</span>
-<span class="nc" id="L107">        return info</span>
-<span class="nc" id="L108">    }</span>
+<span class="nc" id="L102">        RunInfo info = new RunInfo()</span>
+<span class="nc" id="L103">        info.event = rowResult.get(&quot;LASTEVENT&quot; )</span>
+<span class="nc" id="L104">        info.id = rowResult.get(&quot;RUNID&quot;)</span>
+<span class="nc" id="L105">        info.status = rowResult.get(&quot;LASTEVENT&quot; )</span>
+<span class="nc" id="L106">        info.name = rowResult.get(&quot;NAME&quot;)</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">        info.time = utcDateFormat.parse(toUTCTime(rowResult.get(&quot;LASTRECORD&quot;) as String))</span>
+<span class="nc" id="L108">        return info</span>
+<span class="nc" id="L109">    }</span>
 
     void storeWeblogMessage(Workflow message) throws WeblogStorageException{
-<span class="nc" id="L111">       this.sql = new Sql(dataSource.source)</span>
+<span class="nc" id="L112">       this.sql = new Sql(dataSource.source)</span>
         try {
-<span class="nc" id="L113">            tryToStoreWeblogMessage(message)</span>
-<span class="nc" id="L114">            sql.close()</span>
-<span class="nc" id="L115">        } catch (Exception e) {</span>
-<span class="nc" id="L116">            sql.close()</span>
-<span class="nc" id="L117">            throw new WeblogStorageException(&quot;Could not store weblog message: $message! Reason: $e&quot;, e.fillInStackTrace())</span>
-<span class="nc" id="L118">        }</span>
-<span class="nc" id="L119">    }</span>
+<span class="nc" id="L114">            tryToStoreWeblogMessage(message)</span>
+<span class="nc" id="L115">            sql.close()</span>
+<span class="nc" id="L116">        } catch (Exception e) {</span>
+<span class="nc" id="L117">            sql.close()</span>
+<span class="nc" id="L118">            throw new WeblogStorageException(&quot;Could not store weblog message: $message! Reason: $e&quot;, e.fillInStackTrace())</span>
+<span class="nc" id="L119">        }</span>
+<span class="nc" id="L120">    }</span>
 
     private void tryToStoreWeblogMessage(Workflow message) {
-<span class="nc" id="L122">        def primaryKeyRun = storeRunInfo(message.runInfo)</span>
-<span class="nc" id="L123">        insertTraceInfo(message.trace, primaryKeyRun)</span>
-<span class="nc" id="L124">        insertMetadataInfo(message.metadata, primaryKeyRun)</span>
-<span class="nc" id="L125">    }</span>
+<span class="nc" id="L123">        def primaryKeyRun = storeRunInfo(message.runInfo)</span>
+<span class="nc" id="L124">        insertTraceInfo(message.trace, primaryKeyRun)</span>
+<span class="nc" id="L125">        insertMetadataInfo(message.metadata, primaryKeyRun)</span>
+<span class="nc" id="L126">    }</span>
 
     private void insertMetadataInfo(MetaData metaData, Integer primaryKeyRun) {
-<span class="nc bnc" id="L128" title="All 2 branches missed.">        if( metaData == new MetaData() ) {</span>
-<span class="nc" id="L129">            return</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if( metaData == new MetaData() ) {</span>
+<span class="nc" id="L130">            return</span>
         }
-<span class="nc" id="L131">        sql.execute(&quot;&quot;&quot;insert into metadata (runId,</span>
+<span class="nc bnc" id="L132" title="All 4 branches missed.">        sql.execute(&quot;&quot;&quot;insert into metadata (runId,</span>
             startTime, parameters, workDir, container, user, manifest,
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
                 $primaryKeyRun,
-<span class="nc" id="L136">                ${ utcDateFormat.parse(metaData.workflow.'start' as String) },</span>
-<span class="nc" id="L137">                ${JsonOutput.toJson(metaData.'parameters')},</span>
+<span class="nc" id="L137">                ${ safelyConvertDate(metaData.workflow.'start' as String) },</span>
+<span class="nc" id="L138">                ${JsonOutput.toJson(metaData.'parameters')},</span>
                 ${metaData.workflow.'workDir'},
                 ${metaData.workflow.'container'},
                 ${metaData.workflow.'userName'},
-<span class="nc" id="L141">                ${JsonOutput.toJson(metaData.workflow.'manifest')},</span>
+<span class="nc" id="L142">                ${JsonOutput.toJson(metaData.workflow.'manifest')},</span>
                 ${metaData.workflow.'revision'},
                 ${metaData.workflow.'duration'},
                 ${metaData.workflow.'success'},
@@ -147,48 +148,60 @@ class MariaDBStorage implements Workflows, AutoCloseable{
                 ${metaData.workflow.'exitStatus'},
                 ${metaData.workflow.'errorMessage'}
             );&quot;&quot;&quot;)
-<span class="nc" id="L150">    }</span>
+<span class="nc" id="L151">    }</span>
+
+    private static def safelyConvertDate(String date){
+        try {
+<span class="nc" id="L155">            toUTCTime(date)</span>
+<span class="nc" id="L156">        } catch (Exception e){</span>
+            // Nextflow changed from Date to OffsetDateTime
+<span class="nc" id="L158">            log.info &quot;Date seems to be an offset date time...&quot;</span>
+<span class="nc" id="L159">            def formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME</span>
+<span class="nc" id="L160">            return formatter.parse(date)</span>
+<span class="nc" id="L161">        }</span>
+
+<span class="nc" id="L163">    }</span>
 
     private Integer storeRunInfo(RunInfo runInfo) {
-<span class="nc" id="L153">        def primaryKey</span>
-<span class="nc bnc" id="L154" title="All 2 branches missed.">        if( isRunInfoStored(runInfo) ) {</span>
-<span class="nc" id="L155">            primaryKey = updateWeblogRunInfo(runInfo)</span>
-<span class="nc bnc" id="L156" title="All 2 branches missed.">            log.info &quot;Updated run info for run with id ${runInfo.id}&quot;</span>
-<span class="nc" id="L157">        } else {</span>
-<span class="nc" id="L158">            primaryKey = insertWeblogRunInfo(runInfo)</span>
+<span class="nc" id="L166">        def primaryKey</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if( isRunInfoStored(runInfo) ) {</span>
+<span class="nc" id="L168">            primaryKey = updateWeblogRunInfo(runInfo)</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            log.info &quot;Updated run info for run with id ${runInfo.id}&quot;</span>
+<span class="nc" id="L170">        } else {</span>
+<span class="nc" id="L171">            primaryKey = insertWeblogRunInfo(runInfo)</span>
         }
-<span class="nc" id="L160">        return primaryKey</span>
-<span class="nc" id="L161">    }</span>
+<span class="nc" id="L173">        return primaryKey</span>
+<span class="nc" id="L174">    }</span>
 
     private boolean isRunInfoStored(RunInfo runInfo) {
-<span class="nc" id="L164">        return tryToFindWeblogEntryWithRunId(runInfo.id)</span>
-<span class="nc" id="L165">    }</span>
+<span class="nc" id="L177">        return tryToFindWeblogEntryWithRunId(runInfo.id)</span>
+<span class="nc" id="L178">    }</span>
 
     private Integer updateWeblogRunInfo(RunInfo runInfo){
-<span class="nc" id="L168">        sql.execute(&quot;&quot;&quot; update runs set lastEvent = ${runInfo.event.toString()}, \</span>
+<span class="nc" id="L181">        sql.execute(&quot;&quot;&quot; update runs set lastEvent = ${runInfo.event.toString()}, \</span>
                 lastRecord = ${runInfo.time} where runId = ${runInfo.id} and name = ${runInfo.name};&quot;&quot;&quot;)
-<span class="nc" id="L170">        def result = tryToFindWeblogEntryWithRunId(runInfo.id)</span>
-<span class="nc" id="L171">        return result[0].get('id') as Integer</span>
-<span class="nc" id="L172">    }</span>
+<span class="nc" id="L183">        def result = tryToFindWeblogEntryWithRunId(runInfo.id)</span>
+<span class="nc" id="L184">        return result[0].get('id') as Integer</span>
+<span class="nc" id="L185">    }</span>
 
     private Integer insertWeblogRunInfo(RunInfo runInfo) {
-<span class="nc" id="L175">        sql.execute(&quot;&quot;&quot;insert into runs (runId, name, lastEvent, lastRecord) values \</span>
+<span class="nc" id="L188">        sql.execute(&quot;&quot;&quot;insert into runs (runId, name, lastEvent, lastRecord) values \</span>
             ($runInfo.id,
             $runInfo.name,
-<span class="nc" id="L178">            ${runInfo.event.toString()},</span>
+<span class="nc" id="L191">            ${runInfo.event.toString()},</span>
             ${ runInfo.time });&quot;&quot;&quot;)
-<span class="nc" id="L180">        def result = tryToFindWeblogEntryWithRunId(runInfo.id)</span>
-<span class="nc bnc" id="L181" title="All 4 branches missed.">        if( !result ) {</span>
-<span class="nc" id="L182">            throw new WeblogStorageException(&quot;Insertion went wrong!&quot;)</span>
+<span class="nc" id="L193">        def result = tryToFindWeblogEntryWithRunId(runInfo.id)</span>
+<span class="nc bnc" id="L194" title="All 4 branches missed.">        if( !result ) {</span>
+<span class="nc" id="L195">            throw new WeblogStorageException(&quot;Insertion went wrong!&quot;)</span>
         }
-<span class="nc" id="L184">        return result[0].get('id') as Integer</span>
+<span class="nc" id="L197">        return result[0].get('id') as Integer</span>
 
-<span class="nc" id="L186">    }</span>
+<span class="nc" id="L199">    }</span>
 
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        if( trace == new Trace() )</span>
-<span class="nc" id="L190">            return</span>
-<span class="nc" id="L191">        sql.execute(&quot;&quot;&quot;insert into traces (taskId, runId, startTime, submissionTime, name, `status`, `exit`, attempt, memory, cpus, queue, duration) values \</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if( trace == new Trace() )</span>
+<span class="nc" id="L203">            return</span>
+<span class="nc" id="L204">        sql.execute(&quot;&quot;&quot;insert into traces (taskId, runId, startTime, submissionTime, name, `status`, `exit`, attempt, memory, cpus, queue, duration) values \</span>
             (${trace.'task_id'},
             $primaryKeyRun,
             ${trace.'start'},
@@ -201,97 +214,97 @@ class MariaDBStorage implements Workflows, AutoCloseable{
             ${trace.'cpus'},
             ${trace.'queue'},
             ${trace.'duration'});&quot;&quot;&quot;)
-<span class="nc" id="L204">    }</span>
+<span class="nc" id="L217">    }</span>
 
     List&lt;MetaData&gt; findMetadataForRunWithId(String id) {
-<span class="nc" id="L207">        sql = new Sql(dataSource.source)</span>
-<span class="nc" id="L208">        try {</span>
-<span class="nc bnc" id="L209" title="All 4 branches missed.">            def result = tryToFetchMetadataForRun(id)</span>
-<span class="nc" id="L210">            sql.close()</span>
-<span class="nc" id="L211">            return result</span>
-<span class="nc" id="L212">        } catch (Exception e) {</span>
-<span class="nc" id="L213">            sql.close()</span>
-<span class="nc" id="L214">            throw new WeblogStorageException(&quot;Could not retrieve metadata information for run with id: $id. Reason: $e&quot;, e)</span>
-<span class="nc" id="L215">        }</span>
-<span class="nc" id="L216">    }</span>
+<span class="nc" id="L220">        sql = new Sql(dataSource.source)</span>
+<span class="nc" id="L221">        try {</span>
+<span class="nc bnc" id="L222" title="All 4 branches missed.">            def result = tryToFetchMetadataForRun(id)</span>
+<span class="nc" id="L223">            sql.close()</span>
+<span class="nc" id="L224">            return result</span>
+<span class="nc" id="L225">        } catch (Exception e) {</span>
+<span class="nc" id="L226">            sql.close()</span>
+<span class="nc" id="L227">            throw new WeblogStorageException(&quot;Could not retrieve metadata information for run with id: $id. Reason: $e&quot;, e)</span>
+<span class="nc" id="L228">        }</span>
+<span class="nc" id="L229">    }</span>
 
     private List&lt;MetaData&gt; tryToFetchMetadataForRun(String runId) {
-<span class="nc bnc" id="L219" title="All 4 branches missed.">        def resultRows = tryToFindWeblogEntryWithRunId(runId)</span>
-<span class="nc bnc" id="L220" title="All 2 branches missed.">        if( resultRows.size() &gt; 1 ) {</span>
-<span class="nc" id="L221">            throw new WeblogStorageException(&quot;More than one run found for id $runId!. Expected unique result.&quot;)</span>
+<span class="nc bnc" id="L232" title="All 4 branches missed.">        def resultRows = tryToFindWeblogEntryWithRunId(runId)</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        if( resultRows.size() &gt; 1 ) {</span>
+<span class="nc" id="L234">            throw new WeblogStorageException(&quot;More than one run found for id $runId!. Expected unique result.&quot;)</span>
         }
-<span class="nc" id="L223">        def primaryKeyRun = resultRows.get(0)[&quot;ID&quot;] as Integer</span>
-<span class="nc" id="L224">        return findMetadataForRunWithForeignKey(primaryKeyRun)</span>
-<span class="nc" id="L225">    }</span>
+<span class="nc" id="L236">        def primaryKeyRun = resultRows.get(0)[&quot;ID&quot;] as Integer</span>
+<span class="nc" id="L237">        return findMetadataForRunWithForeignKey(primaryKeyRun)</span>
+<span class="nc" id="L238">    }</span>
 
     private List&lt;MetaData&gt; findMetadataForRunWithForeignKey(Integer key) {
-<span class="nc" id="L228">        def result = sql.rows(&quot;SELECT * FROM metadata WHERE runId=$key;&quot;)</span>
-<span class="nc" id="L229">        List&lt;MetaData&gt; metadata = result.collect{ convertRowResultToMetadata(it) }</span>
-<span class="nc" id="L230">        return metadata</span>
-<span class="nc" id="L231">    }</span>
+<span class="nc" id="L241">        def result = sql.rows(&quot;SELECT * FROM metadata WHERE runId=$key;&quot;)</span>
+<span class="nc" id="L242">        List&lt;MetaData&gt; metadata = result.collect{ convertRowResultToMetadata(it) }</span>
+<span class="nc" id="L243">        return metadata</span>
+<span class="nc" id="L244">    }</span>
 
     private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
-<span class="nc" id="L234">        def slurper = new JsonSlurper()</span>
-<span class="nc bnc" id="L235" title="All 4 branches missed.">        def workflow = [</span>
-<span class="nc" id="L236">                'start': toUTCTime(rowResult.get('STARTTIME') as String),</span>
-<span class="nc" id="L237">                'workDir': rowResult.get('WORKDIR'),</span>
-<span class="nc" id="L238">                'container': rowResult.get('CONTAINER'),</span>
-<span class="nc" id="L239">                'userName': rowResult.get('USER'),</span>
-<span class="nc bnc" id="L240" title="All 4 branches missed.">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') ?: '')),</span>
-<span class="nc" id="L241">                'revision': rowResult.get('REVISION'),</span>
-<span class="nc" id="L242">                'duration': rowResult.get('DURATION'),</span>
-<span class="nc" id="L243">                'success': rowResult.get('SUCCESS'),</span>
-<span class="nc" id="L244">                'resume': rowResult.get('RESUME'),</span>
-<span class="nc" id="L245">                'model': ['version': rowResult.get('NEXTFLOWVERSION')],</span>
-<span class="nc" id="L246">                'exitStatus': rowResult.get('EXITSTATUS'),</span>
-<span class="nc" id="L247">                'errorMessage': rowResult.get('ERRORMESSAGE')</span>
+<span class="nc" id="L247">        def slurper = new JsonSlurper()</span>
+<span class="nc bnc" id="L248" title="All 4 branches missed.">        def workflow = [</span>
+<span class="nc" id="L249">                'start': toUTCTime(rowResult.get('STARTTIME') as String),</span>
+<span class="nc" id="L250">                'workDir': rowResult.get('WORKDIR'),</span>
+<span class="nc" id="L251">                'container': rowResult.get('CONTAINER'),</span>
+<span class="nc" id="L252">                'userName': rowResult.get('USER'),</span>
+<span class="nc bnc" id="L253" title="All 4 branches missed.">                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') ?: '')),</span>
+<span class="nc" id="L254">                'revision': rowResult.get('REVISION'),</span>
+<span class="nc" id="L255">                'duration': rowResult.get('DURATION'),</span>
+<span class="nc" id="L256">                'success': rowResult.get('SUCCESS'),</span>
+<span class="nc" id="L257">                'resume': rowResult.get('RESUME'),</span>
+<span class="nc" id="L258">                'model': ['version': rowResult.get('NEXTFLOWVERSION')],</span>
+<span class="nc" id="L259">                'exitStatus': rowResult.get('EXITSTATUS'),</span>
+<span class="nc" id="L260">                'errorMessage': rowResult.get('ERRORMESSAGE')</span>
         ]
 
-<span class="nc" id="L250">        return new MetaData([</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">                'parameters': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),</span>
+<span class="nc" id="L263">        return new MetaData([</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">                'parameters': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),</span>
                 'workflow': workflow
         ])
-<span class="nc" id="L254">    }</span>
+<span class="nc" id="L267">    }</span>
 
     @Override
     List&lt;RunInfo&gt; findAllRunInfo() {
-<span class="nc" id="L258">        this.sql = new Sql(dataSource.source)</span>
-<span class="nc" id="L259">        try {</span>
-<span class="nc bnc" id="L260" title="All 4 branches missed.">            def runInfoList = tryToFindAllRunInfo()</span>
-<span class="nc" id="L261">            sql.close()</span>
-<span class="nc" id="L262">            return runInfoList</span>
-<span class="nc" id="L263">        } catch (Exception e) {</span>
-<span class="nc" id="L264">            sql.close()</span>
-<span class="nc" id="L265">            throw new WeblogStorageException(&quot;Could not request all run info Reason: $e&quot;, e.fillInStackTrace())</span>
-<span class="nc" id="L266">        }</span>
-<span class="nc" id="L267">    }</span>
+<span class="nc" id="L271">        this.sql = new Sql(dataSource.source)</span>
+<span class="nc" id="L272">        try {</span>
+<span class="nc bnc" id="L273" title="All 4 branches missed.">            def runInfoList = tryToFindAllRunInfo()</span>
+<span class="nc" id="L274">            sql.close()</span>
+<span class="nc" id="L275">            return runInfoList</span>
+<span class="nc" id="L276">        } catch (Exception e) {</span>
+<span class="nc" id="L277">            sql.close()</span>
+<span class="nc" id="L278">            throw new WeblogStorageException(&quot;Could not request all run info Reason: $e&quot;, e.fillInStackTrace())</span>
+<span class="nc" id="L279">        }</span>
+<span class="nc" id="L280">    }</span>
 
     private List&lt;RunInfo&gt; tryToFindAllRunInfo() {
-<span class="nc" id="L270">        def result = sql.rows(&quot;SELECT * FROM runs ORDER BY lastRecord DESC;&quot;)</span>
-<span class="nc" id="L271">        List&lt;RunInfo&gt; runInfoList = result.collect{ convertRowResultToRunInfo(it) }</span>
-<span class="nc" id="L272">        return runInfoList</span>
-<span class="nc" id="L273">    }</span>
+<span class="nc" id="L283">        def result = sql.rows(&quot;SELECT * FROM runs ORDER BY lastRecord DESC;&quot;)</span>
+<span class="nc" id="L284">        List&lt;RunInfo&gt; runInfoList = result.collect{ convertRowResultToRunInfo(it) }</span>
+<span class="nc" id="L285">        return runInfoList</span>
+<span class="nc" id="L286">    }</span>
 
     private static String parseClob(Object clob) {
-<span class="nc bnc" id="L276" title="All 4 branches missed.">        if (! clob) {</span>
-<span class="nc" id="L277">            return &quot;{}&quot;</span>
+<span class="nc bnc" id="L289" title="All 4 branches missed.">        if (! clob) {</span>
+<span class="nc" id="L290">            return &quot;{}&quot;</span>
         }
-<span class="nc bnc" id="L279" title="All 4 branches missed.">        if (! (clob instanceof Clob)){</span>
-<span class="nc" id="L280">            return clob.toString()</span>
+<span class="nc bnc" id="L292" title="All 4 branches missed.">        if (! (clob instanceof Clob)){</span>
+<span class="nc" id="L293">            return clob.toString()</span>
         }
-<span class="nc" id="L282">        Reader reader = (clob as Clob).getCharacterStream()</span>
-<span class="nc" id="L283">        return reader.getText()</span>
-<span class="nc" id="L284">    }</span>
+<span class="nc" id="L295">        Reader reader = (clob as Clob).getCharacterStream()</span>
+<span class="nc" id="L296">        return reader.getText()</span>
+<span class="nc" id="L297">    }</span>
 
     private static String toUTCTime(String timestamp) {
-<span class="nc" id="L287">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
-<span class="nc" id="L288">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
-<span class="nc" id="L289">    }</span>
+<span class="nc" id="L300">        def parsedDate = databaseDateFormat.parse(timestamp)</span>
+<span class="nc" id="L301">        return DateUtilExtensions.format(parsedDate, Constants.ISO_8601_DATETIME_FORMAT)</span>
+<span class="nc" id="L302">    }</span>
 
     @Override
     void close() throws Exception {
-<span class="nc" id="L293">        sql.close()</span>
-<span class="nc" id="L294">        dataSource.connection.close()</span>
-<span class="nc" id="L295">    }</span>
+<span class="nc" id="L306">        sql.close()</span>
+<span class="nc" id="L307">        dataSource.connection.close()</span>
+<span class="nc" id="L308">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
