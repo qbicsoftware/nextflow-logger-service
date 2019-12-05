@@ -4,11 +4,12 @@ import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.annotation.*
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.domain.Workflows
 import life.qbic.flowstore.domain.Workflow
-import life.qbic.flowstore.domain.MetaData
-import life.qbic.flowstore.domain.RunInfo
-import life.qbic.flowstore.domain.Trace
+
 import spock.lang.Shared
 import spock.lang.Specification
 

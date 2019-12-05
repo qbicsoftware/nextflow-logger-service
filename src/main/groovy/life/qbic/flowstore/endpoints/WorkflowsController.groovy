@@ -11,11 +11,13 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.domain.Contact
 import life.qbic.flowstore.domain.Workflow
-import life.qbic.flowstore.domain.MetaData
-import life.qbic.flowstore.domain.RunInfo
-import life.qbic.flowstore.domain.Trace
+
+
 import life.qbic.flowstore.domain.WorkflowService
 import life.qbic.micronaututils.auth.Authentication
 

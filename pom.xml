@@ -67,6 +67,12 @@
       <version>1.2.3</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- QBiC dependencies -->
+    <dependency>
+      <groupId>life.qbic</groupId>
+      <artifactId>data-model-lib</artifactId>
+      <version>1.6.0</version>
+    </dependency>
     <!-- Production database driver -->
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>

@@ -2,6 +2,9 @@ package life.qbic.flowstore.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.json.JsonSlurper
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 
 class Workflow {
 

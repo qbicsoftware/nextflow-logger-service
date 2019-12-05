@@ -1,6 +1,7 @@
 package life.qbic.flowstore.domain
 
 import groovy.json.JsonSlurper
+import life.qbic.datamodel.workflows.RunInfo
 import spock.lang.Specification
 
 class RunInfoSpecification extends Specification {

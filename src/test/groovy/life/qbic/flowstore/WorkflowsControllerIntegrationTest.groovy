@@ -9,9 +9,9 @@ import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.annotation.MicronautTest
+import life.qbic.datamodel.workflows.RunInfo
 import life.qbic.flowstore.domain.Workflow
-import life.qbic.flowstore.domain.RunInfo
-import life.qbic.flowstore.domain.Trace
+import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.domain.WorkflowService
 import spock.lang.Shared
 import spock.lang.Specification

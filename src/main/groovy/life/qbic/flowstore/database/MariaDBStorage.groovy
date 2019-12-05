@@ -5,14 +5,16 @@ import groovy.json.JsonSlurper
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import groovy.util.logging.Log4j2
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.Constants
 import life.qbic.flowstore.domain.WeblogStorageException
 import life.qbic.flowstore.domain.Workflows
 import life.qbic.micronaututils.QBiCDataSource
 import life.qbic.flowstore.domain.Workflow
-import life.qbic.flowstore.domain.MetaData
-import life.qbic.flowstore.domain.RunInfo
-import life.qbic.flowstore.domain.Trace
+
+
 import org.apache.groovy.dateutil.extensions.DateUtilExtensions
 
 import javax.inject.Inject
