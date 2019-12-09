@@ -2,11 +2,12 @@
 
 import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+
 import javax.inject.Singleton
 
-@Requires(property=&quot;contact.first-name&quot;, defaultValue=&quot;Sven&quot;)
-@Requires(property=&quot;contact.last-name&quot;, defaultValue=&quot;Fillinger&quot;)
-@Requires(property=&quot;contact.email&quot;, defaultValue=&quot;sven.fillinger@qbic.uni-tuebingen.de&quot;)
+@Requires(property = &quot;contact.first-name&quot;, defaultValue = &quot;Sven&quot;)
+@Requires(property = &quot;contact.last-name&quot;, defaultValue = &quot;Fillinger&quot;)
+@Requires(property = &quot;contact.email&quot;, defaultValue = &quot;sven.fillinger@qbic.uni-tuebingen.de&quot;)
 @Singleton
 class Contact {
 
@@ -16,22 +17,22 @@ class Contact {
 
     String email
 
-    Contact(@Property(name=&quot;contact.first-name&quot;) String firstName,
-            @Property(name=&quot;contact.last-name&quot;) String lastName,
-            @Property(name=&quot;contact.email&quot;) String email) {
-<span class="nc" id="L22">        this.firstName = firstName</span>
-<span class="nc" id="L23">        this.lastName = lastName</span>
-<span class="nc" id="L24">        this.email = email</span>
-<span class="nc" id="L25">    }</span>
+    Contact(@Property(name = &quot;contact.first-name&quot;) String firstName,
+            @Property(name = &quot;contact.last-name&quot;) String lastName,
+            @Property(name = &quot;contact.email&quot;) String email) {
+<span class="nc" id="L23">        this.firstName = firstName</span>
+<span class="nc" id="L24">        this.lastName = lastName</span>
+<span class="nc" id="L25">        this.email = email</span>
+<span class="nc" id="L26">    }</span>
 
     @Override
     String toString() {
-<span class="nc" id="L29">        StringBuilder builder = new StringBuilder()</span>
-<span class="nc" id="L30">        builder.append(&quot;--------\n&quot;)</span>
-<span class="nc" id="L31">        builder.append(&quot;$firstName $lastName\n&quot;)</span>
-<span class="nc" id="L32">        builder.append(&quot;$email\n&quot;)</span>
-<span class="nc" id="L33">        return builder.toString()</span>
-<span class="nc" id="L34">    }</span>
+<span class="nc" id="L30">        StringBuilder builder = new StringBuilder()</span>
+<span class="nc" id="L31">        builder.append(&quot;--------\n&quot;)</span>
+<span class="nc" id="L32">        builder.append(&quot;$firstName $lastName\n&quot;)</span>
+<span class="nc" id="L33">        builder.append(&quot;$email\n&quot;)</span>
+<span class="nc" id="L34">        return builder.toString()</span>
+<span class="nc" id="L35">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
