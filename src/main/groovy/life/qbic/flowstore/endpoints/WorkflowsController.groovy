@@ -4,18 +4,14 @@ import groovy.util.logging.Log4j2
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Consumes
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.domain.Contact
 import life.qbic.flowstore.domain.Workflow
-import life.qbic.flowstore.domain.MetaData
-import life.qbic.flowstore.domain.RunInfo
-import life.qbic.flowstore.domain.Trace
 import life.qbic.flowstore.domain.WorkflowService
 import life.qbic.micronaututils.auth.Authentication
 
@@ -38,14 +34,14 @@ class WorkflowsController {
 
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Post(uri="/")
+    @Post(uri = "/")
     HttpResponse storeWeblogMessage(@Body String message) {
         Workflow weblogMessage
         try {
             weblogMessage = Workflow.createFromJson(message)
             log.info "Incoming weblog message with for run ID: ${weblogMessage.runInfo.id}"
             informationCenter.storeWeblogMessage(weblogMessage)
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             log.error(e)
             log.debug(e.printStackTrace())
             return HttpResponse.serverError("Unexpected error, resource could not be created.")
@@ -60,11 +56,11 @@ class WorkflowsController {
         List<RunInfo> runInfoList
         try {
             runInfoList = informationCenter.getWorkflowRunInfoForId(runId)
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             log.error(e)
             return HttpResponse.serverError(serverErrorResponse())
         }
-        runInfoList ? HttpResponse.ok(runInfoList): HttpResponse.notFound()
+        runInfoList ? HttpResponse.ok(runInfoList) : HttpResponse.notFound()
     }
 
     @Secured("READER")
@@ -74,7 +70,7 @@ class WorkflowsController {
         List<Trace> traces
         try {
             traces = informationCenter.getTracesForWorkflowWithId(runId)
-        } catch( Exception e ) {
+        } catch (Exception e) {
             log.error(e)
             return HttpResponse.serverError()
         }
@@ -88,7 +84,7 @@ class WorkflowsController {
         List<MetaData> metaData
         try {
             metaData = informationCenter.getMetadataOfWorkflow(runId)
-        } catch( Exception e ) {
+        } catch (Exception e) {
             log.error(e)
             return HttpResponse.serverError()
         }
@@ -103,7 +99,7 @@ class WorkflowsController {
         List<RunInfo> runInfoList
         try {
             runInfoList = informationCenter.getAllWorkflowRunInfo()
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             log.error(e)
             return HttpResponse.serverError()
         }

@@ -1,12 +1,12 @@
 package life.qbic.flowstore
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j2
 import io.micronaut.runtime.Micronaut
-import groovy.transform.CompileStatic
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.info.Contact
 import io.swagger.v3.oas.annotations.info.Info
 import io.swagger.v3.oas.annotations.info.License
-import io.swagger.v3.oas.annotations.info.Contact
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.Configurator

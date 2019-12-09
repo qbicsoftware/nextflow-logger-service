@@ -1,6 +1,6 @@
 package life.qbic.flowstore.domain
 
-class WeblogStorageException extends RuntimeException{
+class WeblogStorageException extends RuntimeException {
 
     WeblogStorageException() {
         super()

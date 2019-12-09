@@ -5,14 +5,14 @@ import groovy.json.JsonSlurper
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import groovy.util.logging.Log4j2
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 import life.qbic.flowstore.Constants
 import life.qbic.flowstore.domain.WeblogStorageException
+import life.qbic.flowstore.domain.Workflow
 import life.qbic.flowstore.domain.Workflows
 import life.qbic.micronaututils.QBiCDataSource
-import life.qbic.flowstore.domain.Workflow
-import life.qbic.flowstore.domain.MetaData
-import life.qbic.flowstore.domain.RunInfo
-import life.qbic.flowstore.domain.Trace
 import org.apache.groovy.dateutil.extensions.DateUtilExtensions
 
 import javax.inject.Inject
@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter
 
 @Log4j2
 @Singleton
-class MariaDBStorage implements Workflows, AutoCloseable{
+class MariaDBStorage implements Workflows, AutoCloseable {
 
     private static final DateFormat databaseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
@@ -34,7 +34,8 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private Sql sql
 
-    @Inject MariaDBStorage(QBiCDataSource dataSource) {
+    @Inject
+    MariaDBStorage(QBiCDataSource dataSource) {
         this.dataSource = dataSource
     }
 
@@ -52,7 +53,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private List<Trace> tryToFetchTracesForRun(String runId) {
         def resultRows = tryToFindWeblogEntryWithRunId(runId)
-        if( resultRows.size() > 1 ) {
+        if (resultRows.size() > 1) {
             throw new WeblogStorageException("More than one run found for id $runId!. Expected unique result.")
         }
         def primaryKeyRun = resultRows.get(0)["ID"] as Integer
@@ -62,22 +63,22 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private List<Trace> findTracesForRunWithPrimaryKey(Integer key) {
         def result = sql.rows("""SELECT * FROM traces WHERE runId=$key;""")
-        List<Trace> traces = result.collect{ convertRowResultToTrace(it) }
+        List<Trace> traces = result.collect { convertRowResultToTrace(it) }
         return traces
     }
 
     private static Trace convertRowResultToTrace(GroovyRowResult row) {
-        return new Trace(["task_id": row.get('TASKID'),
-            "start": row.get('STARTTIME'),
-            "submit": row.get('SUBMISSIONTIME'),
-            "name": row.get('NAME'),
-            "status": row.get('STATUS'),
-            "exit": row.get('EXIT'),
-            "attempt": row.get('ATTEMPT'),
-            "memory": row.get('MEMORY'),
-            "duration": row.get('DURATION'),
-            "cpus": row.get('CPUS'),
-            "queue": row.get('QUEUE')])
+        return new Trace(["task_id" : row.get('TASKID'),
+                          "start"   : row.get('STARTTIME'),
+                          "submit"  : row.get('SUBMISSIONTIME'),
+                          "name"    : row.get('NAME'),
+                          "status"  : row.get('STATUS'),
+                          "exit"    : row.get('EXIT'),
+                          "attempt" : row.get('ATTEMPT'),
+                          "memory"  : row.get('MEMORY'),
+                          "duration": row.get('DURATION'),
+                          "cpus"    : row.get('CPUS'),
+                          "queue"   : row.get('QUEUE')])
     }
 
     List<RunInfo> findRunWithRunId(String runId) {
@@ -100,16 +101,16 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private static RunInfo convertRowResultToRunInfo(GroovyRowResult rowResult) {
         RunInfo info = new RunInfo()
-        info.event = rowResult.get("LASTEVENT" )
+        info.event = rowResult.get("LASTEVENT")
         info.id = rowResult.get("RUNID")
-        info.status = rowResult.get("LASTEVENT" )
+        info.status = rowResult.get("LASTEVENT")
         info.name = rowResult.get("NAME")
         info.time = utcDateFormat.parse(toUTCTime(rowResult.get("LASTRECORD") as String))
         return info
     }
 
-    void storeWeblogMessage(Workflow message) throws WeblogStorageException{
-       this.sql = new Sql(dataSource.source)
+    void storeWeblogMessage(Workflow message) throws WeblogStorageException {
+        this.sql = new Sql(dataSource.source)
         try {
             tryToStoreWeblogMessage(message)
             sql.close()
@@ -126,7 +127,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
     }
 
     private void insertMetadataInfo(MetaData metaData, Integer primaryKeyRun) {
-        if( metaData == new MetaData() ) {
+        if (metaData == new MetaData()) {
             return
         }
         sql.execute("""insert into metadata (runId,
@@ -134,7 +135,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
             revision, duration, success, resume, nextflowVersion, exitStatus, errorMessage) 
             values (
                 $primaryKeyRun,
-                ${ safelyConvertDate(metaData.workflow.'start' as String) },
+                ${safelyConvertDate(metaData.workflow.'start' as String)},
                 ${JsonOutput.toJson(metaData.'parameters')},
                 ${metaData.workflow.'workDir'},
                 ${metaData.workflow.'container'},
@@ -164,7 +165,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private Integer storeRunInfo(RunInfo runInfo) {
         def primaryKey
-        if( isRunInfoStored(runInfo) ) {
+        if (isRunInfoStored(runInfo)) {
             primaryKey = updateWeblogRunInfo(runInfo)
             log.info "Updated run info for run with id ${runInfo.id}"
         } else {
@@ -177,7 +178,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
         return tryToFindWeblogEntryWithRunId(runInfo.id)
     }
 
-    private Integer updateWeblogRunInfo(RunInfo runInfo){
+    private Integer updateWeblogRunInfo(RunInfo runInfo) {
         sql.execute(""" update runs set lastEvent = ${runInfo.event.toString()}, \
                 lastRecord = ${runInfo.time} where runId = ${runInfo.id} and name = ${runInfo.name};""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
@@ -189,9 +190,9 @@ class MariaDBStorage implements Workflows, AutoCloseable{
             ($runInfo.id,
             $runInfo.name,
             ${runInfo.event.toString()},
-            ${ runInfo.time });""")
+            ${runInfo.time});""")
         def result = tryToFindWeblogEntryWithRunId(runInfo.id)
-        if( !result ) {
+        if (!result) {
             throw new WeblogStorageException("Insertion went wrong!")
         }
         return result[0].get('id') as Integer
@@ -199,7 +200,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
     }
 
     private void insertTraceInfo(Trace trace, Integer primaryKeyRun) {
-        if( trace == new Trace() )
+        if (trace == new Trace())
             return
         sql.execute("""insert into traces (taskId, runId, startTime, submissionTime, name, `status`, `exit`, attempt, memory, cpus, queue, duration) values \
             (${trace.'task_id'},
@@ -230,7 +231,7 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private List<MetaData> tryToFetchMetadataForRun(String runId) {
         def resultRows = tryToFindWeblogEntryWithRunId(runId)
-        if( resultRows.size() > 1 ) {
+        if (resultRows.size() > 1) {
             throw new WeblogStorageException("More than one run found for id $runId!. Expected unique result.")
         }
         def primaryKeyRun = resultRows.get(0)["ID"] as Integer
@@ -239,30 +240,30 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private List<MetaData> findMetadataForRunWithForeignKey(Integer key) {
         def result = sql.rows("SELECT * FROM metadata WHERE runId=$key;")
-        List<MetaData> metadata = result.collect{ convertRowResultToMetadata(it) }
+        List<MetaData> metadata = result.collect { convertRowResultToMetadata(it) }
         return metadata
     }
 
     private static MetaData convertRowResultToMetadata(GroovyRowResult rowResult) {
         def slurper = new JsonSlurper()
         def workflow = [
-                'start': toUTCTime(rowResult.get('STARTTIME') as String),
-                'workDir': rowResult.get('WORKDIR'),
-                'container': rowResult.get('CONTAINER'),
-                'userName': rowResult.get('USER'),
-                'manifest': slurper.parseText(parseClob(rowResult.get('MANIFEST') ?: '')),
-                'revision': rowResult.get('REVISION'),
-                'duration': rowResult.get('DURATION'),
-                'success': rowResult.get('SUCCESS'),
-                'resume': rowResult.get('RESUME'),
-                'model': ['version': rowResult.get('NEXTFLOWVERSION')],
-                'exitStatus': rowResult.get('EXITSTATUS'),
+                'start'       : toUTCTime(rowResult.get('STARTTIME') as String),
+                'workDir'     : rowResult.get('WORKDIR'),
+                'container'   : rowResult.get('CONTAINER'),
+                'userName'    : rowResult.get('USER'),
+                'manifest'    : slurper.parseText(parseClob(rowResult.get('MANIFEST') ?: '')),
+                'revision'    : rowResult.get('REVISION'),
+                'duration'    : rowResult.get('DURATION'),
+                'success'     : rowResult.get('SUCCESS'),
+                'resume'      : rowResult.get('RESUME'),
+                'model'       : ['version': rowResult.get('NEXTFLOWVERSION')],
+                'exitStatus'  : rowResult.get('EXITSTATUS'),
                 'errorMessage': rowResult.get('ERRORMESSAGE')
         ]
 
         return new MetaData([
                 'parameters': slurper.parseText(parseClob(rowResult.get('PARAMETERS') ?: '')),
-                'workflow': workflow
+                'workflow'  : workflow
         ])
     }
 
@@ -281,15 +282,15 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private List<RunInfo> tryToFindAllRunInfo() {
         def result = sql.rows("SELECT * FROM runs ORDER BY lastRecord DESC;")
-        List<RunInfo> runInfoList = result.collect{ convertRowResultToRunInfo(it) }
+        List<RunInfo> runInfoList = result.collect { convertRowResultToRunInfo(it) }
         return runInfoList
     }
 
     private static String parseClob(Object clob) {
-        if (! clob) {
+        if (!clob) {
             return "{}"
         }
-        if (! (clob instanceof Clob)){
+        if (!(clob instanceof Clob)) {
             return clob.toString()
         }
         Reader reader = (clob as Clob).getCharacterStream()

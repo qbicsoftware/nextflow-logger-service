@@ -1,5 +1,8 @@
 package life.qbic.flowstore.domain
 
+import life.qbic.datamodel.workflows.MetaData
+import life.qbic.datamodel.workflows.RunInfo
+import life.qbic.datamodel.workflows.Trace
 
 import javax.inject.Singleton
 
