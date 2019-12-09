@@ -26,10 +26,10 @@ class Workflow {
     static Workflow createFromJson(String json) {
 <span class="fc" id="L27">        final def messageProperties = new JsonSlurper(checkDates: true).parseText(json) as Map</span>
 <span class="fc" id="L28">        return new Workflow().tap {</span>
-<span class="fc" id="L29">            it.runInfo = new RunInfo(messageProperties)</span>
+<span class="pc" id="L29">            it.runInfo = new RunInfo(messageProperties)</span>
 <span class="fc" id="L30">            it.trace = createTraceInfoFromMap(messageProperties)</span>
 <span class="fc" id="L31">            it.metadata = createMetadataFromJson(messageProperties)</span>
-<span class="nc" id="L32">        }</span>
+        }
 <span class="nc" id="L33">    }</span>
 
     private static MetaData createMetadataFromJson(Map map) {
@@ -55,27 +55,27 @@ class Workflow {
     static Workflow withRunAndTraceInfo(RunInfo runInfo,
                                         Trace trace) {
 <span class="fc" id="L57">        return new Workflow().tap {</span>
-<span class="fc" id="L58">            it.runInfo = runInfo</span>
+<span class="pc" id="L58">            it.runInfo = runInfo</span>
 <span class="fc" id="L59">            it.trace = trace</span>
 <span class="fc" id="L60">            metadata = new MetaData()</span>
-<span class="nc" id="L61">        }</span>
+        }
 <span class="nc" id="L62">    }</span>
 
     static Workflow withRunAndMetadataInfo(RunInfo runInfo,
                                            MetaData metadata) {
 <span class="fc" id="L66">        return new Workflow().tap {</span>
-<span class="fc" id="L67">            it.runInfo = runInfo</span>
+<span class="pc" id="L67">            it.runInfo = runInfo</span>
 <span class="fc" id="L68">            it.trace = new Trace()</span>
 <span class="fc" id="L69">            it.metadata = metadata</span>
-<span class="nc" id="L70">        }</span>
+        }
 <span class="nc" id="L71">    }</span>
 
     static Workflow withRunInfo(RunInfo runInfo) {
 <span class="fc" id="L74">        return new Workflow().tap {</span>
-<span class="fc" id="L75">            it.runInfo = runInfo</span>
+<span class="pc" id="L75">            it.runInfo = runInfo</span>
 <span class="fc" id="L76">            trace = new Trace()</span>
 <span class="fc" id="L77">            metadata = new MetaData()</span>
-<span class="nc" id="L78">        }</span>
+        }
 <span class="nc" id="L79">    }</span>
 
 }

@@ -151,7 +151,7 @@ class MariaDBStorage implements Workflows, AutoCloseable {
             );&quot;&quot;&quot;)
 <span class="nc" id="L152">    }</span>
 
-    private static def safelyConvertDate(String date){
+<span class="nc bnc" id="L154" title="All 4 branches missed.">    private static def safelyConvertDate(String date){</span>
         try {
 <span class="nc" id="L156">            toUTCTime(date)</span>
 <span class="nc" id="L157">        } catch (Exception e){</span>
