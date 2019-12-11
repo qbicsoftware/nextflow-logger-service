@@ -152,10 +152,12 @@ class MariaDBStorage implements Workflows, AutoCloseable{
 
     private static def safelyConvertDate(String date){
         try {
-            toUTCTime(date)
+            def convertedTime = toUTCTime(date)
+            return convertedTime
         } catch (Exception e){
             // Nextflow changed from Date to OffsetDateTime
             log.info "Date seems to be an offset date time..."
+            log.info "Date is: $date"
             def formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
             return formatter.parse(date)
         }
